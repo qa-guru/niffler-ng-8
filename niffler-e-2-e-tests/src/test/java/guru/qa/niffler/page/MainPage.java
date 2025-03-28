@@ -1,14 +1,20 @@
 package guru.qa.niffler.page;
 
 import com.codeborne.selenide.ElementsCollection;
+import com.codeborne.selenide.SelenideElement;
+
+import java.time.Duration;
 
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Condition.visible;
+import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
 
-public class MainPage {
+public class MainPage extends BasePage {
 
   private final ElementsCollection tableRows = $$("#spendings tbody tr");
+  private final SelenideElement historyBox = $("#spendings");
+  private final SelenideElement statisticsBox = $("#stat");
 
   public EditSpendingPage editSpending(String spendingDescription) {
     tableRows.find(text(spendingDescription))
@@ -21,6 +27,12 @@ public class MainPage {
   public void checkThatTableContains(String spendingDescription) {
     tableRows.find(text(spendingDescription))
         .should(visible);
+  }
+
+  public MainPage assertMainComponents(){
+    historyBox.shouldBe(visible, Duration.ofSeconds(10));
+    statisticsBox.shouldBe(visible, Duration.ofSeconds(10));
+    return this;
   }
 
 

@@ -10,6 +10,7 @@ services:
       - PGTZ=GMT+3
     volumes:
       - ./postgres/script:/docker-entrypoint-initdb.d
+      - pgdata:/var/lib/postgresql/data
     healthcheck:
       test: [ "CMD", "pg_isready", "-U", "postgres", "-d", "postgres" ]
       interval: 3s

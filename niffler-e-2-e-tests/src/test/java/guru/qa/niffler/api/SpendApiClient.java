@@ -35,7 +35,7 @@ public class SpendApiClient {
         final Response<T> response;
         try {
             response = call.execute();
-            assertEquals(expectedResponseCode, response.code());
+            assertEquals(expectedResponseCode, response.code(),"Wrong response code");
             return response.body();
         } catch (IOException e) {
             throw new AssertionError(e);

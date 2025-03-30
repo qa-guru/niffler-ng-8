@@ -8,6 +8,7 @@ import com.codeborne.selenide.SelenideElement;
 
 import java.time.Duration;
 
+import static com.codeborne.selenide.Condition.cssValue;
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.$;
@@ -83,8 +84,9 @@ public class ProfilePage extends BasePage {
         getCategoryButton(name)
                 .shouldBe(Condition.visible,Duration.ofSeconds(5))
                 .scrollTo();
-        boolean isCheapColorArchived = getCategoryButton(name).parent().getAttribute("class").contains("MuiChip-colorDefault");
-        assertTrue(isCheapColorArchived);
+        getCategoryButton(name)
+                .parent()
+                .shouldHave(cssValue("background-color", "rgba(234, 236, 250, 1)"));
         assertFalse(getCategoryEditIcon(name).exists());
         return this;
     }
@@ -99,8 +101,9 @@ public class ProfilePage extends BasePage {
         getCategoryButton(name)
                 .shouldBe(Condition.visible,Duration.ofSeconds(5))
                 .scrollTo();
-        boolean isCheapColorActive = getCategoryButton(name).parent().getAttribute("class").contains("MuiChip-colorPrimary");
-        assertTrue(isCheapColorActive);
+        getCategoryButton(name)
+                .parent()
+                .shouldHave(cssValue("background-color", "rgba(41, 65, 204, 1)"));
         assertTrue(getCategoryEditIcon(name).exists());
         return this;
     }

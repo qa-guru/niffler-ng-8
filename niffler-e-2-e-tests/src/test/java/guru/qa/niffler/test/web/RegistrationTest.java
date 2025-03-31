@@ -4,6 +4,7 @@ import com.codeborne.selenide.Selenide;
 import com.github.javafaker.Faker;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.page.LoginPage;
+import guru.qa.niffler.page.RegisterPage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,38 +18,34 @@ public class RegistrationTest {
 
     @BeforeEach
     void setUp() {
-        username = faker.internet().emailAddress();
+        username = faker.name().username();
         password = faker.internet().password(3, 12);
     }
 
     @Test
     @DisplayName("Проверить успешную регистрацию")
     void testSuccessRegistration() {
-        Selenide.open(CFG.frontUrl(), LoginPage.class)
-                .goToRegistration()
+        Selenide.open(CFG.registrationUrl(), RegisterPage.class)
                 .submitRegistration(username, password)
                 .goToLoginAfterSuccessfulRegistration()
-                .doLogin(username, password);
-              //  .assertMainPageOpened();// тест на регистрацию, а проверяем что отобразилсь main page
+                .doLogin(username, password)
+                .assertMainPageOpened();
     }
 
     @Test
     @DisplayName("Проверить, что регистрация с существующим username невозможна")
     void shouldNotRegisterUserWithExistingUsername() {
         var existingUser = "user1";
-        Selenide.open(CFG.frontUrl(), LoginPage.class)
-                .goToRegistration()
+        Selenide.open(CFG.registrationUrl(), RegisterPage.class)
                 .submitRegistration(existingUser, password)
                 .assertErrorShown("Username `" + existingUser + "` already exists");
-
     }
 
     @Test
     @DisplayName("Проверить, что если пароль и подтверждения пароля отличаются - регистрация невозможна")
     void shouldShowErrorIfPasswordAndConfirmPasswordAreNotEqual() {
-        Selenide.open(CFG.frontUrl(), LoginPage.class)
-                .goToRegistration()
-                .submitDifferentPasswords(username, password, password + "1")
+        Selenide.open(CFG.registrationUrl(), RegisterPage.class)
+                .submitRegistrationWithDifferentPasswords(username, password, password + "1")
                 .assertErrorShown("Passwords should be equal");
     }
 

@@ -16,6 +16,6 @@ public class LoginTest {
     @DisplayName("Проверить, что при вводе некорректных username+password пользователь остается на странице логина")
     void shouldStayOnLoginPageAfterLoginWithBAdCredentials() {
         Selenide.open(CFG.frontUrl(), LoginPage.class)
-                .doLogin(faker.internet().emailAddress(), faker.internet().password(3, 12))
+                .doLogin(faker.name().username(), faker.internet().password(3, 12))
                 .assertErrorShown("Неверные учетные данные пользователя");
     }}

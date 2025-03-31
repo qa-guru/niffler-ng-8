@@ -2,8 +2,8 @@ package guru.qa.niffler.test.web;
 
 import com.codeborne.selenide.Selenide;
 import guru.qa.niffler.config.Config;
-import guru.qa.niffler.jupiter.BrowserExtension;
-import guru.qa.niffler.jupiter.DoRegister;
+import guru.qa.niffler.jupiter.extension.BrowserExtension;
+import guru.qa.niffler.jupiter.annotation.DoRegister;
 import guru.qa.niffler.model.PasswordType;
 import guru.qa.niffler.model.User;
 import guru.qa.niffler.page.LoginPage;

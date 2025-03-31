@@ -1,9 +1,9 @@
-package guru.qa.niffler.jupiter;
+package guru.qa.niffler.jupiter.extension;
 
 import com.codeborne.selenide.Selenide;
 import com.github.javafaker.Faker;
 import guru.qa.niffler.config.Config;
-import guru.qa.niffler.model.SpendJson;
+import guru.qa.niffler.jupiter.annotation.DoRegister;
 import guru.qa.niffler.model.User;
 import guru.qa.niffler.page.LoginPage;
 import guru.qa.niffler.page.RegistrationPage;
@@ -11,10 +11,10 @@ import org.junit.jupiter.api.extension.*;
 import org.junit.platform.commons.support.AnnotationSupport;
 
 public class RegisterExtension implements BeforeEachCallback, ParameterResolver {
-    public static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(CreateSpendingExtension.class);
+    public static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(SpendExtension.class);
     @Override
     public void beforeEach(ExtensionContext context) {
-        AnnotationSupport.findAnnotation(context.getRequiredTestMethod(),DoRegister.class)
+        AnnotationSupport.findAnnotation(context.getRequiredTestMethod(), DoRegister.class)
                 .ifPresent(anno ->{
                     Faker faker = new Faker();
                     User user = new User(

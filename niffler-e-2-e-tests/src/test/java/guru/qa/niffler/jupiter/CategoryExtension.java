@@ -6,7 +6,8 @@ import guru.qa.niffler.model.CategoryJson;
 import org.junit.jupiter.api.extension.*;
 import org.junit.platform.commons.support.AnnotationSupport;
 
-public class CategoryExtension implements BeforeEachCallback, AfterTestExecutionCallback,ParameterResolver {
+public class CategoryExtension implements BeforeEachCallback, AfterTestExecutionCallback, ParameterResolver {
+    public static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(CategoryExtension.class);
     private final SpendApiClient spendApiClient = new SpendApiClient();
     private final Faker faker = new Faker();
 
@@ -15,53 +16,57 @@ public class CategoryExtension implements BeforeEachCallback, AfterTestExecution
         Category annotation = AnnotationSupport.findAnnotation(context.getRequiredTestMethod(), Category.class)
                 .orElse(null);
         final String username = faker.name().username();
+        CategoryJson category = null;
 
         if (annotation != null) {
-            CategoryJson category = new CategoryJson(
+            category = new CategoryJson(
                     null,
                     username,
                     annotation.username(),
-                    annotation.archived()
+                    false
             );
 
-            spendApiClient.addCategory(category);
+            category = spendApiClient.addCategory(category);
 
             if (annotation.archived()) {
-                CategoryJson archCategoryJson = new CategoryJson(
+                category = new CategoryJson(
                         category.id(),
                         username,
                         annotation.username(),
                         true
                 );
-                spendApiClient.updateCategory(archCategoryJson);
+                spendApiClient.updateCategory(category);
             }
         }
+
+        context.getStore(NAMESPACE).put(context.getUniqueId(), category);
     }
 
     @Override
     public void afterTestExecution(ExtensionContext context) {
-        Category annotation = AnnotationSupport.findAnnotation(context.getRequiredTestMethod(), Category.class)
-                .orElse(null);
-        final String username = faker.name().username();
+        CategoryJson category = context.getStore(NAMESPACE).get(context.getUniqueId(), CategoryJson.class);
 
-        if (annotation != null && !annotation.archived()) {
-            CategoryJson category = new CategoryJson(
-                    null,
-                    username,
-                    annotation.username(),
+        if (category != null && !category.archived()) {
+            category = new CategoryJson(
+                    category.id(),
+                    category.name(),
+                    category.username(),
                     true
             );
+
             spendApiClient.updateCategory(category);
         }
     }
 
     @Override
-    public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
-        return false;
+    public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext context) throws ParameterResolutionException {
+
+        return context.getRequiredTestMethod().isAnnotationPresent(Category.class);
     }
 
     @Override
-    public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
-        return null;
+    public CategoryJson resolveParameter(ParameterContext parameterContext, ExtensionContext context) throws ParameterResolutionException {
+
+        return context.getStore(NAMESPACE).get(context.getUniqueId(), CategoryJson.class);
     }
 }

@@ -18,9 +18,9 @@ public interface SpendApi {
   @DELETE("internal/spends/remove")
   Call<SpendJson> deleteSpend(@Query("ids") String ids);
   @POST("internal/categories/add")
-  Call<SpendJson> addCategory(@Body CategoryJson category);
+  Call<CategoryJson> addCategory(@Body CategoryJson category);
   @PATCH("internal/categories/update")
-  Call<SpendJson> updateCategory(@Body CategoryJson category);
+  Call<CategoryJson> updateCategory(@Body CategoryJson category);
   @GET("internal/categories/all")
-  Call<SpendJson> getCategories();
+  Call<CategoryJson> getCategories();
 }

@@ -85,8 +85,8 @@ public class SpendApiClient {
     return response.body();
   }
 
-  public SpendJson addCategory(CategoryJson category) {
-    final Response<SpendJson> response;
+  public CategoryJson addCategory(CategoryJson category) {
+    final Response<CategoryJson> response;
     try {
       response = spendApi.addCategory(category)
               .execute();
@@ -97,8 +97,8 @@ public class SpendApiClient {
     return response.body();
   }
 
-  public SpendJson getCategories() {
-    final Response<SpendJson> response;
+  public CategoryJson getCategories() {
+    final Response<CategoryJson> response;
     try {
       response = spendApi.getCategories()
               .execute();
@@ -109,8 +109,8 @@ public class SpendApiClient {
     return response.body();
   }
 
-  public SpendJson updateCategory(CategoryJson category) {
-    final Response<SpendJson> response;
+  public CategoryJson updateCategory(CategoryJson category) {
+    final Response<CategoryJson> response;
     try {
       response = spendApi.updateCategory(category)
               .execute();

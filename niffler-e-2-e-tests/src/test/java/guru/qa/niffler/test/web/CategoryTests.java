@@ -11,8 +11,8 @@ public class CategoryTests {
     private static final Config CFG = Config.getInstance();
     @Test
     @Category(
-            name = "ilesnikov",
-            archived = true
+            username = "ilesnikov",
+            archived = false
     )
     @DisplayName("Архивация категории")
     void shouldCategoryArchiving() {
@@ -20,15 +20,12 @@ public class CategoryTests {
                 .doLogin("ilesnikov", "12345")
                 .iconSubmit()
                 .profileSubmit();
-
-        var r = 0;
-
     }
 
     @Test
     @Category(
-            name = "ilesnikov",
-            archived = false
+            username = "ilesnikov",
+            archived = true
     )
     @DisplayName("Разархивация категории")
     void shouldUnzippingCategory() {

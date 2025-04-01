@@ -7,6 +7,6 @@ import java.lang.annotation.*;
 @Target(ElementType.METHOD)
 @ExtendWith(CategoryExtension.class)
 public @interface Category {
-    String name();
+    String username();
     boolean archived();
 }

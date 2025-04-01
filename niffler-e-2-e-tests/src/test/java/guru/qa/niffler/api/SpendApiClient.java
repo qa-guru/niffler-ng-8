@@ -35,7 +35,7 @@ public class SpendApiClient {
         final Response<T> response;
         try {
             response = call.execute();
-            assertEquals(expectedResponseCode, response.code(),"Wrong response code");
+            assertEquals(expectedResponseCode, response.code(), "Wrong response code");
             return response.body();
         } catch (IOException e) {
             throw new AssertionError(e);
@@ -59,7 +59,7 @@ public class SpendApiClient {
     }
 
     public Response<Void> deleteSpends(String username, List<String> ids) {
-        return executeRequest(spendApi.deleteSpends(username, ids), 200);
+        return executeRequest(spendApi.deleteSpends(username, ids), 202);
     }
 
     public CategoryJson addCategory(CategoryJson category) {

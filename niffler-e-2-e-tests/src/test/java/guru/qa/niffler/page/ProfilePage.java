@@ -1,13 +1,15 @@
 package guru.qa.niffler.page;
 
+import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
+import guru.qa.niffler.model.CategoryJson;
 
 import java.util.List;
 
 import static com.codeborne.selenide.Selenide.*;
 
-public class ProfilePage {
+public class ProfilePage extends  BasePage {
 
     private final SelenideElement uploadNewPictureBtn =$("span[tabindex='0']");
     private final SelenideElement usernameInput = $("#username");
@@ -29,5 +31,12 @@ public class ProfilePage {
     public ProfilePage addNewCategory(String categoryName){
         newCategoryInput.setValue(categoryName).pressEnter();
         return  this;
+    }
+
+    public  void assertCategoryIsShown(CategoryJson categoryJson){
+       if(categoryJson.archived()){
+           showArchivedTgl.click();
+       }
+        categoryList.find(Condition.text(categoryJson.name())).shouldBe(Condition.visible);
     }
 }

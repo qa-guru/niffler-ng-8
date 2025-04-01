@@ -4,6 +4,7 @@ import com.codeborne.selenide.Selenide;
 import com.github.javafaker.Faker;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.page.LoginPage;
+import guru.qa.niffler.page.MainPage;
 import guru.qa.niffler.page.RegisterPage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -42,7 +43,7 @@ public class RegistrationTest {
     }
 
     @Test
-    @DisplayName("Проверить, что если пароль и подтверждения пароля отличаются - регистрация невозможна")
+    @DisplayName("Проверить, что если пароль и подтверждение пароля отличаются - регистрация невозможна")
     void shouldShowErrorIfPasswordAndConfirmPasswordAreNotEqual() {
         Selenide.open(CFG.registrationUrl(), RegisterPage.class)
                 .submitRegistrationWithDifferentPasswords(username, password, password + "1")

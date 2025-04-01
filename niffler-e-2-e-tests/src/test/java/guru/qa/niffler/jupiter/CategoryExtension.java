@@ -9,12 +9,11 @@ import org.junit.platform.commons.support.AnnotationSupport;
 
 import java.util.Date;
 
-public class CategoryExtension implements BeforeEachCallback, AfterEachCallback,ParameterResolver {
+public class CategoryExtension implements BeforeEachCallback, ParameterResolver, AfterTestExecutionCallback {
 
     public static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(CreateSpendingExtension.class);
     private final SpendApiClient spendApiClient = new SpendApiClient();
-    private static final String BEFORE_EACH_CALLBACK_KEY = "_beforeEachCallback";
-    private static final String AFTER_EACH_CALLBACK_KEY = "_afterEachCallback";
+
 
     @Override
     public void beforeEach(ExtensionContext context) {
@@ -22,7 +21,7 @@ public class CategoryExtension implements BeforeEachCallback, AfterEachCallback,
                 .ifPresent(anno -> {
                     CategoryJson categoryJson = new CategoryJson(
                             null,
-                            new Faker().name().name(),
+                            new Faker().funnyName().name(),
                             anno.username(),
                             false
                     );
@@ -30,23 +29,21 @@ public class CategoryExtension implements BeforeEachCallback, AfterEachCallback,
                     if (anno.archived()) {
                         created = archiveCategory(created);
                     }
-                    context.getStore(NAMESPACE).put(context.getUniqueId() + BEFORE_EACH_CALLBACK_KEY, created);
+                    context.getStore(NAMESPACE).put(context.getUniqueId(), created);
                 });
     }
 
     @Override
-    public void afterEach(ExtensionContext context) {
+    public void afterTestExecution(ExtensionContext context) throws Exception {
         AnnotationSupport.findAnnotation(context.getRequiredTestMethod(), Category.class)
                 .ifPresent(
                         anno -> {
                             CategoryJson categoryJson = context.getStore(NAMESPACE)
-                                    .get(context.getUniqueId() + BEFORE_EACH_CALLBACK_KEY, CategoryJson.class);
+                                    .get(context.getUniqueId(), CategoryJson.class);
                             if (!categoryJson.archived()) {
-                                CategoryJson updatedCategoryJson = archiveCategory(categoryJson);
-                                context.getStore(NAMESPACE).put(context.getUniqueId() + AFTER_EACH_CALLBACK_KEY, updatedCategoryJson);
+                                archiveCategory(categoryJson);
                             }
                         });
-
     }
 
     private CategoryJson archiveCategory(CategoryJson categoryJson) {
@@ -66,8 +63,11 @@ public class CategoryExtension implements BeforeEachCallback, AfterEachCallback,
 
     @Override
     public CategoryJson resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
-        return extensionContext.getStore(NAMESPACE).get(extensionContext.getUniqueId()+BEFORE_EACH_CALLBACK_KEY, CategoryJson.class);
+        return extensionContext.getStore(NAMESPACE).get(extensionContext.getUniqueId(), CategoryJson.class);
     }
+
+
 }
+
 
 

@@ -9,11 +9,18 @@ public class LoginPage {
   private final SelenideElement usernameInput = $("input[name='username']");
   private final SelenideElement passwordInput = $("input[name='password']");
   private final SelenideElement submitBtn = $("button[type='submit']");
+  private final SelenideElement registerButton = $("[class='form__register']");
 
   public MainPage doLogin(String username, String password) {
     usernameInput.setValue(username);
     passwordInput.setValue(password);
     submitBtn.click();
     return new MainPage();
+  }
+
+  public RegisterPage registerSubmit() {
+    registerButton.click();
+
+    return new RegisterPage();
   }
 }

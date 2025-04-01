@@ -5,13 +5,13 @@ import com.codeborne.selenide.SelenideElement;
 
 import static com.codeborne.selenide.Selenide.$;
 
-public class SuccessfulRegistrationPage {
+public class SuccessRegisterPage {
     private final SelenideElement successfulRegistrationText = $("[class*='paragraph_success']");
     private final SelenideElement loginSubmit = $("[class='form_sign-in']");
 
-    public SuccessfulRegistrationPage shouldRegistrationText() {
+    public SuccessRegisterPage shouldRegistrationText() {
         successfulRegistrationText.shouldHave(Condition.text("Congratulations! You've registered!"));
 
-        return new SuccessfulRegistrationPage();
+        return new SuccessRegisterPage();
     }
 }

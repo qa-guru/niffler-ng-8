@@ -1,6 +1,5 @@
 package guru.qa.niffler.jupiter;
 
-import guru.qa.niffler.model.CurrencyValues;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.lang.annotation.ElementType;
@@ -8,17 +7,17 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import static guru.qa.niffler.jupiter.UseUser.Mode.DEFAULT;
+
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
-@ExtendWith({CreateSpendingExtension.class, SpendingResolverExtension.class})
-public @interface Spend {
-  String username();
+@ExtendWith(UseUserResolver.class)
+public @interface UseUser {
 
-  String category();
+    Mode value() default DEFAULT;
 
-  String description();
+    enum Mode {
+        DEFAULT, GEN, NON
+    }
 
-  double amount();
-
-  CurrencyValues currency();
 }

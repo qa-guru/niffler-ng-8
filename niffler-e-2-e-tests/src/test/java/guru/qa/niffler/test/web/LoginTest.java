@@ -4,7 +4,7 @@ import com.codeborne.selenide.Selenide;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.jupiter.extension.BrowserExtension;
 import guru.qa.niffler.jupiter.annotation.DoRegister;
-import guru.qa.niffler.model.PasswordType;
+import guru.qa.niffler.model.ElementType;
 import guru.qa.niffler.model.User;
 import guru.qa.niffler.page.LoginPage;
 import guru.qa.niffler.page.MainPage;
@@ -35,9 +35,9 @@ public class LoginTest {
         Selenide.open(CFG.frontUrl(), LoginPage.class)
                 .setPassword(password)
                 .assertPassword(password)
-                .assertPasswordType(PasswordType.PASSWORD)
+                .assertPasswordType(ElementType.PASSWORD)
                 .showPassword()
-                .assertPasswordType(PasswordType.TEXT);
+                .assertPasswordType(ElementType.TEXT);
     }
 
     @Test

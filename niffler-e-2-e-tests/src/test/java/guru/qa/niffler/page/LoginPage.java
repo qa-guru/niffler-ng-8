@@ -2,14 +2,13 @@ package guru.qa.niffler.page;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
-import guru.qa.niffler.model.PasswordType;
-import org.junit.jupiter.api.Assertions;
+import guru.qa.niffler.model.ElementType;
 
 import java.time.Duration;
 
+import static com.codeborne.selenide.Condition.value;
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.$;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class LoginPage extends BasePage{
 
@@ -17,8 +16,8 @@ public class LoginPage extends BasePage{
   private final SelenideElement passwordInput = $("input[name='password']");
   private final SelenideElement submitBtn = $("button[type='submit']");
   private final SelenideElement registerButton = $("a[class='form__register']");
-  private static SelenideElement showPasswordIcon = $("button[class=form__password-button]");
-  private static SelenideElement errorComponent = $(byText("Неверные учетные данные пользователя"));
+  private final SelenideElement showPasswordIcon = $("button[class=form__password-button]");
+  private final SelenideElement errorComponent = $(byText("Неверные учетные данные пользователя"));
 
   public MainPage doLogin(String username, String password) {
     return this.setUserName(username)
@@ -46,8 +45,8 @@ public class LoginPage extends BasePage{
     return new RegistrationPage();
   }
 
-  public LoginPage assertPasswordType(PasswordType type){
-    assertEquals(type.toString(),passwordInput.getAttribute("type"));
+  public LoginPage assertPasswordType(ElementType type){
+    passwordInput.shouldHave(type.assertType());
     return this;
   }
   public LoginPage showPassword() {
@@ -55,7 +54,7 @@ public class LoginPage extends BasePage{
     return this;
   }
   public LoginPage assertPassword(String password) {
-    Assertions.assertEquals(passwordInput.val(),password);
+    passwordInput.shouldHave(value(password));
     return this;
   }
 

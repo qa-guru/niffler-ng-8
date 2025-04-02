@@ -50,9 +50,7 @@ public class ProfilePage extends BasePage {
     }
 
     private SelenideElement getCategoryUnarchiveIcon(String name) {
-        return getCategoryButton(name)
-                .parent()
-                .parent()
+        return getCategoryRow(name)
                 .find("button[aria-label='Unarchive category']");
     }
 

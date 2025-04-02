@@ -2,7 +2,7 @@ package guru.qa.niffler.page;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
-import guru.qa.niffler.model.PasswordType;
+import guru.qa.niffler.model.ElementType;
 import org.junit.jupiter.api.Assertions;
 
 import java.time.Duration;
@@ -10,17 +10,16 @@ import java.time.Duration;
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selectors.byXpath;
 import static com.codeborne.selenide.Selenide.$;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class RegistrationPage extends BasePage {
-    private static SelenideElement loginHyperLink = $(byText("Log in!"));
-    private static SelenideElement usernameInput = $("input[id=username]");
-    private static SelenideElement passwordInput = $("input[id=password]");
-    private static SelenideElement showPasswordIcon = $("button[id=passwordBtn]");
-    private static SelenideElement passwordSubmitInput = $("input[id=passwordSubmit]");
-    private static SelenideElement showPasswordSubmitIcon = $("button[id=passwordSubmitBtn]");
-    private static SelenideElement signUpButton = $(byXpath("//button[normalize-space(text())='Sign Up']"));
-    private static SelenideElement signInButton = $(byText("Sign in"));
+    private final SelenideElement loginHyperLink = $(byText("Log in!"));
+    private final SelenideElement usernameInput = $("input[id=username]");
+    private final SelenideElement passwordInput = $("input[id=password]");
+    private final SelenideElement showPasswordIcon = $("button[id=passwordBtn]");
+    private final SelenideElement passwordSubmitInput = $("input[id=passwordSubmit]");
+    private final SelenideElement showPasswordSubmitIcon = $("button[id=passwordSubmitBtn]");
+    private final SelenideElement signUpButton = $(byXpath("//button[normalize-space(text())='Sign Up']"));
+    private final SelenideElement signInButton = $(byText("Sign in"));
 
     public RegistrationPage setUserName(String userName) {
         usernameInput.val(userName);
@@ -107,12 +106,12 @@ public class RegistrationPage extends BasePage {
         return this;
     }
 
-    public RegistrationPage assertPasswordType(PasswordType type){
-        assertEquals(type.toString(),passwordInput.getAttribute("type"));
+    public RegistrationPage assertPasswordType(ElementType type){
+        passwordInput.shouldHave(type.assertType());
         return this;
     }
-    public RegistrationPage assertPasswordSubmitType(PasswordType type){
-        assertEquals(type.toString(),passwordSubmitInput.getAttribute("type"));
+    public RegistrationPage assertPasswordSubmitType(ElementType type){
+        passwordSubmitInput.shouldHave(type.assertType());
         return this;
     }
 }

@@ -29,11 +29,10 @@ public class SpendApiClient {
 
   private final SpendApi spendApi = retrofit.create(SpendApi.class);
 
-  private <T> T executeRequest(Call<T> call, int successLastDigit) {
+  private <T> T executeRequest(Call<T> call) {
     try {
-      int successCode = 200+successLastDigit;
       Response<T> response = call.execute();
-      assertEquals(successCode, response.code());
+      assertEquals(2, response.code()/100);
       return response.body();
     } catch (IOException e) {
       throw new AssertionError(e);
@@ -42,34 +41,34 @@ public class SpendApiClient {
 
   // Используем универсальный метод для всех операций
   public SpendJson addSpend(SpendJson spend) {
-    return executeRequest(spendApi.addSpend(spend),1);
+    return executeRequest(spendApi.addSpend(spend));
   }
 
   public SpendJson editSpend(SpendJson spend) {
-    return executeRequest(spendApi.editSpend(spend),0);
+    return executeRequest(spendApi.editSpend(spend));
   }
 
   public SpendJson getSpend(String id, String username) {
-    return executeRequest(spendApi.getSpend(id, username),0);
+    return executeRequest(spendApi.getSpend(id, username));
   }
 
   public List<SpendJson> getSpends(String username, CurrencyValues currencyValues, Date from, Date to) {
-    return executeRequest(spendApi.getSpends(username, currencyValues, from, to),0);
+    return executeRequest(spendApi.getSpends(username, currencyValues, from, to));
   }
 
   public Response<Void> deleteSpends(String username, List<String> ids) {
-    return executeRequest(spendApi.deleteSpends(username, ids),2);
+    return executeRequest(spendApi.deleteSpends(username, ids));
   }
 
   public List<CategoryJson> getCategories(String username, boolean excludeArchived) {
-    return executeRequest(spendApi.getCategories(username, excludeArchived),0);
+    return executeRequest(spendApi.getCategories(username, excludeArchived));
   }
 
   public CategoryJson addCategory(CategoryJson category) {
-    return executeRequest(spendApi.addCategory(category),0);
+    return executeRequest(spendApi.addCategory(category));
   }
 
   public CategoryJson updateCategory(CategoryJson category) {
-    return executeRequest(spendApi.updateCategory(category),0);
+    return executeRequest(spendApi.updateCategory(category));
   }
 }

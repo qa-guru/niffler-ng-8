@@ -10,8 +10,8 @@ public enum Pages {
     LOGIN("login",LoginPage.class),
     MAIN("main",MainPage.class),
     PROFILE("profile",ProfilePage.class),
-    FRIENDS("people/friends",null),
-    ALL_PEOPLE("people/all",null),
+    FRIENDS("people/friends", FriendsPage.class),
+    ALL_PEOPLE("people/all", AllPeoplePage.class),
     ADD_SPENDING("spending",null),
     EDIT_SPENDING("spending/%s",EditSpendingPage.class);
 

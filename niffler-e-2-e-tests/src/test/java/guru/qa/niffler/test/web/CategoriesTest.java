@@ -14,9 +14,7 @@ public class CategoriesTest {
     private static final Config CFG = Config.getInstance();
     private static final String PASSWORD = "123";
 
-    @Category(
-            username = "Timofey",
-            archived = false)
+    @Category(username = "Timofey")
     @Test
     void testArchiveCategory(CategoryJson categoryJson){
         String name = categoryJson.name();

@@ -1,7 +1,9 @@
 package guru.qa.niffler.page;
 
 import com.codeborne.selenide.SelenideElement;
+import org.openqa.selenium.By;
 
+import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Selenide.$;
 
 public class LoginPage {
@@ -9,6 +11,8 @@ public class LoginPage {
   private final SelenideElement usernameInput = $("input[name='username']");
   private final SelenideElement passwordInput = $("input[name='password']");
   private final SelenideElement submitBtn = $("button[type='submit']");
+  private final SelenideElement registerBtn = $($(By.className("form__register")));
+  private final SelenideElement credentialsError = $($(By.className("form__error")));
 
   public MainPage doLogin(String username, String password) {
     usernameInput.setValue(username);
@@ -16,4 +20,17 @@ public class LoginPage {
     submitBtn.click();
     return new MainPage();
   }
+
+  public RegisterPage clickRegisterNewAccount() {
+    registerBtn.click();
+    return new RegisterPage();
+  }
+
+  public void credentialsError(String username) {
+    usernameInput.setValue(username);
+    passwordInput.setValue("12346");
+    submitBtn.click();
+    credentialsError.shouldHave(text("Bad credentials"));
+  }
+
 }

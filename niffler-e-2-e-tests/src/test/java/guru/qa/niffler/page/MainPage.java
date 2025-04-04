@@ -13,7 +13,8 @@ public class MainPage {
   private final ElementsCollection tableRows = $$("#spendings tbody tr");
   private final SelenideElement iconButton = $("[class*='MuiAppBar-root'] button");
   private final ElementsCollection modalWindowButtons = $$("[class='link nav-link']");
-
+  private final SelenideElement statistics = $("#stat [class*='MuiTypography']");
+  private final SelenideElement historyOfSpendings = $("#spendings [class*='MuiTypography-h']");
 
   public EditSpendingPage editSpending(String spendingDescription) {
     tableRows.find(text(spendingDescription))
@@ -30,13 +31,20 @@ public class MainPage {
 
   public MainPage iconSubmit() {
     iconButton.click();
-
     return this;
   }
 
   public ProfilePage profileSubmit() {
     modalWindowButtons.get(0).click();
-
     return new ProfilePage();
+  }
+
+  public MainPage shouldStatisticsVisible() {
+    statistics.shouldBe(visible);
+    return this;
+  }
+
+  public void shouldHistoryOfSpendingVisible() {
+    historyOfSpendings.shouldBe(visible);
   }
 }

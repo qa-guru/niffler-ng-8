@@ -7,7 +7,9 @@ import okhttp3.OkHttpClient;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
+
 import java.io.IOException;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class SpendApiClient {

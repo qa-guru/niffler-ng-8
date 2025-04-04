@@ -12,23 +12,21 @@ public class CategoryTests {
     private static final Config CFG = Config.getInstance();
 
     @Test
-    @Category(
-            username = "ilesnikov",
-            archived = false
-    )
+    @Category(username = "ilesnikov", archived = false)
     @DisplayName("Архивация категории")
-    void shouldCategoryArchiving() {
+    void shouldCategoryArchiving(CategoryJson category) {
         Selenide.open(CFG.frontUrl(), LoginPage.class)
                 .doLogin("ilesnikov", "12345")
                 .iconSubmit()
-                .profileSubmit();
+                .profileSubmit()
+                .archivedCategorySubmit(category.name())
+                .buttonSubmit("Archive")
+                .archivedCheckboxSubmit()
+                .shouldArchivedCategoryDisplayed(category.name());
     }
 
     @Test
-    @Category(
-            username = "ilesnikov",
-            archived = true
-    )
+    @Category(username = "ilesnikov", archived = true)
     @DisplayName("Разархивация категории")
     void shouldUnzippingCategory(CategoryJson category) {
         Selenide.open(CFG.frontUrl(), LoginPage.class)
@@ -36,6 +34,8 @@ public class CategoryTests {
                 .iconSubmit()
                 .profileSubmit()
                 .archivedCheckboxSubmit()
-                .shouldArchivedCategory(category.name());
+                .unarchivedCategorySubmit(category.name())
+                .buttonSubmit("Unarchive")
+                .shouldArchiveCategoryButtonDisplayed(category.name());
     }
 }

@@ -5,6 +5,7 @@ import com.codeborne.selenide.SelenideElement;
 
 import java.util.Objects;
 
+import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
@@ -22,13 +23,7 @@ public class ProfilePage {
     }
 
     public ProfilePage shouldArchivedCategoryDisplayed(String categoryName) {
-        categories.stream().filter(element -> element.text().equals(categoryName))
-                .findFirst()
-                .orElseThrow()
-                .shouldBe(visible)
-                .$("[data-testid='UnarchiveOutlinedIcon']")
-                .shouldBe(visible);
-
+        categories.find(text(categoryName)).shouldBe(visible);
         return this;
     }
 

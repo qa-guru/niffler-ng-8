@@ -25,6 +25,6 @@ public class LoginTests {
         Selenide.open(CFG.frontUrl(), LoginPage.class)
                 .doLogin(faker.name().username(), faker.internet().password());
 
-        new LoginPage().shouldError();
+        new LoginPage().shouldErrorVisible();
     }
 }

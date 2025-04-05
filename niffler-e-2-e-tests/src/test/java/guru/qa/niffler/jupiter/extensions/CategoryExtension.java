@@ -1,7 +1,8 @@
-package guru.qa.niffler.jupiter;
+package guru.qa.niffler.jupiter.extensions;
 
 import com.github.javafaker.Faker;
 import guru.qa.niffler.api.SpendApiClient;
+import guru.qa.niffler.jupiter.annotations.Category;
 import guru.qa.niffler.model.CategoryJson;
 import org.junit.jupiter.api.extension.*;
 import org.junit.platform.commons.support.AnnotationSupport;
@@ -13,22 +14,17 @@ public class CategoryExtension implements BeforeEachCallback, AfterTestExecution
 
     @Override
     public void beforeEach(ExtensionContext context) {
-        Category annotation = AnnotationSupport.findAnnotation(context.getRequiredTestMethod(), Category.class)
-                .orElse(null);
-        final String username = faker.name().username();
-        CategoryJson category = null;
-
-        if (annotation != null) {
-            category = new CategoryJson(
+        AnnotationSupport.findAnnotation(context.getRequiredTestMethod(), Category.class).ifPresent(annotation -> {
+            String username = faker.name().username();
+            CategoryJson category = new CategoryJson(
                     null,
                     username,
                     annotation.username(),
                     false
             );
-
             category = spendApiClient.addCategory(category);
 
-            if (annotation.archived()) {
+            if (category.archived()) {
                 category = new CategoryJson(
                         category.id(),
                         username,
@@ -37,9 +33,9 @@ public class CategoryExtension implements BeforeEachCallback, AfterTestExecution
                 );
                 spendApiClient.updateCategory(category);
             }
-        }
 
-        context.getStore(NAMESPACE).put(context.getUniqueId(), category);
+            context.getStore(NAMESPACE).put(context.getUniqueId(), category);
+        });
     }
 
     @Override

@@ -8,7 +8,6 @@ import io.qameta.allure.selenide.AllureSelenide;
 import org.junit.jupiter.api.extension.*;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
-
 import java.io.ByteArrayInputStream;
 
 public class BrowserExtension implements
@@ -18,18 +17,19 @@ public class BrowserExtension implements
     LifecycleMethodExecutionExceptionHandler {
 
   @Override
-  public void afterEach(ExtensionContext context) throws Exception {
-    if (WebDriverRunner.hasWebDriverStarted()) {
-      Selenide.closeWebDriver();
-    }
-  }
-
-  @Override
-  public void beforeEach(ExtensionContext context) throws Exception {
+  public void beforeEach(ExtensionContext context) {
     SelenideLogger.addListener("Allure-selenide", new AllureSelenide()
         .savePageSource(false)
         .screenshots(false)
     );
+  }
+
+
+  @Override
+  public void afterEach(ExtensionContext context) {
+    if (WebDriverRunner.hasWebDriverStarted()) {
+      Selenide.closeWebDriver();
+    }
   }
 
   @Override

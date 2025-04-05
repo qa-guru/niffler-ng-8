@@ -4,7 +4,6 @@ import io.qameta.allure.Allure;
 import org.apache.commons.lang3.time.StopWatch;
 import org.junit.jupiter.api.extension.*;
 import org.junit.platform.commons.support.AnnotationSupport;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -31,8 +30,8 @@ public class UsersQueueExtension implements BeforeEachCallback, AfterEachCallbac
         NOT_EMPTY_USERS.add(new StaticUser("ilesnikov", "12345", false));
     }
 
-    @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.PARAMETER)
+    @Retention(RetentionPolicy.RUNTIME)
     @ExtendWith(UsersQueueExtension.class)
     public @interface UserType {
         boolean empty() default true;

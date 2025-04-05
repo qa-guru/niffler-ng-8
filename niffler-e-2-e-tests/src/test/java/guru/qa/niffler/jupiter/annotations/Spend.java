@@ -4,7 +4,6 @@ import guru.qa.niffler.jupiter.extensions.CreateSpendingExtension;
 import guru.qa.niffler.jupiter.extensions.SpendingResolverExtension;
 import guru.qa.niffler.model.CurrencyValues;
 import org.junit.jupiter.api.extension.ExtendWith;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

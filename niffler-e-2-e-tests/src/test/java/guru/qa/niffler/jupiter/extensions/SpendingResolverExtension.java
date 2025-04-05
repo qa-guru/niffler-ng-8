@@ -6,7 +6,6 @@ import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
 
-
 public class SpendingResolverExtension implements ParameterResolver {
 
   @Override

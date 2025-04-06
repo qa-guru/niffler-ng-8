@@ -14,20 +14,23 @@ public class UsersQueueExtension implements BeforeEachCallback, AfterEachCallbac
 
     public static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(UsersQueueExtension.class);
 
-    public record StaticUser(String username, String password, boolean empty) {}
+    public record StaticUser(
+            String username,
+            String password,
+            String friend,
+            String income,
+            String outcome) {}
 
     private static final Queue<StaticUser> EMPTY_USERS = new ConcurrentLinkedQueue<>();
     private static final Queue<StaticUser> WITH_FRIEND_USERS = new ConcurrentLinkedQueue<>();
-    private static final Queue<StaticUser> WITH_ICONE_USERS = new ConcurrentLinkedQueue<>();
     private static final Queue<StaticUser> WITH_INCOME_REQUEST_USERS = new ConcurrentLinkedQueue<>();
     private static final Queue<StaticUser> WITH_OUTCOME_REQUEST_USERS = new ConcurrentLinkedQueue<>();
 
     static {
-        EMPTY_USERS.add(new StaticUser("ilesnikov", "12345", true));
-        WITH_FRIEND_USERS.add(new StaticUser("ilesnikov", "12345", false));
-        WITH_ICONE_USERS.add(new StaticUser("ilesnikov", "12345", false));
-        WITH_INCOME_REQUEST_USERS.add(new StaticUser("ilesnikov", "12345", false));
-        WITH_OUTCOME_REQUEST_USERS.add(new StaticUser("ilesnikov", "12345", false));
+        EMPTY_USERS.add(new StaticUser("ilesnikov", "12345", null, null, null));
+        WITH_FRIEND_USERS.add(new StaticUser("lesnikov", "12345", "ilesnikov", null, null));
+        WITH_INCOME_REQUEST_USERS.add(new StaticUser("ilya", "12345", null, "", null));
+        WITH_OUTCOME_REQUEST_USERS.add(new StaticUser("ilyalesnikov", "123456", null, null, ""));
     }
 
     @Override
@@ -42,7 +45,6 @@ public class UsersQueueExtension implements BeforeEachCallback, AfterEachCallbac
                         user = switch (userType.type()) {
                             case EMPTY -> Optional.ofNullable(EMPTY_USERS.poll());
                             case WITH_FRIEND -> Optional.ofNullable(WITH_FRIEND_USERS.poll());
-                            case WITH_ICONE -> Optional.ofNullable(WITH_ICONE_USERS.poll());
                             case WITH_INCOME_REQUEST -> Optional.ofNullable(WITH_INCOME_REQUEST_USERS.poll());
                             case WITH_OUTCOME_REQUEST -> Optional.ofNullable(WITH_OUTCOME_REQUEST_USERS.poll());
                         };
@@ -67,7 +69,6 @@ public class UsersQueueExtension implements BeforeEachCallback, AfterEachCallbac
             switch (e.getKey().type()) {
                 case EMPTY -> EMPTY_USERS.add(e.getValue());
                 case WITH_FRIEND -> WITH_FRIEND_USERS.add(e.getValue());
-                case WITH_ICONE -> WITH_ICONE_USERS.add(e.getValue());
                 case WITH_INCOME_REQUEST -> WITH_INCOME_REQUEST_USERS.add(e.getValue());
                 case WITH_OUTCOME_REQUEST -> WITH_OUTCOME_REQUEST_USERS.add(e.getValue());
             }

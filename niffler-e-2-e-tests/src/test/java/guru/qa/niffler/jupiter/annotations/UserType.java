@@ -15,6 +15,6 @@ public @interface UserType {
     Type type() default Type.EMPTY;
 
     enum Type {
-        EMPTY, WITH_FRIEND, WITH_ICONE, WITH_INCOME_REQUEST, WITH_OUTCOME_REQUEST
+        EMPTY, WITH_FRIEND, WITH_INCOME_REQUEST, WITH_OUTCOME_REQUEST
     }
 }

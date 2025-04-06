@@ -2,6 +2,7 @@ package guru.qa.niffler.test.web;
 
 import com.codeborne.selenide.Selenide;
 import guru.qa.niffler.config.Config;
+import guru.qa.niffler.jupiter.annotation.User;
 import guru.qa.niffler.jupiter.extension.BrowserExtension;
 import guru.qa.niffler.jupiter.annotation.Category;
 import guru.qa.niffler.model.CategoryJson;
@@ -14,7 +15,8 @@ public class CategoriesTest {
     private static final Config CFG = Config.getInstance();
     private static final String PASSWORD = "123";
 
-    @Category(username = "Timofey")
+    @User(username = "Timofey",
+    categories = @Category())
     @Test
     void testArchiveCategory(CategoryJson categoryJson){
         String name = categoryJson.name();
@@ -28,9 +30,12 @@ public class CategoriesTest {
                 .assertArchiveCategory(name);
     }
 
-    @Category(
+    @User(
             username = "Timofey",
-            archived = true)
+            categories = @Category(
+                    archived = true
+            )
+    )
     @Test
     void testUnarchiveCategory(CategoryJson categoryJson){
         String name = categoryJson.name();

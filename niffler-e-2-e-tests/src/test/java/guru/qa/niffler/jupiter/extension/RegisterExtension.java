@@ -1,12 +1,12 @@
 package guru.qa.niffler.jupiter.extension;
 
 import com.codeborne.selenide.Selenide;
-import com.github.javafaker.Faker;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.jupiter.annotation.DoRegister;
 import guru.qa.niffler.model.User;
 import guru.qa.niffler.page.LoginPage;
 import guru.qa.niffler.page.RegistrationPage;
+import guru.qa.niffler.utils.RandomDataUtils;
 import org.junit.jupiter.api.extension.*;
 import org.junit.platform.commons.support.AnnotationSupport;
 
@@ -16,10 +16,9 @@ public class RegisterExtension implements BeforeEachCallback, ParameterResolver 
     public void beforeEach(ExtensionContext context) {
         AnnotationSupport.findAnnotation(context.getRequiredTestMethod(), DoRegister.class)
                 .ifPresent(anno ->{
-                    Faker faker = new Faker();
                     User user = new User(
-                            faker.internet().emailAddress(),
-                            faker.internet().password(3,12)
+                            RandomDataUtils.randomEmail(),
+                            RandomDataUtils.randomPassword(3,12)
                     );
                     Selenide.open(Config.getInstance().frontUrl(), LoginPage.class)
                             .clickRegister()

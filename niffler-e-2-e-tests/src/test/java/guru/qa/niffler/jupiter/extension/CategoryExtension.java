@@ -1,9 +1,9 @@
 package guru.qa.niffler.jupiter.extension;
 
-import com.github.javafaker.Faker;
 import guru.qa.niffler.api.SpendApiClient;
-import guru.qa.niffler.jupiter.annotation.Category;
+import guru.qa.niffler.jupiter.annotation.User;
 import guru.qa.niffler.model.CategoryJson;
+import guru.qa.niffler.utils.RandomDataUtils;
 import org.junit.jupiter.api.extension.*;
 import org.junit.platform.commons.support.AnnotationSupport;
 
@@ -14,18 +14,19 @@ public class CategoryExtension implements BeforeEachCallback, ParameterResolver,
 
     @Override
     public void beforeEach(ExtensionContext context) {
-        AnnotationSupport.findAnnotation(context.getRequiredTestMethod(), Category.class)
+        AnnotationSupport.findAnnotation(context.getRequiredTestMethod(), User.class)
+                .filter(anno -> anno.categories().length > 0)
                 .ifPresent(anno -> {
                     CategoryJson categoryJson =
                             new CategoryJson(
                                     null,
-                                    new Faker().commerce().department(),
+                                    RandomDataUtils.randomCategoryName(),
                                     anno.username(),
                                     false
                             );
 
                     CategoryJson created = spendApiClient.addCategory(categoryJson);
-                    if (anno.archived()) {
+                    if (anno.categories()[0].archived()) {
                         created = archiveCategory(created);
                     }
                     context.getStore(NAMESPACE).put(context.getUniqueId(), created);
@@ -34,7 +35,8 @@ public class CategoryExtension implements BeforeEachCallback, ParameterResolver,
 
     @Override
     public void afterEach(ExtensionContext context) {
-        AnnotationSupport.findAnnotation(context.getRequiredTestMethod(), Category.class)
+        AnnotationSupport.findAnnotation(context.getRequiredTestMethod(), User.class)
+                .filter(anno -> anno.categories().length > 0)
                 .ifPresent(anno -> {
                     CategoryJson categoryJson = context.getStore(NAMESPACE)
                             .get(context.getUniqueId()

@@ -5,6 +5,7 @@ import io.qameta.allure.Allure;
 import org.apache.commons.lang3.time.StopWatch;
 import org.junit.jupiter.api.extension.*;
 import org.junit.platform.commons.support.AnnotationSupport;
+
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.TimeUnit;
@@ -33,9 +34,8 @@ public class UsersQueueExtension implements BeforeEachCallback, AfterEachCallbac
     public void beforeEach(ExtensionContext context) {
         Arrays.stream(context.getRequiredTestMethod().getParameters())
                 .filter(parameter -> AnnotationSupport.isAnnotated(parameter, UserType.class))
-                .findFirst()
                 .map(parameter -> parameter.getAnnotation(UserType.class))
-                .ifPresent(userType -> {
+                .forEach(userType -> {
                     Optional<StaticUser> user = Optional.empty();
                     StopWatch stopWatch = StopWatch.createStarted();
                     while (user.isEmpty() && stopWatch.getTime(TimeUnit.SECONDS) < 30) {
@@ -83,6 +83,7 @@ public class UsersQueueExtension implements BeforeEachCallback, AfterEachCallbac
 
     @Override
     public StaticUser resolveParameter(ParameterContext parameterContext, ExtensionContext context) throws ParameterResolutionException {
-        return context.getStore(NAMESPACE).get(context.getUniqueId(), StaticUser.class);
+        return (StaticUser) context.getStore(NAMESPACE).get(context.getUniqueId(), Map.class)
+                .get(AnnotationSupport.findAnnotation(parameterContext.getParameter(), UserType.class));
     }
 }

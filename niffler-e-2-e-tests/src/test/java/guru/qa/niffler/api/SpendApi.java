@@ -33,5 +33,6 @@ public interface SpendApi {
   Call<CategoryJson> updateCategory(@Body CategoryJson category);
 
   @GET("internal/categories/all")
-  Call<List<CategoryJson>> getAllCategories(@Query("excludeArchived") Boolean excludeArchived);
+  Call<List<CategoryJson>> getCategories(@Query("username") String username,
+                                         @Query("excludeArchived") Boolean excludeArchived);
 }

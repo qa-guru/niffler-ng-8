@@ -113,16 +113,27 @@ public class SpendApiClient {
         return response.body();
     }
 
-    public List<CategoryJson> getAllCategories(Boolean excludeArchived) {
-        final Response<List<CategoryJson>> response;
+    public CategoryJson createCategory(CategoryJson category) {
+        final Response<CategoryJson> response;
         try {
-            response = spendApi.getAllCategories(excludeArchived)
+            response = spendApi.addCategory(category)
                     .execute();
         } catch (IOException e) {
             throw new AssertionError(e);
         }
         assertEquals(HttpURLConnection.HTTP_OK, response.code());
+        return response.body();
+    }
 
+    public List<CategoryJson> getCategories(String username, Boolean excludeArchived) {
+        final Response<List<CategoryJson>> response;
+        try {
+            response = spendApi.getCategories(username, excludeArchived)
+                    .execute();
+        } catch (IOException e) {
+            throw new AssertionError(e);
+        }
+        assertEquals(HttpURLConnection.HTTP_OK, response.code());
         return response.body();
     }
 }

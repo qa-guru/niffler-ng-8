@@ -19,4 +19,8 @@ public class FakerGenUtil {
     public  String genRandomPassword() {
         return faker.internet().password(3, 10);
     }
+
+    public String genRandomCommerceName() {
+        return faker.commerce().productName();
+    }
 }

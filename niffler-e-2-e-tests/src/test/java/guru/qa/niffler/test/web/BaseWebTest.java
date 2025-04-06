@@ -3,6 +3,8 @@ package guru.qa.niffler.test.web;
 import com.codeborne.selenide.Selenide;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.jupiter.extension.BrowserExtension;
+import guru.qa.niffler.jupiter.extension.UsersQueueExtension.StaticUser;
+import guru.qa.niffler.web.page.FriendsPage;
 import guru.qa.niffler.web.page.LoginPage;
 import guru.qa.niffler.web.page.RegisterPage;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,6 +21,12 @@ public class BaseWebTest {
     protected RegisterPage openRegisterPage() {
         return openLoginPage()
                 .clickCreateNewUserBtn();
+    }
+
+    protected FriendsPage openFriendsPage(StaticUser user) {
+        return openLoginPage()
+                .doLoginSuccess(user.username(), user.password())
+                .getHeader().goToFriendsPage();
     }
 
 }

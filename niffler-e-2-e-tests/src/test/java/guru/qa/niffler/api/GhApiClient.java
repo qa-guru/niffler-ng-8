@@ -6,24 +6,25 @@ import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
 import java.io.IOException;
+import java.util.Objects;
 
 public class GhApiClient {
-    private static final Config CFG = Config.getInstance();
+    private static final String GUTHUB_TOKEN_ENV = "GITHUB_TOKEN";
     private final Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl(CFG.frontUrl())
+            .baseUrl(Config.getInstance().frontUrl())
             .addConverterFactory(JacksonConverterFactory.create())
             .build();
     private final GhApi ghApi = retrofit.create(GhApi.class);
 
-    public String getIssue(String issueNumber) {
+    public String getIssueState(String issueNumber) {
         JsonNode response;
         try {
-            response = ghApi.getIssue("", issueNumber)
+            response = ghApi.getIssue("Bearer " + System.getenv(GUTHUB_TOKEN_ENV), issueNumber)
                     .execute()
                     .body();
         } catch (IOException exception) {
             throw new AssertionError("Не удалось выполнить запрос на эндпоинт");
         }
-        return response.get("id").asText();
+        return Objects.requireNonNull(response).get("state").asText();
     }
 }

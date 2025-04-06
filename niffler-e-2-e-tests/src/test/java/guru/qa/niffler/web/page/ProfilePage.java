@@ -1,22 +1,16 @@
 package guru.qa.niffler.web.page;
 
+import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
-import guru.qa.niffler.web.element.Category;
-import org.junit.jupiter.api.Assertions;
 
-import java.util.List;
-import java.util.Optional;
-
+import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
 
 public class ProfilePage extends BasePage {
 
     private final SelenideElement showArchivedToggle = $(".MuiSwitch-input");
-
-    private List<Category> getCategories() {
-        return initElements($$(".MuiGrid-grid-xs-12 > .MuiBox-root"), Category.class);
-    }
+    private final ElementsCollection categoryList = $$(".MuiGrid-grid-xs-12 > .MuiBox-root");
 
     public ProfilePage clickShowArchivedToggle() {
         showArchivedToggle.click();
@@ -24,14 +18,15 @@ public class ProfilePage extends BasePage {
     }
 
     public ProfilePage checkCategoryExist(String categoryName, boolean isArchived) {
-        Optional<Category> findCategory = getCategories().stream()
-                .filter(c -> c.getName().equals(categoryName))
-                .findFirst();
-        if (findCategory.isEmpty()) {
-            Assertions.fail("Отсутствует категория '%s'".formatted(categoryName));
+        SelenideElement categoryRow = categoryList
+                .find(text(categoryName));
+        if (isArchived) {
+            categoryRow.$(".MuiChip-colorDefault").shouldBe(exist);
+            categoryRow.$("button[aria-label='Unarchive category']").shouldBe(visible);
         } else {
-            Assertions.assertEquals(isArchived, findCategory.get().isArchival(),
-                    "Категория '%s' ожидается isArchival=%s".formatted(categoryName, isArchived));
+            categoryRow.$(".MuiChip-colorPrimary").shouldBe(exist);
+            categoryRow.$("button[aria-label='Archive category']").shouldBe(visible);
+            categoryRow.$("button[aria-label='Edit category']").shouldBe(visible);
         }
         return this;
     }

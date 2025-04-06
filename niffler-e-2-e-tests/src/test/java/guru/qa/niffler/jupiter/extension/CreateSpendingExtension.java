@@ -1,9 +1,10 @@
-package guru.qa.niffler.jupiter;
+package guru.qa.niffler.jupiter.extension;
 
 import guru.qa.niffler.api.SpendService;
 import guru.qa.niffler.api.SpendServiceClient;
 import guru.qa.niffler.api.model.CategoryJson;
 import guru.qa.niffler.api.model.SpendJson;
+import guru.qa.niffler.jupiter.annotation.Spend;
 import guru.qa.niffler.retrofit.TestResponse;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Assertions;
@@ -21,7 +22,7 @@ public class CreateSpendingExtension implements BeforeEachCallback {
     @Override
     @SneakyThrows
     public void beforeEach(ExtensionContext context) {
-        AnnotationSupport.findAnnotation(context.getRequiredTestMethod(), GenSpend.class)
+        AnnotationSupport.findAnnotation(context.getRequiredTestMethod(), Spend.class)
                 .ifPresent(anno -> {
                     SpendJson spendJson = new SpendJson(
                             null,

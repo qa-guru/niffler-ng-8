@@ -1,7 +1,8 @@
-package guru.qa.niffler.jupiter;
+package guru.qa.niffler.jupiter.extension;
 
 import com.codeborne.selenide.Selenide;
 import guru.qa.niffler.config.Config;
+import guru.qa.niffler.jupiter.annotation.UseUser;
 import guru.qa.niffler.web.model.User;
 import guru.qa.niffler.web.page.LoginPage;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -10,8 +11,8 @@ import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
 import org.junit.platform.commons.support.AnnotationSupport;
 
-import static guru.qa.niffler.jupiter.UseUser.Mode.DEFAULT;
-import static guru.qa.niffler.jupiter.UseUser.Mode.GEN;
+import static guru.qa.niffler.jupiter.annotation.UseUser.Mode.DEFAULT;
+import static guru.qa.niffler.jupiter.annotation.UseUser.Mode.GEN;
 import static guru.qa.niffler.util.GenerationUtil.genPassword;
 import static guru.qa.niffler.util.GenerationUtil.genUsername;
 

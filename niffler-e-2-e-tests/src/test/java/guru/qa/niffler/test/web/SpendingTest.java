@@ -1,13 +1,13 @@
 package guru.qa.niffler.test.web;
 
-import guru.qa.niffler.jupiter.GenSpend;
+import guru.qa.niffler.jupiter.annotation.Spend;
 import guru.qa.niffler.api.model.CurrencyValues;
 import guru.qa.niffler.api.model.SpendJson;
 import org.junit.jupiter.api.Test;
 
 public class SpendingTest extends BaseWebTest {
 
-    @GenSpend(
+    @Spend(
             username = "user",
             category = "Обучение",
             description = "Обучение Niffler 2.0",

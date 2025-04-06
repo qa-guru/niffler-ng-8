@@ -1,6 +1,7 @@
-package guru.qa.niffler.jupiter;
+package guru.qa.niffler.jupiter.extension;
 
 import guru.qa.niffler.api.model.SpendJson;
+import guru.qa.niffler.jupiter.annotation.Spend;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
@@ -12,7 +13,7 @@ public class SpendingResolverExtension implements ParameterResolver {
 
     @Override
     public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
-        return AnnotationSupport.findAnnotation(extensionContext.getRequiredTestMethod(), GenSpend.class).isPresent()
+        return AnnotationSupport.findAnnotation(extensionContext.getRequiredTestMethod(), Spend.class).isPresent()
                 && parameterContext.getParameter().getType().isAssignableFrom(SpendJson.class);
     }
 

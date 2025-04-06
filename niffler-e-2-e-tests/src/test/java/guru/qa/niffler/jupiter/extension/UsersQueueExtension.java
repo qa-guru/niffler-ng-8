@@ -15,7 +15,7 @@ import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class UsersQueueExtension implements BeforeTestExecutionCallback, AfterTestExecutionCallback, ParameterResolver {
+public class UsersQueueExtension implements BeforeEachCallback, AfterEachCallback, ParameterResolver {
 
     private static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(UsersQueueExtension.class);
     private static final Map<Type, Queue<StaticUser>> USER_POOLS = new ConcurrentHashMap<>();
@@ -58,7 +58,7 @@ public class UsersQueueExtension implements BeforeTestExecutionCallback, AfterTe
 
     @SneakyThrows
     @Override
-    public void beforeTestExecution(ExtensionContext context) {
+    public void beforeEach(ExtensionContext context) {
         LOCK.lock();
         Map<Parameter, StaticUser> allocatedUsers = new HashMap<>();
         try {
@@ -103,7 +103,7 @@ public class UsersQueueExtension implements BeforeTestExecutionCallback, AfterTe
     }
 
     @Override
-    public void afterTestExecution(ExtensionContext context) {
+    public void afterEach(ExtensionContext context) {
         Map<Parameter, StaticUser> allocatedUsers = context.getStore(NAMESPACE).get(context.getUniqueId(), Map.class);
         retrieveToUserPools(allocatedUsers);
     }

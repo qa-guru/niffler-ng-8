@@ -1,4 +1,4 @@
-package guru.qa.niffler.model;
+package guru.qa.niffler.api.model;
 
 import java.util.UUID;
 

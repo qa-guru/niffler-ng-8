@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 
 public class UsersQueueExtension implements BeforeTestExecutionCallback, AfterTestExecutionCallback, ParameterResolver {
 
-    private static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(UsersQueueExtension2.class);
+    private static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(UsersQueueExtension.class);
     private static final Map<Type, Queue<StaticUser>> USER_POOLS = new ConcurrentHashMap<>();
     private static final ReentrantLock LOCK = new ReentrantLock();
 

@@ -210,6 +210,10 @@ User-MacBook-Pro niffler-ng-client % npm run build:dev
 User-MacBook-Pro niffler % cd niffler-auth
 User-MacBook-Pro niffler-auth % gradle bootRun --args='--spring.profiles.active=local'
 ```
+- Запустить все сервисы
+```posh
+User-MacBook-Pro niffler % ./gradlew bootRun --parallel --args='--spring.profiles.active=local'
+```
 
 Или просто перейдя к main-классу приложения NifflerAuthApplication выбрать run в IDEA (предварительно удостовериться что
 выполнен предыдущий пункт)
@@ -273,6 +277,16 @@ User-MacBook-Pro niffler % vi /etc/hosts
 127.0.0.1       frontend.niffler.dc
 127.0.0.1       auth.niffler.dc
 127.0.0.1       gateway.niffler.dc
+```
+ - Для windows добавить в файл - C:\Windows\System32\drivers\etc\hosts
+```posh
+##
+...
+...
+127.0.0.1 frontend.niffler.dc
+127.0.0.1 auth.niffler.dc
+127.0.0.1 gateway.niffler.dc
+# End of section
 ```
 
 #### 5. Перейти в корневой каталог проекта

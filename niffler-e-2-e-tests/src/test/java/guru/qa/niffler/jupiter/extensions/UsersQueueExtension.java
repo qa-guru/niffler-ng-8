@@ -27,10 +27,10 @@ public class UsersQueueExtension implements BeforeEachCallback, AfterEachCallbac
     private static final Queue<StaticUser> WITH_OUTCOME_REQUEST_USERS = new ConcurrentLinkedQueue<>();
 
     static {
-        EMPTY_USERS.add(new StaticUser("ilesnikov", "12345", null, null, null));
+        EMPTY_USERS.add(new StaticUser("userEmpty", "1234567", null, null, null));
         WITH_FRIEND_USERS.add(new StaticUser("lesnikov", "12345", "ilesnikov", null, null));
-        WITH_INCOME_REQUEST_USERS.add(new StaticUser("ilya", "12345", null, "", null));
-        WITH_OUTCOME_REQUEST_USERS.add(new StaticUser("ilyalesnikov", "123456", null, null, ""));
+        WITH_INCOME_REQUEST_USERS.add(new StaticUser("ilya", "12345", null, "ilyalesnikov", null));
+        WITH_OUTCOME_REQUEST_USERS.add(new StaticUser("ilyalesnikov", "123456", null, null, "ilya"));
     }
 
     @Override
@@ -85,6 +85,6 @@ public class UsersQueueExtension implements BeforeEachCallback, AfterEachCallbac
     @Override
     public StaticUser resolveParameter(ParameterContext parameterContext, ExtensionContext context) throws ParameterResolutionException {
         return (StaticUser) context.getStore(NAMESPACE).get(context.getUniqueId(), Map.class)
-                .get(AnnotationSupport.findAnnotation(parameterContext.getParameter(), UserType.class));
+                .get(AnnotationSupport.findAnnotation(parameterContext.getParameter(), UserType.class).get());
     }
 }

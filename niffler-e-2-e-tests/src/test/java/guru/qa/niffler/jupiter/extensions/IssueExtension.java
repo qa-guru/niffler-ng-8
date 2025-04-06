@@ -26,7 +26,7 @@ public class IssueExtension implements ExecutionCondition {
                             ? ConditionEvaluationResult.disabled("Disable by issue: " + byIssue.value())
                             : ConditionEvaluationResult.enabled("Issue closed")
                 ).orElseGet(
-                () -> ConditionEvaluationResult.enabled("Annotation @DisabledByIssue not found")
+                    () -> ConditionEvaluationResult.enabled("Annotation @DisabledByIssue not found")
             );
     }
 }

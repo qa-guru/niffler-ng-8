@@ -2,7 +2,7 @@ package guru.qa.niffler.test.web;
 
 import com.codeborne.selenide.Selenide;
 import guru.qa.niffler.config.Config;
-import guru.qa.niffler.jupiter.annotations.Spend;
+import guru.qa.niffler.jupiter.annotations.Spending;
 import guru.qa.niffler.jupiter.extensions.BrowserExtension;
 import guru.qa.niffler.model.CurrencyValues;
 import guru.qa.niffler.model.SpendJson;
@@ -16,7 +16,7 @@ public class SpendingTest {
 
   private static final Config CFG = Config.getInstance();
 
-  @Spend(
+  @Spending(
       username = "duck",
       category = "Обучение",
       description = "Обучение Niffler 2.0",

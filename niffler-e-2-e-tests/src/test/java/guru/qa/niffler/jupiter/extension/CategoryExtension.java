@@ -1,41 +1,39 @@
 package guru.qa.niffler.jupiter.extension;
 
-import com.github.javafaker.Faker;
 import guru.qa.niffler.api.SpendService;
 import guru.qa.niffler.api.SpendServiceClient;
 import guru.qa.niffler.api.model.CategoryJson;
 import guru.qa.niffler.jupiter.annotation.Category;
-import guru.qa.niffler.web.model.User;
+import guru.qa.niffler.jupiter.annotation.User;
 import guru.qa.niffler.retrofit.TestResponse;
+import guru.qa.niffler.web.model.WebUser;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.extension.*;
 import org.junit.platform.commons.support.AnnotationSupport;
 
+import java.util.Optional;
 import java.util.function.Supplier;
+
+import static guru.qa.niffler.util.RandomDataUtils.genCategoryName;
 
 public class CategoryExtension implements ParameterResolver, AfterEachCallback {
 
     public static final SpendServiceClient SPEND_CLIENT = SpendService.client();
-    private static final Faker FAKER = Faker.instance();
     public static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(CategoryExtension.class);
 
     @Override
     public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
-        return AnnotationSupport.isAnnotated(extensionContext.getRequiredTestMethod(), Category.class)
-                && parameterContext.getParameter().getType() == CategoryJson.class;
+        return getCategory(extensionContext).isPresent() && parameterContext.getParameter().getType() == CategoryJson.class;
     }
 
     @Override
-    public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
-        Category categoryAnno = AnnotationSupport.findAnnotation(extensionContext.getRequiredTestMethod(), Category.class).get();
-
-        User user = extensionContext.getStore(UseUserResolver.NAMESPACE).get(extensionContext.getUniqueId(), User.class);
-        User categoryUser = UseUserResolver.resolve(categoryAnno.user());
-        user = chooseUser(categoryUser, user);
+    public CategoryJson resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
+        WebUser user = extensionContext.getStore(UserResolver.NAMESPACE).get(extensionContext.getUniqueId(), WebUser.class);
+        Category categoryAnno = getCategory(extensionContext).get();
 
         CategoryJson categoryJson = new CategoryJson(
                 null,
-                FAKER.app().name(),
+                genCategoryName(),
                 user.username(),
                 false
         );
@@ -46,25 +44,22 @@ public class CategoryExtension implements ParameterResolver, AfterEachCallback {
         return createdCategory;
     }
 
-    private User chooseUser(User categoryUser, User user) {
-        if (user == null && categoryUser == null) {
-            throw new IllegalStateException("Не указан пользователь для которого будет создаваться категория: " +
-                    "\n@UseUser \nили \n@Category(user=@UseUser)");
-        }
-        if (categoryUser != null) {
-            user = categoryUser;
-        }
-        return user;
-    }
-
     @Override
     public void afterEach(ExtensionContext context) {
         CategoryJson createdCategory = context.getStore(NAMESPACE).get(context.getUniqueId(), CategoryJson.class);
-        archiveCategoryIfNeeded(createdCategory, !createdCategory.archived());
+        if (createdCategory != null) {
+            archiveCategoryIfNeeded(createdCategory, !createdCategory.archived());
+        }
     }
 
-    private CategoryJson archiveCategoryIfNeeded(CategoryJson createdCategory, boolean isArchived) {
-        if (isArchived) {
+    private Optional<Category> getCategory(ExtensionContext extensionContext) {
+        return AnnotationSupport.findAnnotation(extensionContext.getRequiredTestMethod(), User.class)
+                .filter(user -> user.categories().length > 0)
+                .map(user -> user.categories()[0]);
+    }
+
+    private CategoryJson archiveCategoryIfNeeded(CategoryJson createdCategory, boolean needToArchive) {
+        if (needToArchive) {
             CategoryJson archivedCategory = new CategoryJson(
                     createdCategory.id(),
                     createdCategory.name(),

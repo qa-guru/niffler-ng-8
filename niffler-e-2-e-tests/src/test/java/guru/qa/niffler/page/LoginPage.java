@@ -25,7 +25,7 @@ public class LoginPage {
     return new RegisterPage();
   }
 
-  public void shouldError() {
+  public void shouldErrorVisible() {
     error.shouldBe(visible);
   }
 }

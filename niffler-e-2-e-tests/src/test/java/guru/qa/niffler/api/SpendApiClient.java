@@ -34,7 +34,7 @@ public class SpendApiClient {
     } catch (IOException exception) {
       throw new AssertionError("Не удалось выполнить запрос на эндпоинт internal/spends/add");
     }
-    assertEquals(response.code(), 200);
+    assertEquals(response.code(), 201);
     return response.body();
   }
 
@@ -95,7 +95,7 @@ public class SpendApiClient {
     } catch (IOException exception) {
       throw new AssertionError("Не удалось выполнить запрос на эндпоинт internal/categories/add");
     }
-    assertEquals(response.code(), 200);
+    assertEquals(response.code(), 201);
     return response.body();
   }
 

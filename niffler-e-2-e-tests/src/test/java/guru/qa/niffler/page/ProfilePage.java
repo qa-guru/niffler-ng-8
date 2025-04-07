@@ -5,6 +5,7 @@ import com.codeborne.selenide.SelenideElement;
 
 import java.util.Objects;
 
+import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
@@ -12,7 +13,6 @@ import static com.codeborne.selenide.Selenide.$$;
 public class ProfilePage {
     private final SelenideElement archivedCheckbox = $("[class*='PrivateSwitchBase-input']");
     private final ElementsCollection categories = $$("[class*='MuiBox-root css-1lekzkb']");
-    private final ElementsCollection archivedCategoriesButton = $$("[class*='MuiChip-labelMedium']");
     private final ElementsCollection button = $$("button");
 
     public ProfilePage archivedCheckboxSubmit() {
@@ -22,21 +22,13 @@ public class ProfilePage {
     }
 
     public ProfilePage shouldArchivedCategoryDisplayed(String categoryName) {
-        categories.stream().filter(element -> element.text().equals(categoryName))
-                .findFirst()
-                .orElseThrow()
-                .shouldBe(visible)
-                .$("[data-testid='UnarchiveOutlinedIcon']")
+        categories.find(text(categoryName))
                 .shouldBe(visible);
-
         return this;
     }
 
     public ProfilePage archivedCategorySubmit(String categoryName) {
-        Objects.requireNonNull(categories.stream().filter(element -> element.text().equals(categoryName))
-                        .findFirst()
-                        .orElse(null))
-                .$("[aria-label='Archive category']")
+        categories.find(text(categoryName))
                 .shouldBe(visible)
                 .click();
 

@@ -72,7 +72,7 @@ public class UsersQueueExtension implements BeforeEachCallback, AfterEachCallbac
 
             StopWatch sw = StopWatch.createStarted();
             boolean canAllocateUsers = canAllocateUsers(requiredUserTypes);
-            while (!canAllocateUsers && sw.getTime(TimeUnit.SECONDS) < 2) {
+            while (!canAllocateUsers && sw.getTime(TimeUnit.SECONDS) < 10) {
                 Thread.sleep(50);
                 canAllocateUsers = canAllocateUsers(requiredUserTypes);
             }

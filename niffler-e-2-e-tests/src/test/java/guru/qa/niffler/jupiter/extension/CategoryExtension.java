@@ -1,6 +1,8 @@
 package guru.qa.niffler.jupiter.extension;
 
 import guru.qa.niffler.api.SpendApiClient;
+import guru.qa.niffler.data.dao.impl.CategoryDaoJdbc;
+import guru.qa.niffler.data.entity.spend.CategoryEntity;
 import guru.qa.niffler.jupiter.annotation.User;
 import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.utils.RandomDataUtils;
@@ -25,10 +27,11 @@ public class CategoryExtension implements BeforeEachCallback, ParameterResolver,
                                     false
                             );
 
-                    CategoryJson created = spendApiClient.addCategory(categoryJson);
-                    if (anno.categories()[0].archived()) {
-                        created = archiveCategory(created);
-                    }
+                    CategoryJson created = CategoryJson.fromEntity(
+                            new CategoryDaoJdbc().create(
+                                    CategoryEntity.fromJson(categoryJson)
+                            )
+                    );
                     context.getStore(NAMESPACE).put(context.getUniqueId(), created);
                 });
     }
@@ -41,9 +44,9 @@ public class CategoryExtension implements BeforeEachCallback, ParameterResolver,
                     CategoryJson categoryJson = context.getStore(NAMESPACE)
                             .get(context.getUniqueId()
                                     , CategoryJson.class);
-                    if (isUnarchived(categoryJson)) {
-                        archiveCategory(categoryJson);
-                    }
+                    new CategoryDaoJdbc().deleteCategory(
+                            CategoryEntity.fromJson(categoryJson)
+                    );
                 });
     }
 

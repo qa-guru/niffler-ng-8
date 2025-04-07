@@ -87,7 +87,7 @@ public class UsersQueueExtension implements BeforeEachCallback, AfterEachCallbac
             }
 
             if (allocatedUsers.size() != neededTypeByParameter.size()) {
-                throw new IllegalStateException("Can't obtain user after 30s.");
+                throw new IllegalStateException("Can't obtain user after 10s.");
             }
 
             Allure.getLifecycle().updateTestCase(testCase ->

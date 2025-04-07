@@ -3,7 +3,7 @@ package guru.qa.niffler.test.web;
 import com.codeborne.selenide.Selenide;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.jupiter.BrowserExtension;
-import guru.qa.niffler.jupiter.Spend;
+import guru.qa.niffler.jupiter.spending.Spend;
 import guru.qa.niffler.model.CurrencyValues;
 import guru.qa.niffler.model.SpendJson;
 import guru.qa.niffler.page.LoginPage;

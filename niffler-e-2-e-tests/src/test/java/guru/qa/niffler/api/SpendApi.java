@@ -10,29 +10,36 @@ import java.util.List;
 
 public interface SpendApi {
 
-  @POST("internal/spends/add")
-  Call<SpendJson> addSpend(@Body SpendJson spend);
+    @POST("internal/spends/add")
+    Call<SpendJson> addSpend(@Body SpendJson spend);
 
-  @PATCH("internal/spends/edit")
-  Call<SpendJson> editSpend(@Body SpendJson spend);
+    @PATCH("internal/spends/edit")
+    Call<SpendJson> editSpend(@Body SpendJson spend);
 
-  @GET("internal/spends/{id}")
-  Call<SpendJson> getSpendById(@Path("id") String id);
+    @GET("internal/spends/{id}")
+    Call<SpendJson> getSpendById(
+            @Path("id") String id,
+            @Query("username") String username);
 
-  @GET("internal/spends/all")
-  Call<SpendJson> getAllSpends(@Query("filterPeriod") String filterPeriod,
-                               @Query("filterCurrency") CurrencyValues filterCurrency);
 
-  @DELETE("internal/spends/remove")
-  Call<Void> removeSpend(@Query("ids") List<String> ids);
+    @GET("internal/spends/all")
+    Call<SpendJson> getAllSpends(
+            @Query("username") String username,
+            @Query("filterPeriod") String filterPeriod,
+            @Query("filterCurrency") CurrencyValues filterCurrency);
 
-  @POST("internal/categories/add")
-  Call<CategoryJson> addCategory(@Body CategoryJson category);
+    @DELETE("internal/spends/remove")
+    Call<Void> removeSpend(
+            @Query("username") String username,
+            @Query("ids") List<String> ids);
 
-  @PATCH("internal/categories/update")
-  Call<CategoryJson> updateCategory(@Body CategoryJson category);
+    @POST("internal/categories/add")
+    Call<CategoryJson> addCategory(@Body CategoryJson category);
 
-  @GET("internal/categories/all")
-  Call<List<CategoryJson>> getCategories(@Query("username") String username,
-                                         @Query("excludeArchived") Boolean excludeArchived);
+    @PATCH("internal/categories/update")
+    Call<CategoryJson> updateCategory(@Body CategoryJson category);
+
+    @GET("internal/categories/all")
+    Call<List<CategoryJson>> getCategories(@Query("username") String username,
+                                           @Query("excludeArchived") Boolean excludeArchived);
 }

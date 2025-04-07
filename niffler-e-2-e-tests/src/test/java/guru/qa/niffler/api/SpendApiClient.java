@@ -52,10 +52,10 @@ public class SpendApiClient {
         return response.body();
     }
 
-    public SpendJson getSpendById(String id) {
+    public SpendJson getSpendById(String id, String username) {
         final Response<SpendJson> response;
         try {
-            response = spendApi.getSpendById(id)
+            response = spendApi.getSpendById(id, username)
                     .execute();
         } catch (IOException e) {
             throw new AssertionError(e);
@@ -64,10 +64,10 @@ public class SpendApiClient {
         return response.body();
     }
 
-    public SpendJson getAllSpends(String filterPeriod, CurrencyValues filterCurrency) {
+    public SpendJson getAllSpends(String username, String filterPeriod, CurrencyValues filterCurrency) {
         final Response<SpendJson> response;
         try {
-            response = spendApi.getAllSpends(filterPeriod, filterCurrency)
+            response = spendApi.getAllSpends(username, filterPeriod, filterCurrency)
                     .execute();
         } catch (IOException e) {
             throw new AssertionError(e);
@@ -76,10 +76,10 @@ public class SpendApiClient {
         return response.body();
     }
 
-    public void removeSpend(List<String> ids) {
+    public void removeSpend(String usernames, List<String> ids) {
         final Response<Void> response;
         try {
-            response = spendApi.removeSpend(ids)
+            response = spendApi.removeSpend(usernames,ids)
                     .execute();
         } catch (IOException e) {
             throw new AssertionError(e);

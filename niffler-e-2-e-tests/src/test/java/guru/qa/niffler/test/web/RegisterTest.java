@@ -1,17 +1,16 @@
 package guru.qa.niffler.test.web;
 
-import ch.qos.logback.core.testUtil.RandomUtil;
 import com.codeborne.selenide.Selenide;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.page.LoginPage;
 import guru.qa.niffler.page.RegisterPage;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import java.util.Random;
-
-import static utils.FakerGenUtil.*;
+import static utils.FakerGenUtil.genRandomName;
+import static utils.FakerGenUtil.genRandomPassword;
 
 
 public class RegisterTest {
@@ -28,6 +27,12 @@ public class RegisterTest {
         Selenide.open(CFG.frontUrl(), LoginPage.class)
                 .doRegister()
                 .doRegister(newUser, newPassword);
+
+    }
+
+    @AfterAll
+    public static void afterAll() {
+        Selenide.closeWebDriver();
     }
 
     private static final Config CFG = Config.getInstance();

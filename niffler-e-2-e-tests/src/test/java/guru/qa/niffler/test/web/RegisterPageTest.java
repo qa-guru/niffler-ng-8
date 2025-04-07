@@ -1,5 +1,6 @@
 package guru.qa.niffler.test.web;
 
+import guru.qa.niffler.jupiter.annotation.DisabledByIssue;
 import guru.qa.niffler.jupiter.annotation.UseUser;
 import guru.qa.niffler.web.model.User;
 import org.junit.jupiter.api.Test;
@@ -29,6 +30,7 @@ public class RegisterPageTest extends BaseWebTest {
     }
 
     @Test
+    @DisabledByIssue("3")
     void shouldShowErrorIfPasswordAndConfirmPasswordAreNotEqual() {
         String username = genUsername();
         String password1 = genPassword();

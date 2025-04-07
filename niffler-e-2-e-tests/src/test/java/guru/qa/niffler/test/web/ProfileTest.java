@@ -15,7 +15,7 @@ public class ProfileTest extends BaseWebTest {
         openLoginPage()
                 .doLoginSuccess(user.username(), user.password())
                 .getHeader()
-                .goToProfile()
+                .goToProfilePage()
                 .clickShowArchivedToggle()
                 .checkCategoryExist(category.name(), true);
     }
@@ -27,7 +27,7 @@ public class ProfileTest extends BaseWebTest {
         openLoginPage()
                 .doLoginSuccess(user.username(), user.password())
                 .getHeader()
-                .goToProfile()
+                .goToProfilePage()
                 .checkCategoryExist(category.name(), false);
     }
 

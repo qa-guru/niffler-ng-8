@@ -14,27 +14,26 @@ public class CategoryExtension implements BeforeEachCallback, AfterTestExecution
 
     @Override
     public void beforeEach(ExtensionContext context) {
-        AnnotationSupport.findAnnotation(context.getRequiredTestMethod(), Category.class).ifPresent(annotation -> {
-            String username = faker.name().username();
-            CategoryJson category = new CategoryJson(
-                    null,
-                    username,
-                    annotation.username(),
-                    false
-            );
-            category = spendApiClient.addCategory(category);
-
-            if (category.archived()) {
-                category = new CategoryJson(
-                        category.id(),
+        AnnotationSupport.findAnnotation(context.getRequiredTestMethod(), Category.class)
+            .ifPresent(annotation -> {
+                String username = faker.name().username();
+                CategoryJson category = new CategoryJson(
+                        null,
                         username,
                         annotation.username(),
-                        true
+                        false
                 );
-                spendApiClient.updateCategory(category);
-            }
-
-            context.getStore(NAMESPACE).put(context.getUniqueId(), category);
+                category = spendApiClient.addCategory(category);
+                if (annotation.archived()) {
+                    category = new CategoryJson(
+                            category.id(),
+                            username,
+                            annotation.username(),
+                            true
+                    );
+                    spendApiClient.updateCategory(category);
+                }
+                context.getStore(NAMESPACE).put(context.getUniqueId(), category);
         });
     }
 
@@ -56,13 +55,11 @@ public class CategoryExtension implements BeforeEachCallback, AfterTestExecution
 
     @Override
     public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext context) throws ParameterResolutionException {
-
         return context.getRequiredTestMethod().isAnnotationPresent(Category.class);
     }
 
     @Override
     public CategoryJson resolveParameter(ParameterContext parameterContext, ExtensionContext context) throws ParameterResolutionException {
-
         return context.getStore(NAMESPACE).get(context.getUniqueId(), CategoryJson.class);
     }
 }

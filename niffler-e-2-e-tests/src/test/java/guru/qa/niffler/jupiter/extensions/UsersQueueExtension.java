@@ -42,12 +42,7 @@ public class UsersQueueExtension implements BeforeEachCallback, AfterEachCallbac
                     Optional<StaticUser> user = Optional.empty();
                     StopWatch stopWatch = StopWatch.createStarted();
                     while (user.isEmpty() && stopWatch.getTime(TimeUnit.SECONDS) < 30) {
-                        user = switch (userType.type()) {
-                            case EMPTY -> Optional.ofNullable(EMPTY_USERS.poll());
-                            case WITH_FRIEND -> Optional.ofNullable(WITH_FRIEND_USERS.poll());
-                            case WITH_INCOME_REQUEST -> Optional.ofNullable(WITH_INCOME_REQUEST_USERS.poll());
-                            case WITH_OUTCOME_REQUEST -> Optional.ofNullable(WITH_OUTCOME_REQUEST_USERS.poll());
-                        };
+                        user = userQueuePoll(userType.type());
                     }
                     Allure.getLifecycle().updateTestCase(testCase -> {
                         testCase.setStart(new Date().getTime());
@@ -57,7 +52,7 @@ public class UsersQueueExtension implements BeforeEachCallback, AfterEachCallbac
                                     context.getUniqueId(),
                                     key -> new HashMap()
                             )).put(userType, u),
-                            () -> new IllegalStateException("Can`t find user after 30 sec")
+                            () -> { throw new IllegalStateException("Can`t find user after 30 sec"); }
                     );
                 });
     }
@@ -86,5 +81,14 @@ public class UsersQueueExtension implements BeforeEachCallback, AfterEachCallbac
     public StaticUser resolveParameter(ParameterContext parameterContext, ExtensionContext context) throws ParameterResolutionException {
         return (StaticUser) context.getStore(NAMESPACE).get(context.getUniqueId(), Map.class)
                 .get(AnnotationSupport.findAnnotation(parameterContext.getParameter(), UserType.class).get());
+    }
+
+    private Optional<StaticUser> userQueuePoll(UserType.Type userType) {
+        return switch (userType) {
+            case EMPTY -> Optional.ofNullable(EMPTY_USERS.poll());
+            case WITH_FRIEND -> Optional.ofNullable(WITH_FRIEND_USERS.poll());
+            case WITH_INCOME_REQUEST -> Optional.ofNullable(WITH_INCOME_REQUEST_USERS.poll());
+            case WITH_OUTCOME_REQUEST -> Optional.ofNullable(WITH_OUTCOME_REQUEST_USERS.poll());
+        };
     }
 }

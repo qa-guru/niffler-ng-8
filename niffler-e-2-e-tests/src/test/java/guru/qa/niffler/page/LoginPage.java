@@ -17,14 +17,12 @@ public class LoginPage {
         usernameInput.setValue(username);
         passwordInput.setValue(password);
         submitBtn
-                .shouldBe(enabled)
                 .click();
         return new MainPage();
     }
 
     public RegisterPage clickCreateNewAccount() {
         createNewAccountBtn
-                .shouldBe(enabled)
                 .click();
         return new RegisterPage();
     }
@@ -45,7 +43,6 @@ public class LoginPage {
 
     public LoginPage clickSubmitBtn() {
         submitBtn
-                .shouldBe(enabled)
                 .click();
         return this;
     }

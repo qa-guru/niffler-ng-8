@@ -32,14 +32,12 @@ public class RegisterPage {
 
     public RegisterPage setPasswordSubmit(String passwordSubmit) {
         passwordSubmitInput
-                .shouldBe(visible)
                 .setValue(passwordSubmit);
         return this;
     }
 
     public RegisterPage submitRegistration() {
         submitBtn
-                .shouldBe(visible)
                 .click();
         return new RegisterPage();
     }
@@ -52,7 +50,6 @@ public class RegisterPage {
 
     public LoginPage clickSignInBtn() {
         signInBtn
-                .shouldBe(enabled)
                 .click();
         return new LoginPage();
     }

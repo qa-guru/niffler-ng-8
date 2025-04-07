@@ -47,10 +47,8 @@ public class MainPage {
 
     public ProfilePage goToProfilePage(){
         profileBtn
-                .shouldBe(visible)
                 .click();
         profileLink
-                .shouldBe(visible)
                 .click();
         return new ProfilePage();
     }

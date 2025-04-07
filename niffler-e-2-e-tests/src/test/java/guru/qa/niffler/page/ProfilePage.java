@@ -19,7 +19,6 @@ public class ProfilePage {
 
     public ProfilePage clickArchiveToggleSwitch() {
         archivedToggleSwitch
-                .shouldBe(visible)
                 .click();
         return this;
     }

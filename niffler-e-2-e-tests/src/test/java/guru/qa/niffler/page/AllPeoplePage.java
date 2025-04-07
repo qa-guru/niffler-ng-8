@@ -24,7 +24,7 @@ public class AllPeoplePage {
         return this;
     }
 
-    public AllPeoplePage checkTableCount(int count) {
+    public AllPeoplePage checkTableSize(int count) {
         allPeopleRows.shouldBe(CollectionCondition.size(count));
         return this;
     }

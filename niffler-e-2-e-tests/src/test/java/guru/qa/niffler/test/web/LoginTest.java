@@ -58,7 +58,7 @@ public class LoginTest {
         new SidebarPage().clickMenu()
                 .clickAllPeople();
         new AllPeoplePage().findPersonByName(userName)
-                .checkTableCount(1)
+                .checkTableSize(1)
                 .checkTableContainsPerson(userName);
 
     }

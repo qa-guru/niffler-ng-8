@@ -24,7 +24,7 @@ public class CategoryExtension implements BeforeEachCallback, AfterEachCallback 
                                     null,
                                     name,
                                     anno.username(),
-                                    anno.archived()
+                                    false
                             );
 
                     CategoryJson created = spendApiClient.addSpendCategories(categoryJson);
@@ -45,7 +45,6 @@ public class CategoryExtension implements BeforeEachCallback, AfterEachCallback 
     public void afterEach(ExtensionContext context) throws Exception {
         CategoryJson category = context.getStore(CategoryExtension.NAMESPACE).get(context.getUniqueId(),
                 CategoryJson.class);
-        System.out.println(category + " Мяу");
         if (!category.archived()) {
             AnnotationSupport.findAnnotation(context.getRequiredTestMethod(), Category.class)
                     .ifPresent(anno -> {
@@ -56,9 +55,7 @@ public class CategoryExtension implements BeforeEachCallback, AfterEachCallback 
                                         category.username(),
                                         true
                                 );
-                        System.out.println(categoryJson + " Мяу2");
                         spendApiClient.updateCategories(categoryJson);
-                        context.getStore(NAMESPACE).put(context.getUniqueId(), categoryJson);
                     });
         }
     }

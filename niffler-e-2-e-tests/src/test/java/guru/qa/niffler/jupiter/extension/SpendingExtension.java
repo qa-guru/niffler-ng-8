@@ -1,15 +1,11 @@
 package guru.qa.niffler.jupiter.extension;
 
-import guru.qa.niffler.api.SpendApiClient;
-import guru.qa.niffler.data.dao.impl.CategoryDaoJdbc;
-import guru.qa.niffler.data.dao.impl.SpendDaoJdbc;
-import guru.qa.niffler.data.entity.spend.CategoryEntity;
-import guru.qa.niffler.data.entity.spend.SpendEntity;
 import guru.qa.niffler.jupiter.annotation.User;
 import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.model.SpendJson;
 
 
+import guru.qa.niffler.service.SpendDbClient;
 import org.junit.jupiter.api.extension.*;
 
 import org.junit.platform.commons.support.AnnotationSupport;
@@ -20,7 +16,7 @@ public class SpendingExtension implements BeforeEachCallback, ParameterResolver,
 
     public static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(SpendingExtension.class);
 
-    private final SpendApiClient spendApiClient = new SpendApiClient();
+    private final SpendDbClient spendDbClient = new SpendDbClient();
 
     @Override
     public void beforeEach(ExtensionContext context) {
@@ -42,11 +38,8 @@ public class SpendingExtension implements BeforeEachCallback, ParameterResolver,
                             anno.username()
                     );
 
-                    SpendJson created = SpendJson.fromEntity(
-                            new SpendDaoJdbc().create(
-                                    SpendEntity.fromJson(spendJson)
-                            )
-                    );
+                    SpendJson created = spendDbClient.createSpend(spendJson);
+
                     context.getStore(NAMESPACE).put(context.getUniqueId(), created);
                 });
     }
@@ -54,14 +47,13 @@ public class SpendingExtension implements BeforeEachCallback, ParameterResolver,
     @Override
     public void afterEach(ExtensionContext context) {
         AnnotationSupport.findAnnotation(context.getRequiredTestMethod(), User.class)
-                .filter(anno -> anno.categories().length > 0)
                 .ifPresent(anno -> {
                     SpendJson spendJson = context.getStore(NAMESPACE)
-                            .get(context.getUniqueId()
-                                    , SpendJson.class);
-                    new SpendDaoJdbc().deleteSpend(
-                            SpendEntity.fromJson(spendJson)
-                    );
+                            .get(context.getUniqueId(),
+                                    SpendJson.class);
+                    if(spendJson!=null) {
+                        spendDbClient.deleteSpend(spendJson);
+                    }
                 });
     }
 

@@ -3,7 +3,6 @@ package guru.qa.niffler.data.dao.impl;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.Databases;
 import guru.qa.niffler.data.dao.UserDao;
-import guru.qa.niffler.data.entity.spend.CategoryEntity;
 import guru.qa.niffler.data.entity.user.UserEntity;
 import guru.qa.niffler.model.CurrencyValues;
 
@@ -24,8 +23,8 @@ public class UserDaoJdbc implements UserDao {
                     Statement.RETURN_GENERATED_KEYS
             )) {
                 ps.setString(1, user.getUsername());
-                ps.setString(3, user.getCurrency().name());
-                ps.setString(2, user.getFullname());
+                ps.setString(2, user.getCurrency().name());
+                ps.setString(3, user.getFullname());
                 ps.setString(4, user.getFirstname());
                 ps.setString(5, user.getSurname());
                 ps.setBytes(6, user.getPhoto());
@@ -62,12 +61,12 @@ public class UserDaoJdbc implements UserDao {
                         UserEntity ue = new UserEntity();
                         ue.setId(rs.getObject("id", UUID.class));
                         ue.setUsername(rs.getString("username"));
-                        ue.setCurrency(rs.getObject("currency", CurrencyValues.class));
-                        ue.setFullname(rs.getString("fullname"));
+                        ue.setCurrency(CurrencyValues.valueOf(rs.getString("currency")));
+                        ue.setFullname(rs.getString("full_name"));
                         ue.setFirstname(rs.getString("firstname"));
                         ue.setSurname(rs.getString("surname"));
                         ue.setPhoto(rs.getBytes("photo"));
-                        ue.setPhotoSmall(rs.getBytes("photoSmall"));
+                        ue.setPhotoSmall(rs.getBytes("photo_small"));
                         return Optional.of(ue);
                     } else {
                         return Optional.empty();
@@ -92,12 +91,12 @@ public class UserDaoJdbc implements UserDao {
                         UserEntity ue = new UserEntity();
                         ue.setId(rs.getObject("id", UUID.class));
                         ue.setUsername(rs.getString("username"));
-                        ue.setCurrency(rs.getObject("currency", CurrencyValues.class));
-                        ue.setFullname(rs.getString("fullname"));
+                        ue.setCurrency(CurrencyValues.valueOf(rs.getString("currency")));
+                        ue.setFullname(rs.getString("full_name"));
                         ue.setFirstname(rs.getString("firstname"));
                         ue.setSurname(rs.getString("surname"));
                         ue.setPhoto(rs.getBytes("photo"));
-                        ue.setPhotoSmall(rs.getBytes("photoSmall"));
+                        ue.setPhotoSmall(rs.getBytes("photo_small"));
                         return Optional.of(ue);
                     } else {
                         return Optional.empty();

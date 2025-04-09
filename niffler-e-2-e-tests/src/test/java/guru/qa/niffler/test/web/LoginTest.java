@@ -18,8 +18,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 @ExtendWith(BrowserExtension.class)
 public class LoginTest {
     private static final Config CFG = Config.getInstance();
-    String actualLogin = "test";
-    String actualPass = "12345";
+    String actualLogin = CFG.mainUserLogin();
+    String actualPass = CFG.mainUserPass();
 
 
     @Spend(

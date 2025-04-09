@@ -2,6 +2,7 @@ package guru.qa.niffler.page;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
+import guru.qa.niffler.jupiter.users.UsersQueueExtension;
 
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$x;
@@ -18,6 +19,11 @@ public class LoginPage {
     usernameInput.setValue(username);
     passwordInput.setValue(password);
     submitBtn.click();
+    return new MainPage();
+  }
+
+  public MainPage doLogin(UsersQueueExtension.StaticUser user) {
+   doLogin(user.userName(), user.pass());
     return new MainPage();
   }
 

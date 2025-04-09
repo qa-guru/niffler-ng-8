@@ -4,12 +4,20 @@ import com.codeborne.selenide.Selenide;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.jupiter.BrowserExtension;
 import guru.qa.niffler.jupiter.spending.Spend;
+import guru.qa.niffler.jupiter.users.UsersQueueExtension;
 import guru.qa.niffler.model.CurrencyValues;
 import guru.qa.niffler.model.SpendJson;
 import guru.qa.niffler.page.LoginPage;
 import guru.qa.niffler.page.MainPage;
+import io.qameta.allure.Allure;
+import org.apache.commons.lang3.time.StopWatch;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.platform.commons.support.AnnotationSupport;
+
+import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 @ExtendWith(BrowserExtension.class)
 public class SpendingTest {
@@ -34,4 +42,4 @@ public class SpendingTest {
 
     new MainPage().checkThatTableContains(newDescription);
   }
-}
+  }

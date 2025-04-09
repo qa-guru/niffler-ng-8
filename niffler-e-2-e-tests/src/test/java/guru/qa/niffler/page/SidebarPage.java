@@ -26,4 +26,9 @@ public class SidebarPage {
         allPeople.click();
         return this;
     }
+
+    public SidebarPage clickFriends() {
+        friends.click();
+        return this;
+    }
 }

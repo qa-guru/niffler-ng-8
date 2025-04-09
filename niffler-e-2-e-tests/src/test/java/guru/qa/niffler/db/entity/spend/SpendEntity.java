@@ -1,6 +1,5 @@
 package guru.qa.niffler.db.entity.spend;
 
-import guru.qa.niffler.api.model.CategoryJson;
 import guru.qa.niffler.api.model.CurrencyValues;
 import guru.qa.niffler.api.model.SpendJson;
 import lombok.Data;
@@ -22,35 +21,15 @@ public class SpendEntity implements Serializable {
   private String description;
   private CategoryEntity category;
 
-  public SpendEntity(UUID id,
-                     Date spendDate,
-                     CategoryEntity category,
-                     CurrencyValues currency,
-                     Double amount,
-                     String username,
-                     String description) {
-    this.id = id;
-    this.spendDate = spendDate;
-    this.category = category;
-    this.currency = currency;
-    this.amount = amount;
-    this.username = username;
-    this.description = description;
-  }
-
   public static SpendEntity fromJson(SpendJson json) {
-    final CategoryJson category = json.category();
-    final String username = json.username();
-
-    return new SpendEntity(
-            json.id(),
-            new Date(json.spendDate().getTime()),
-            CategoryEntity.fromJson(category),
-            json.currency(),
-            json.amount(),
-            json.description(),
-            username
-    );
+    return new SpendEntity()
+            .setId(json.id())
+            .setSpendDate(new Date(json.spendDate().getTime()))
+            .setCategory(CategoryEntity.fromJson(json.category()))
+            .setCurrency(json.currency())
+            .setAmount(json.amount())
+            .setUsername(json.username())
+            .setDescription(json.description());
   }
 
 }

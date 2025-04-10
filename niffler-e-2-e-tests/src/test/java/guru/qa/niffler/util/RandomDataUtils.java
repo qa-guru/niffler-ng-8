@@ -19,7 +19,7 @@ public final class RandomDataUtils {
     }
 
     public static String genCategoryName() {
-        return FAKER.app().name();
+        return FAKER.app().name() + Thread.currentThread().threadId();
     }
 
 }

@@ -11,8 +11,8 @@ import java.util.UUID;
 
 public class CategoryDaoJdbc extends AbstractDao<CategoryEntity> implements CategoryDao {
 
-    public CategoryDaoJdbc() {
-        super(CFG.spendJdbcUrl());
+    public CategoryDaoJdbc(String jdbcUrl) {
+        super(jdbcUrl);
     }
 
     @Override

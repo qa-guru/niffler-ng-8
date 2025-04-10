@@ -11,22 +11,20 @@ import java.util.Optional;
 public abstract class AbstractDao<E> {
 
     public static final Config CFG = Config.getInstance();
-    public final String jdbcUrl;
+    private final String jdbcUrl;
 
     public AbstractDao(String jdbcUrl) {
         this.jdbcUrl = jdbcUrl;
     }
 
     protected E executeQuery(String sql, Object... params) {
-        try (Connection cn = Databases.connection(jdbcUrl)) {
-            try (PreparedStatement ps = cn.prepareStatement(sql)) {
-                fillPrepareStatement(params, ps);
-                try (ResultSet rs = ps.executeQuery()) {
-                    if (rs.next()) {
-                        return mapResultSet(rs);
-                    } else {
-                        throw new SQLException("Не найден результаты вызова");
-                    }
+        try (PreparedStatement ps = getConnection().prepareStatement(sql)) {
+            fillPrepareStatement(params, ps);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return mapResultSet(rs);
+                } else {
+                    throw new SQLException("Не найден результаты вызова");
                 }
             }
         } catch (SQLException e) {
@@ -35,19 +33,16 @@ public abstract class AbstractDao<E> {
     }
 
     protected boolean executeUpdateToBoolean(String sql, Object... params) {
-        try (Connection cn = Databases.connection(jdbcUrl)) {
-            try (PreparedStatement ps = cn.prepareStatement(sql)) {
-                fillPrepareStatement(params, ps);
-                return ps.executeUpdate() > 0;
-            }
+        try (PreparedStatement ps = getConnection().prepareStatement(sql)) {
+            fillPrepareStatement(params, ps);
+            return ps.executeUpdate() > 0;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
     protected Optional<E> executeQueryToOptional(String sql, Object... params) {
-        try (Connection connection = Databases.connection(jdbcUrl);
-             PreparedStatement ps = connection.prepareStatement(sql)) {
+        try (PreparedStatement ps = getConnection().prepareStatement(sql)) {
             fillPrepareStatement(params, ps);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
@@ -62,8 +57,7 @@ public abstract class AbstractDao<E> {
     }
 
     protected List<E> executeQueryToList(String sql, Object... params) {
-        try (Connection connection = Databases.connection(jdbcUrl);
-             PreparedStatement ps = connection.prepareStatement(sql)) {
+        try (PreparedStatement ps = getConnection().prepareStatement(sql)) {
             fillPrepareStatement(params, ps);
             try (ResultSet rs = ps.executeQuery()) {
                 List<E> entities = new ArrayList<>();
@@ -109,6 +103,10 @@ public abstract class AbstractDao<E> {
         for (int i = 0; i < params.length; i++) {
             ps.setObject(i + 1, params[i]);
         }
+    }
+
+    public Connection getConnection() {
+        return Databases.connection(jdbcUrl);
     }
 
 }

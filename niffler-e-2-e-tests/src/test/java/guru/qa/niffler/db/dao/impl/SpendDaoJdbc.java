@@ -13,8 +13,8 @@ import java.util.UUID;
 
 public class SpendDaoJdbc extends AbstractDao<SpendEntity> implements SpendDao {
 
-    public SpendDaoJdbc() {
-        super(CFG.spendJdbcUrl());
+    public SpendDaoJdbc(String jdbcUrl) {
+        super(jdbcUrl);
     }
 
     @Override

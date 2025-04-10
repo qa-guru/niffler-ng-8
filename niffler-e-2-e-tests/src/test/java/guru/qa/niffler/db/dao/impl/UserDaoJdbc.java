@@ -26,13 +26,13 @@ public class UserDaoJdbc extends AbstractDao<UserEntity> implements UserDao {
 
     @Override
     public Optional<UserEntity> findUserById(UUID id) {
-        String sql = "SELECT FROM \"user\" WHERE id = ?";
+        String sql = "SELECT * FROM \"user\" WHERE id = ?";
         return executeQueryToOptional(sql, id);
     }
 
     @Override
     public Optional<UserEntity> findUserByUsername(String username) {
-        String sql = "SELECT FROM \"user\" WHERE username = ?";
+        String sql = "SELECT * FROM \"user\" WHERE username = ?";
         return executeQueryToOptional(sql, username);
     }
 

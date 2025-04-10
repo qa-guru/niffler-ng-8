@@ -13,7 +13,7 @@ public class Databases {
     private Databases() {
     }
 
-    public static final Map<String, DataSource> dataSources = new ConcurrentHashMap<>();
+    private static final Map<String, DataSource> dataSources = new ConcurrentHashMap<>();
 
     private static DataSource dataSource(String jdbcUrl) {
         return dataSources.computeIfAbsent(

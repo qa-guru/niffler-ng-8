@@ -12,7 +12,5 @@ public interface Config {
 
     String registerUrl();
 
-  String spendUrl();
-
-  String ghUrl();
+    String ghUrl();
 }

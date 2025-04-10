@@ -73,32 +73,6 @@ public abstract class AbstractDao<E> {
 
     protected abstract E mapResultSet(ResultSet rs) throws SQLException;
 
-    private void inspectResultSet(ResultSet rs) throws SQLException {
-        ResultSetMetaData meta = rs.getMetaData();
-        int colCount = meta.getColumnCount();
-
-        System.out.println("=== ResultSet Structure ===");
-        for (int i = 1; i <= colCount; i++) {
-            System.out.printf("%d: %s (%s, precision: %d, scale: %d)%n",
-                    i,
-                    meta.getColumnName(i),
-                    meta.getColumnTypeName(i),
-                    meta.getPrecision(i),
-                    meta.getScale(i));
-        }
-
-        System.out.println("=== Data ===");
-        while (rs.next()) {
-            for (int i = 1; i <= colCount; i++) {
-                Object value = rs.getObject(i);
-                System.out.printf("%s: %s | ",
-                        meta.getColumnName(i),
-                        value != null ? value : "NULL");
-            }
-            System.out.println();
-        }
-    }
-
     private void fillPrepareStatement(Object[] params, PreparedStatement ps) throws SQLException {
         for (int i = 0; i < params.length; i++) {
             ps.setObject(i + 1, params[i]);

@@ -12,4 +12,5 @@ public interface Config {
 
     String registerUrl();
 
+    String ghUrl();
 }

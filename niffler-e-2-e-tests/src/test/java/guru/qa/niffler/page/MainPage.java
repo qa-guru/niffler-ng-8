@@ -14,6 +14,7 @@ public class MainPage {
     private final ElementsCollection tableRows = $$("#spendings tbody tr");
     private final SelenideElement profileBtn = $("[data-testid='PersonIcon']");
     private final SelenideElement profileLink = $(By.linkText("Profile"));
+    private final ElementsCollection menuItems = $$("ul[role='menu'] li");
 
     public EditSpendingPage editSpending(String spendingDescription) {
         tableRows.find(text(spendingDescription))
@@ -45,11 +46,31 @@ public class MainPage {
                 .shouldHave(text("History of Spendings"));
     }
 
-    public ProfilePage goToProfilePage(){
+    public ProfilePage goToProfilePage() {
         profileBtn
                 .click();
         profileLink
                 .click();
         return new ProfilePage();
     }
+
+    public FriendsPage goToFriendsTab() {
+        profileBtn
+                .click();
+        menuItems
+                .findBy(text("Friends"))
+                .click();
+        return new FriendsPage();
+    }
+
+    public AllPeoplePage goToAllPeopleTab() {
+        profileBtn
+                .click();
+        menuItems
+                .findBy(text("All People"))
+                .click();
+        return new AllPeoplePage();
+    }
+
+
 }

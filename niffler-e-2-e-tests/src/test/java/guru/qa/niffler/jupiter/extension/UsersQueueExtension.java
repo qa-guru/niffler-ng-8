@@ -104,8 +104,7 @@ public class UsersQueueExtension implements
 
     @Override
     public StaticUser resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
-        UserType userType = AnnotationSupport.findAnnotation(parameterContext.getParameter(), UserType.class)
-                .orElseThrow(() -> new ParameterResolutionException("UserType annotation is missing"));
+        Optional<UserType> userType = AnnotationSupport.findAnnotation(parameterContext.getParameter(), UserType.class);
         return (StaticUser) extensionContext.getStore(NAMESPACE).get(extensionContext.getUniqueId(), Map.class).get(userType);
     }
 }

@@ -5,6 +5,7 @@ import com.github.javafaker.Faker;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.page.LoginPage;
 import guru.qa.niffler.page.RegisterPage;
+import guru.qa.niffler.utils.RandomDataUtils;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -19,7 +20,7 @@ public class RegistrationTests {
     void shouldRegisterNewUser() {
         Selenide.open(CFG.frontUrl(), LoginPage.class)
                 .registerSubmit()
-                .setUsername(faker.name().username())
+                .setUsername(RandomDataUtils.randomUsername())
                 .setPassword(passwordValid)
                 .setPasswordSubmit(passwordValid)
                 .submitRegistration()

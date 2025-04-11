@@ -12,6 +12,5 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @ExtendWith(CategoryExtension.class)
 public @interface Category {
-    String username();
     boolean archived();
 }

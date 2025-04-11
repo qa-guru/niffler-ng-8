@@ -3,6 +3,7 @@ package guru.qa.niffler.test.web;
 import com.codeborne.selenide.Selenide;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.jupiter.annotations.Category;
+import guru.qa.niffler.jupiter.annotations.User;
 import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.page.LoginPage;
 import org.junit.jupiter.api.DisplayName;
@@ -12,7 +13,12 @@ public class CategoryTests {
     private static final Config CFG = Config.getInstance();
 
     @Test
-    @Category(username = "ilesnikov", archived = false)
+    @User(
+            username = "ilesnikov",
+            categories = @Category(
+                    archived = false
+            )
+    )
     @DisplayName("Архивация категории")
     void shouldCategoryArchiving(CategoryJson category) {
         Selenide.open(CFG.frontUrl(), LoginPage.class)
@@ -26,7 +32,11 @@ public class CategoryTests {
     }
 
     @Test
-    @Category(username = "ilesnikov", archived = true)
+    @User(
+            username = "ilesnikov",
+            categories = @Category(
+                    archived = true
+            ))
     @DisplayName("Разархивация категории")
     void shouldUnzippingCategory(CategoryJson category) {
         Selenide.open(CFG.frontUrl(), LoginPage.class)

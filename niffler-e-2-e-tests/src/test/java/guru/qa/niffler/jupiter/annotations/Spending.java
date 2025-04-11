@@ -14,8 +14,6 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 @ExtendWith({CreateSpendingExtension.class, SpendingResolverExtension.class})
 public @interface Spending {
-  String username();
-
   String category();
 
   String description();

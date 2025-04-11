@@ -18,18 +18,19 @@ public class CategoryExtension implements BeforeEachCallback, AfterTestExecution
             .ifPresent(annotation -> {
                 String username = RandomDataUtils.randomUsername();
                 CategoryJson category = new CategoryJson(
-                        null,
-                        username,
-                        annotation.username(),
-                        false
+                    null,
+                    username,
+                    annotation.username(),
+                    false
                 );
                 category = spendApiClient.addCategory(category);
-                if (annotation.categories()[0].archived()) {
+                Category categoryAnnotation = annotation.categories()[0];
+                if (categoryAnnotation != null && categoryAnnotation.archived()) {
                     category = new CategoryJson(
-                            category.id(),
-                            username,
-                            annotation.username(),
-                            true
+                        category.id(),
+                        username,
+                        annotation.username(),
+                        true
                     );
                     spendApiClient.updateCategory(category);
                 }

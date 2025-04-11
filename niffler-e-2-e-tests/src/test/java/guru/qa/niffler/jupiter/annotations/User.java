@@ -8,6 +8,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 @ExtendWith({CategoryExtension.class, CreateSpendingExtension.class, SpendingResolverExtension.class})
 public @interface User {
     String username();
-    Category[] categories() default  {};
-    Spending[] spendings() default  {};
+    Category[] categories() default {};
+    Spending[] spendings() default {};
 }

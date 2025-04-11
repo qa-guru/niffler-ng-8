@@ -14,6 +14,10 @@ public class MainPage {
   private final SelenideElement spendingText = $x("//h2[contains(text(), \"History of Spendings\")]");
   private final SelenideElement profileBtn = $x("//*[@data-testid='PersonIcon']");
   private final SelenideElement profileLink = $("a[href='/profile']");
+  private final SelenideElement mainOptionsButton = $("button[aria-label='Menu']");
+  private final SelenideElement friendsButton = $x("//a[@href='/people/friends']");
+  private final SelenideElement friendsText = $x("//h2[contains (text(),'Friends')]");
+  private final SelenideElement allPeopleButton = $x("//a[@href='/people/all']");
 
   public EditSpendingPage editSpending(String spendingDescription) {
     tableRows.find(text(spendingDescription))
@@ -37,5 +41,18 @@ public class MainPage {
     profileBtn.click();
     profileLink.click();
     return new ProfilePage();
+  }
+
+  public FriendsPage goToFriendsList() {
+    mainOptionsButton.click();
+    friendsButton.click();
+    friendsText.shouldHave(text("Friends"));
+    return new FriendsPage();
+  }
+
+  public AllPeoplePage goToAllPeopleList() {
+    mainOptionsButton.click();
+    allPeopleButton.shouldBe(visible).click();
+    return new AllPeoplePage();
   }
 }

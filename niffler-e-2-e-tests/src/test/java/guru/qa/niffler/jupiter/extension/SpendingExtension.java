@@ -4,11 +4,7 @@ import guru.qa.niffler.api.SpendApiClient;
 import guru.qa.niffler.jupiter.annotation.Spend;
 import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.model.SpendJson;
-import org.junit.jupiter.api.extension.BeforeEachCallback;
-import org.junit.jupiter.api.extension.ExtensionContext;
-import org.junit.jupiter.api.extension.ParameterContext;
-import org.junit.jupiter.api.extension.ParameterResolutionException;
-import org.junit.jupiter.api.extension.ParameterResolver;
+import org.junit.jupiter.api.extension.*;
 import org.junit.platform.commons.support.AnnotationSupport;
 
 import java.util.Date;
@@ -21,25 +17,25 @@ public class SpendingExtension implements BeforeEachCallback, ParameterResolver 
   @Override
   public void beforeEach(ExtensionContext context) {
     AnnotationSupport.findAnnotation(context.getRequiredTestMethod(), Spend.class)
-        .ifPresent(anno -> {
-          SpendJson spendJson = new SpendJson(
-              null,
-              new Date(),
-              new CategoryJson(
-                  null,
-                  anno.category(),
-                  anno.username(),
-                  false
-              ),
-              anno.currency(),
-              anno.amount(),
-              anno.description(),
-              anno.username()
-          );
+      .ifPresent(anno -> {
+        SpendJson spendJson = new SpendJson(
+          null,
+          new Date(),
+          new CategoryJson(
+            null,
+            anno.category(),
+            anno.username(),
+            false
+          ),
+          anno.currency(),
+          anno.amount(),
+          anno.description(),
+          anno.username()
+        );
 
-          SpendJson created = spendApiClient.addSpend(spendJson);
-          context.getStore(NAMESPACE).put(context.getUniqueId(), created);
-        });
+        SpendJson created = spendApiClient.addSpend(spendJson);
+        context.getStore(NAMESPACE).put(context.getUniqueId(), created);
+      });
   }
 
   @Override
@@ -49,6 +45,6 @@ public class SpendingExtension implements BeforeEachCallback, ParameterResolver 
 
   @Override
   public SpendJson resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
-    return extensionContext.getStore(SpendingExtension.NAMESPACE).get(extensionContext.getUniqueId(), SpendJson.class);
+    return extensionContext.getStore(NAMESPACE).get(extensionContext.getUniqueId(), SpendJson.class);
   }
 }

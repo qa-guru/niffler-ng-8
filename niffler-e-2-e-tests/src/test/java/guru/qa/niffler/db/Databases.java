@@ -1,10 +1,8 @@
 package guru.qa.niffler.db;
 
-import com.atomikos.icatch.jta.UserTransactionImp;
 import com.atomikos.icatch.jta.UserTransactionManager;
 import com.atomikos.jdbc.AtomikosDataSourceBean;
 import jakarta.transaction.SystemException;
-import jakarta.transaction.UserTransaction;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.sql.DataSource;
@@ -14,7 +12,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Supplier;
 
 public class Databases {
 
@@ -39,7 +36,7 @@ public class Databases {
                 jdbcUrl,
                 url -> {
                     AtomikosDataSourceBean atomikosDs = new AtomikosDataSourceBean();
-                    String uniqId = StringUtils.substringBefore(jdbcUrl, "5432/");
+                    String uniqId = StringUtils.substringAfter(jdbcUrl, "5432/");
                     atomikosDs.setUniqueResourceName(uniqId);
                     atomikosDs.setXaDataSourceClassName("org.postgresql.xa.PGXADataSource");
                     Properties props = new Properties();
@@ -77,71 +74,6 @@ public class Databases {
                     }
                 }
         );
-    }
-
-    public static <T> T xaTransaction(Supplier<T> supplier) {
-        UserTransaction ut = new UserTransactionImp();
-        try {
-            ut.begin();
-            T result = supplier.get();
-            ut.commit();
-            return result;
-        } catch (Exception e) {
-            try {
-                ut.rollback();
-            } catch (SystemException ex) {
-                throw new RuntimeException(ex);
-            }
-            throw new RuntimeException(e);
-
-        }
-    }
-
-    public static void xaTransaction(Runnable runnable) {
-        UserTransactionImp ut = new UserTransactionImp();
-        try {
-            ut.begin();
-            runnable.run();
-            ut.commit();
-        } catch (Exception e) {
-            try {
-                ut.rollback();
-            } catch (SystemException ex) {
-                throw new RuntimeException(ex);
-            }
-            throw new RuntimeException(e);
-
-        }
-    }
-
-    public static <T> T transaction(Supplier<T> supplier, String jdbcUrl) {
-        Connection connection = null;
-        try {
-            connection = Databases.connection(jdbcUrl);
-            connection.setAutoCommit(false);
-            T result = supplier.get();
-            connection.commit();
-            connection.setAutoCommit(true);
-            return result;
-        } catch (SQLException e) {
-            if (connection != null) {
-                try {
-                    connection.rollback();
-                    connection.setAutoCommit(true);
-                } catch (SQLException ex) {
-                    throw new RuntimeException(ex);
-                }
-            }
-            throw new RuntimeException(e);
-
-        }
-    }
-
-    public static void transaction(Runnable runnable, String jdbcUrl) {
-        transaction(() -> {
-            runnable.run();
-            return null;
-        }, jdbcUrl);
     }
 
     public static void closeAllConnection() {

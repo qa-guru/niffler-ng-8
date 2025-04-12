@@ -1,6 +1,13 @@
 package guru.qa.niffler.util;
 
 import com.github.javafaker.Faker;
+import guru.qa.niffler.api.model.Authority;
+import guru.qa.niffler.api.model.AuthorityJson;
+import guru.qa.niffler.api.model.UserJson;
+
+import java.util.List;
+
+import static guru.qa.niffler.api.model.CurrencyValues.RUB;
 
 public final class RandomDataUtils {
 
@@ -20,6 +27,23 @@ public final class RandomDataUtils {
 
     public static String genCategoryName() {
         return FAKER.app().name() + Thread.currentThread().threadId();
+    }
+
+    public static UserJson genDefaultUser() {
+        UserJson userJson = new UserJson();
+        List<AuthorityJson> defaultAuthorities = List.of(
+                new AuthorityJson().setAuthority(Authority.write),
+                new AuthorityJson().setAuthority(Authority.write)
+        );
+        return userJson
+                .setUsername(genUsername())
+                .setPassword(genPassword())
+                .setEnabled(true)
+                .setAccountNonExpired(true)
+                .setAccountNonLocked(true)
+                .setCredentialsNonExpired(true)
+                .setAuthorities(defaultAuthorities)
+                .setCurrency(RUB);
     }
 
 }

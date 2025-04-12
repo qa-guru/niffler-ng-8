@@ -14,9 +14,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.function.Supplier;
 
-import static guru.qa.niffler.db.Databases.transaction;
-
-public class SpendDbClient {
+public class SpendDbClient extends AbstractDbClient {
 
     private static final String SPEND_DB_URL = Config.getInstance().spendJdbcUrl();
     private final SpendDao spendDao = new SpendDaoJdbc(SPEND_DB_URL);

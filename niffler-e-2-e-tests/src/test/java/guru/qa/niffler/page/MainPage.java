@@ -41,4 +41,18 @@ public class MainPage {
       .click();
     return new ProfilePage();
   }
+
+  public FriendsPage openFriends() {
+    openMenuButton.click();
+    menuItems.find(text("Friends"))
+      .click();
+    return new FriendsPage();
+  }
+
+  public AllPeoplePage openAllPeople() {
+    openMenuButton.click();
+    menuItems.find(text("All People"))
+      .click();
+    return new AllPeoplePage();
+  }
 }

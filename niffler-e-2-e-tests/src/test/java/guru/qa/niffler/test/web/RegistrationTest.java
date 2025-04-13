@@ -2,9 +2,12 @@ package guru.qa.niffler.test.web;
 
 import com.codeborne.selenide.Selenide;
 import com.github.javafaker.Faker;
+import guru.qa.niffler.jupiter.extension.BrowserExtension;
 import guru.qa.niffler.page.RegistrationPage;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
+@ExtendWith(BrowserExtension.class)
 public class RegistrationTest {
   private static final Faker faker = new Faker();
 
@@ -15,8 +18,7 @@ public class RegistrationTest {
 
     Selenide.open(RegistrationPage.URL, RegistrationPage.class)
       .doRegister(username, password, password)
-      .doLogin(username, password)
-      .verifyMainComponentsVisible();
+      .doLogin(username, password);
   }
 
   @Test

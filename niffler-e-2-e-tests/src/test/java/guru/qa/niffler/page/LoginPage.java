@@ -21,7 +21,7 @@ public class LoginPage {
     usernameInput.setValue(username);
     passwordInput.setValue(password);
     submitBtn.click();
-    return new MainPage();
+    return new MainPage().verifyMainComponentsVisible();
   }
 
   public RegistrationPage clickCreateNewAccount() {

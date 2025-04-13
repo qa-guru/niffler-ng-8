@@ -9,8 +9,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import static utils.FakerGenUtil.genRandomName;
-import static utils.FakerGenUtil.genRandomPassword;
+import static utils.FakerGenUtil.*;
 
 
 public class RegisterTest {

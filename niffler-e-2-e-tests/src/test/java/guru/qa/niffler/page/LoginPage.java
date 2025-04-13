@@ -1,6 +1,7 @@
 package guru.qa.niffler.page;
 
 import com.codeborne.selenide.SelenideElement;
+import guru.qa.niffler.config.Config;
 
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Selenide.$;
@@ -9,6 +10,8 @@ import static guru.qa.niffler.constants.ErrorMessages.USERNAME_INCORRECT;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class LoginPage {
+
+  public static final String URL = Config.getInstance().frontUrl() + "login";
 
   private final SelenideElement usernameInput = $("input[name='username']");
   private final SelenideElement passwordInput = $("input[name='password']");

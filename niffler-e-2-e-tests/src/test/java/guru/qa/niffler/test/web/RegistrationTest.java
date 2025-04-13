@@ -7,7 +7,7 @@ import guru.qa.niffler.page.RegisterPage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import static guru.qa.niffler.data.UserTestData.randomPassword;
+import static guru.qa.niffler.utils.RandomDataUtils.randomPassword;
 
 @ExtendWith(BrowserExtension.class)
 public class RegistrationTest extends BaseTest {
@@ -27,7 +27,7 @@ public class RegistrationTest extends BaseTest {
     void shouldNotRegisterUserWithExistingUsername() {
         String existingUser = "test";
 
-        Selenide.open(CFG.registerUrl(), RegisterPage.class)
+        Selenide.open(CFG.authUrl(), RegisterPage.class)
                 .doRegister(existingUser, password)
                 .checkValidationErrorUserFieldIsDisplayed(existingUser);
     }
@@ -36,7 +36,7 @@ public class RegistrationTest extends BaseTest {
     void shouldShowErrorIfPasswordAndConfirmPasswordAreNotEqual() {
         String notEqualPassword = randomPassword();
 
-        Selenide.open(CFG.registerUrl(), RegisterPage.class)
+        Selenide.open(CFG.authUrl(), RegisterPage.class)
                 .setUsername(username)
                 .setPassword(password)
                 .setPasswordSubmit(notEqualPassword)

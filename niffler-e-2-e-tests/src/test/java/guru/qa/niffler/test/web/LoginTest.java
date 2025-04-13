@@ -6,14 +6,14 @@ import guru.qa.niffler.page.RegisterPage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import static guru.qa.niffler.data.UserTestData.randomPassword;
+import static guru.qa.niffler.utils.RandomDataUtils.randomPassword;
 
 @ExtendWith(BrowserExtension.class)
 public class LoginTest extends BaseTest {
 
     @Test
     void mainPageShouldBeDisplayedAfterSuccessLogin() {
-        Selenide.open(CFG.registerUrl(), RegisterPage.class)
+        Selenide.open(CFG.authUrl(), RegisterPage.class)
                 .doRegister(username, password)
                 .clickSignInBtn()
                 .doLogin(username, password)
@@ -23,7 +23,7 @@ public class LoginTest extends BaseTest {
     @Test
     void userShouldStayOnLoginPageAfterLoginWithBadCredentials() {
         String wrongPassword = randomPassword();
-        Selenide.open(CFG.registerUrl(), RegisterPage.class)
+        Selenide.open(CFG.authUrl(), RegisterPage.class)
                 .doRegister(username, password)
                 .clickSignInBtn()
                 .setUsername(username)

@@ -90,9 +90,10 @@ public class UsersQueueExtension implements
     @Override
     public void afterTestExecution(ExtensionContext context) {
         Map<UserType, StaticUser> map = context.getStore(NAMESPACE).get(context.getUniqueId(), Map.class);
-
-        for (Map.Entry<UserType, StaticUser> e : map.entrySet()) {
-            getQueue(e.getKey()).add(e.getValue());
+        if (map != null) {
+            for (Map.Entry<UserType, StaticUser> e : map.entrySet()) {
+                getQueue(e.getKey()).add(e.getValue());
+            }
         }
     }
 
@@ -104,7 +105,7 @@ public class UsersQueueExtension implements
 
     @Override
     public StaticUser resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
-        Optional<UserType> userType = AnnotationSupport.findAnnotation(parameterContext.getParameter(), UserType.class);
+        UserType userType = parameterContext.getParameter().getAnnotation(UserType.class);
         return (StaticUser) extensionContext.getStore(NAMESPACE).get(extensionContext.getUniqueId(), Map.class).get(userType);
     }
 }

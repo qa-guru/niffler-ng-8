@@ -8,14 +8,24 @@ enum LocalConfig implements Config {
     return "http://127.0.0.1:3000/";
   }
 
-    @Override
+  @Override
+  public String authUrl() {
+    return "http://127.0.0.1:9000/register";
+  }
+
+  @Override
+  public String gatewayUrl() {
+    return "http://127.0.0.1:8090/";
+  }
+
+  @Override
+  public String userdataUrl() {
+    return "http://127.0.0.1:8089/";
+  }
+
+  @Override
     public String spendUrl() {
         return "http://127.0.0.1:8093/";
-    }
-
-    @Override
-    public String registerUrl() {
-        return "http://127.0.0.1:9000/register";
     }
 
   @Override

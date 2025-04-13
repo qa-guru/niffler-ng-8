@@ -67,21 +67,21 @@ public class UsersQueueExtension implements BeforeEachCallback, AfterEachCallbac
     }
 
     @Override
-    public void afterEach(ExtensionContext context) throws Exception {
+    public void afterEach(ExtensionContext context) {
         Map<UserType, StaticUser> userMap = context.getStore(NAMESPACE).get(
                 context.getUniqueId(),
                 Map.class
         );
         if (userMap != null) {
             for (Map.Entry<UserType, StaticUser> e : userMap.entrySet()) {
-               setUserType(e.getKey());
+                Queue<StaticUser> queue = getQueueByType(e.getKey().value());
+                queue.offer(e.getValue());
             }
         }
     }
 
     @Override
     public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
-        System.err.println(extensionContext.getUniqueId());
         return parameterContext.getParameter().getType().isAssignableFrom(StaticUser.class)
                 && AnnotationSupport.isAnnotated(parameterContext.getParameter(), UserType.class);
     }
@@ -98,6 +98,15 @@ public class UsersQueueExtension implements BeforeEachCallback, AfterEachCallbac
             case WITH_FRIEND -> Optional.ofNullable(WITH_FRIEND_USERS.poll());
             case WITH_INCOME_REQUEST -> Optional.ofNullable(WITH_INCOME_REQUEST_USERS.poll());
             case WITH_OUTCOME_REQUEST -> Optional.ofNullable(WITH_OUTCOME_REQUEST_USERS.poll());
+        };
+    }
+
+    private Queue<StaticUser> getQueueByType(UserType.Type type) {
+        return switch (type) {
+            case EMPTY -> EMPTY_USERS;
+            case WITH_FRIEND -> WITH_FRIEND_USERS;
+            case WITH_INCOME_REQUEST -> WITH_INCOME_REQUEST_USERS;
+            case WITH_OUTCOME_REQUEST -> WITH_OUTCOME_REQUEST_USERS;
         };
     }
 }

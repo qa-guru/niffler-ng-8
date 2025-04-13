@@ -2,19 +2,14 @@ package guru.qa.niffler.test.web;
 
 import com.codeborne.selenide.Selenide;
 import guru.qa.niffler.jupiter.annotation.UserType;
-import guru.qa.niffler.jupiter.extention.BrowserExtension;
-import guru.qa.niffler.jupiter.extention.UsersQueueExtension;
+import guru.qa.niffler.jupiter.annotation.meta.WebTest;
 import guru.qa.niffler.page.LoginPage;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 
 import static guru.qa.niffler.jupiter.annotation.UserType.Type.*;
 import static guru.qa.niffler.jupiter.extention.UsersQueueExtension.StaticUser;
 
-@ExtendWith({
-        BrowserExtension.class,
-        UsersQueueExtension.class
-})
+@WebTest
 public class FriendsTest {
 
     @Test

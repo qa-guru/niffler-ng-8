@@ -8,6 +8,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 @ExtendWith(UsersQueueExtension.class)
 public class UserTest {
+
     @Test
     @DisabledByIssue("2")
     void testWithEmptyUser0(@UserType() UsersQueueExtension.StaticUser user) throws InterruptedException {

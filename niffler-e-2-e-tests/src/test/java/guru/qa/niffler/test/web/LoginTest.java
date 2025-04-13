@@ -2,9 +2,11 @@ package guru.qa.niffler.test.web;
 
 import com.codeborne.selenide.Selenide;
 import guru.qa.niffler.config.Config;
+import guru.qa.niffler.jupiter.extention.TextMethodContextExtension;
 import guru.qa.niffler.page.LoginPage;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtensionContext;
 
 import static utils.FakerGenUtil.*;
 
@@ -26,6 +28,10 @@ public class LoginTest {
 
     @Test
     void mainPageShouldBeDisplayedAfterSuccessLogin() {
+        // TODO: добавил extensionContext, чтобы понять, как работает глобальная регистрация
+        // Подробнее: https://junit.org/junit5/docs/current/user-guide/#extensions-registration-automatic
+        ExtensionContext extensionContext = TextMethodContextExtension.context();
+
         Selenide.open(CFG.frontUrl(), LoginPage.class)
                 .doLogin(newUser, newPassword)
                 .checkThatMainPageOpened();

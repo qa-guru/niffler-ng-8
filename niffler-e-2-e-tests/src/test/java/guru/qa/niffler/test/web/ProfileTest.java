@@ -3,6 +3,7 @@ package guru.qa.niffler.test.web;
 import com.codeborne.selenide.Selenide;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.jupiter.annotation.Category;
+import guru.qa.niffler.jupiter.annotation.User;
 import guru.qa.niffler.jupiter.extention.BrowserExtension;
 import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.page.LoginPage;
@@ -15,10 +16,13 @@ public class ProfileTest {
 
     private static final Config CFG = Config.getInstance();
 
-    @Category(
+
+    @User(
             username = "Test03",
-            archived = false
-    )
+            categories = @Category(
+                    archived = false
+            ))
+
     @Test
     void archiveCategory(CategoryJson category) {
         ProfilePage profilePage =
@@ -32,10 +36,14 @@ public class ProfileTest {
                 .checkArchivedCategoryExists(category.name());
     }
 
-    @Category(
+    @User(
             username = "Test03",
-            archived = true
+            categories =
+            @Category(
+                    archived = true
+            )
     )
+
     @Test
     void unArchiveCategory(CategoryJson category) {
         ProfilePage profilePage =

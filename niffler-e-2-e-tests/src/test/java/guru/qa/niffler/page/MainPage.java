@@ -38,8 +38,8 @@ public class MainPage {
   }
 
   public ProfilePage goToProfile() {
-    profileBtn.click();
-    profileLink.click();
+    profileBtn.shouldHave(visible).click();
+    profileLink.shouldHave(visible).click();
     return new ProfilePage();
   }
 

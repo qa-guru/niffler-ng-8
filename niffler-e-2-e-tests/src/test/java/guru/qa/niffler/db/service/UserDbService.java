@@ -1,7 +1,6 @@
 package guru.qa.niffler.db.service;
 
 import guru.qa.niffler.api.model.UserJson;
-import guru.qa.niffler.config.Config;
 import guru.qa.niffler.db.dao.AuthAuthorityDao;
 import guru.qa.niffler.db.dao.AuthUserDao;
 import guru.qa.niffler.db.dao.UserdataUserDao;
@@ -16,8 +15,6 @@ import java.util.List;
 import java.util.function.Supplier;
 
 public class UserDbService extends AbstractDbClient {
-
-    private final Config CFG = Config.getInstance();
 
     private final String AUTH_DB_URL = CFG.authJdbcUrl();
     private final AuthUserDao authUserDao = new AuthUserDaoJdbc(AUTH_DB_URL);

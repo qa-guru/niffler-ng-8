@@ -5,7 +5,6 @@ import guru.qa.niffler.db.service.UserDbService;
 import org.junit.jupiter.api.Test;
 
 import static guru.qa.niffler.util.RandomDataUtils.genDefaultUser;
-import static guru.qa.niffler.util.RandomDataUtils.genPassword;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class UserDbTest {
@@ -15,12 +14,13 @@ public class UserDbTest {
     @Test
     void userWillNotBeCreatedIfNameIsMissing() {
         UserJson userJson = genDefaultUser();
-        userJson.setUsername(null);
-        Exception exception = assertThrows(RuntimeException.class, () -> userDbService.createUser(userJson));
-        assertTrue(exception.getMessage().contains("org.postgresql.util.PSQLException: " +
-                "ERROR: null value in column \"username\" of relation \"user\" violates not-null constraint"));
+        userJson.setAccountNonExpired(null);
 
-        userJson.setUsername(genPassword());
+        Exception exception = assertThrows(RuntimeException.class, () -> userDbService.createUser(userJson));
+        assertTrue(exception.getMessage().contains("org.postgresql.util.PSQLException: ERROR: null value in column " +
+                "\"account_non_expired\" of relation \"user\" violates not-null constraint"));
+
+        userJson.setAccountNonExpired(true);
         assertDoesNotThrow(() -> userDbService.createUser(userJson));
         userDbService.deleteUser(userJson);
     }

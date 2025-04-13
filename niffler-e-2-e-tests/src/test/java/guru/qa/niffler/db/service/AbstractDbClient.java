@@ -1,6 +1,7 @@
 package guru.qa.niffler.db.service;
 
 import com.atomikos.icatch.jta.UserTransactionImp;
+import guru.qa.niffler.config.Config;
 import guru.qa.niffler.db.Databases;
 import jakarta.transaction.SystemException;
 import jakarta.transaction.UserTransaction;
@@ -14,6 +15,8 @@ import java.util.function.Supplier;
 import static java.sql.Connection.TRANSACTION_READ_COMMITTED;
 
 public class AbstractDbClient {
+
+    protected final static Config CFG = Config.getInstance();
 
     public <T> T xaTransaction(Supplier<T> supplier, String... jdbcUrls) {
         return xaTransaction(TRANSACTION_READ_COMMITTED, supplier, jdbcUrls);

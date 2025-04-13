@@ -2,7 +2,6 @@ package guru.qa.niffler.db.service;
 
 import guru.qa.niffler.api.model.CategoryJson;
 import guru.qa.niffler.api.model.SpendJson;
-import guru.qa.niffler.config.Config;
 import guru.qa.niffler.db.dao.CategoryDao;
 import guru.qa.niffler.db.dao.SpendDao;
 import guru.qa.niffler.db.dao.impl.CategoryDaoJdbc;
@@ -16,7 +15,7 @@ import java.util.function.Supplier;
 
 public class SpendDbClient extends AbstractDbClient {
 
-    private static final String SPEND_DB_URL = Config.getInstance().spendJdbcUrl();
+    private static final String SPEND_DB_URL = CFG.spendJdbcUrl();
     private final SpendDao spendDao = new SpendDaoJdbc(SPEND_DB_URL);
     private final CategoryDao categoryDao = new CategoryDaoJdbc(SPEND_DB_URL);
 

@@ -51,6 +51,12 @@ public class SpendDaoJdbc extends AbstractDao<SpendEntity> implements SpendDao {
     }
 
     @Override
+    public List<SpendEntity> findAllSpends() {
+        String sql = "SELECT * FROM spend";
+        return executeQueryToList(sql);
+    }
+
+    @Override
     protected SpendEntity mapResultSet(ResultSet rs) throws SQLException {
         return new SpendEntity()
                 .setId(rs.getObject("id", UUID.class))

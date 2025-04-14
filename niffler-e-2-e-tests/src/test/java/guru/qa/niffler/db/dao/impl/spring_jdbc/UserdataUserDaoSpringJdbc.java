@@ -6,6 +6,7 @@ import guru.qa.niffler.db.entity.userdata.UserdataUserEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import javax.sql.DataSource;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -47,5 +48,11 @@ public class UserdataUserDaoSpringJdbc implements UserdataUserDao {
         String sql = "DELETE FROM \"user\" WHERE id = ?";
         int rowsAffected = jdbcTemplate.update(sql, entity.getId());
         return rowsAffected > 0;
+    }
+
+    @Override
+    public List<UserdataUserEntity> findAllUserdata() {
+        String sql = "SELECT * FROM \"user\"";
+        return jdbcTemplate.query(sql, USEDATA_USER_ROW_MAPPER);
     }
 }

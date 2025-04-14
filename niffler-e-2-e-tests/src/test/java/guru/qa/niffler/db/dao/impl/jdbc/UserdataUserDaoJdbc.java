@@ -7,6 +7,7 @@ import guru.qa.niffler.db.entity.userdata.UserdataUserEntity;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -40,6 +41,12 @@ public class UserdataUserDaoJdbc extends AbstractDao<UserdataUserEntity> impleme
     public boolean deleteUserdata(UserdataUserEntity entity) {
         String sql = "DELETE FROM \"user\" WHERE id = ?";
         return executeUpdateToBoolean(sql, entity.getId());
+    }
+
+    @Override
+    public List<UserdataUserEntity> findAllUserdata() {
+        String sql = "SELECT * FROM \"user\"";
+        return executeQueryToList(sql);
     }
 
     @Override

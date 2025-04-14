@@ -2,6 +2,7 @@ package guru.qa.niffler.db.dao;
 
 import guru.qa.niffler.db.entity.auth.AuthUserEntity;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -16,5 +17,7 @@ public interface AuthUserDao {
     Optional<AuthUserEntity> findAuthUserByUsername(String username);
 
     boolean deleteAuthUser(AuthUserEntity entity);
+
+    List<AuthUserEntity> findAllAuthUsers();
 
 }

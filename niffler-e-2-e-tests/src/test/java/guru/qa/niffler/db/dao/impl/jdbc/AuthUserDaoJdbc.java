@@ -8,6 +8,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -53,6 +54,12 @@ public class AuthUserDaoJdbc extends AbstractDao<AuthUserEntity> implements Auth
     public boolean deleteAuthUser(AuthUserEntity entity) {
         String sql = "DELETE FROM \"user\" WHERE id = ?";
         return executeUpdateToBoolean(sql, entity.getId());
+    }
+
+    @Override
+    public List<AuthUserEntity> findAllAuthUsers() {
+        String sql = "SELECT * FROM \"user\"";
+        return executeQueryToList(sql);
     }
 
     @Override

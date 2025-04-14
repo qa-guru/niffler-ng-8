@@ -18,4 +18,6 @@ public interface SpendDao {
 
     boolean deleteSpend(SpendEntity entity);
 
+    List<SpendEntity> findAllSpends();
+
 }

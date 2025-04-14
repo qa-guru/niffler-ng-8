@@ -20,4 +20,6 @@ public interface CategoryDao {
 
     boolean deleteCategory(CategoryEntity entity);
 
+    List<CategoryEntity> findAllCategories();
+
 }

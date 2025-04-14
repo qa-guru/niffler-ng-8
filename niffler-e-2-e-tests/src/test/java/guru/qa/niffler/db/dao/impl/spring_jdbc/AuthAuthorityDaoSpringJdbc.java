@@ -52,4 +52,10 @@ public class AuthAuthorityDaoSpringJdbc implements AuthAuthorityDao {
         return rowsAffected > 0;
     }
 
+    @Override
+    public List<AuthAuthorityEntity> findAllAuthAuthorities() {
+        String sql = "SELECT * FROM authority";
+        return jdbcTemplate.query(sql, AUTHORITY_ROW_MAPPER);
+    }
+
 }

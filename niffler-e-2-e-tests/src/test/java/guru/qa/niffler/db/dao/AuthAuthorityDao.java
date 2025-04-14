@@ -18,4 +18,6 @@ public interface AuthAuthorityDao {
 
     boolean deleteAuthAuthority(AuthAuthorityEntity entity);
 
+    List<AuthAuthorityEntity> findAllAuthAuthorities();
+
 }

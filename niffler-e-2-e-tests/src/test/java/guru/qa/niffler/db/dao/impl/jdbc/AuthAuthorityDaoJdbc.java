@@ -49,6 +49,12 @@ public class AuthAuthorityDaoJdbc extends AbstractDao<AuthAuthorityEntity> imple
     }
 
     @Override
+    public List<AuthAuthorityEntity> findAllAuthAuthorities() {
+        String sql = "SELECT * FROM authority";
+        return executeQueryToList(sql);
+    }
+
+    @Override
     protected AuthAuthorityEntity mapResultSet(ResultSet rs) throws SQLException {
         return new AuthAuthorityEntity()
                 .setId(rs.getObject("id", UUID.class))

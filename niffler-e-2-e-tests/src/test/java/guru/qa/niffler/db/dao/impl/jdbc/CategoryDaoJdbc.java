@@ -53,6 +53,12 @@ public class CategoryDaoJdbc extends AbstractDao<CategoryEntity> implements Cate
     }
 
     @Override
+    public List<CategoryEntity> findAllCategories() {
+        String sql = "SELECT * FROM category";
+        return executeQueryToList(sql);
+    }
+
+    @Override
     protected CategoryEntity mapResultSet(ResultSet rs) throws SQLException {
         return new CategoryEntity()
                 .setId(rs.getObject("id", UUID.class))

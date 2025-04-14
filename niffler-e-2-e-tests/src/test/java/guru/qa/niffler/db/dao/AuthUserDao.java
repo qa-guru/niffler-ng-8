@@ -13,7 +13,7 @@ public interface AuthUserDao {
 
     Optional<AuthUserEntity> findAuthUserById(UUID id);
 
-    Optional<AuthUserEntity> findAuthUserByUsername(String name);
+    Optional<AuthUserEntity> findAuthUserByUsername(String username);
 
     boolean deleteAuthUser(AuthUserEntity entity);
 

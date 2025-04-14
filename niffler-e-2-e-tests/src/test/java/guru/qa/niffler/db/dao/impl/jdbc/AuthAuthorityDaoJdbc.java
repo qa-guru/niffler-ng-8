@@ -1,4 +1,4 @@
-package guru.qa.niffler.db.dao.impl;
+package guru.qa.niffler.db.dao.impl.jdbc;
 
 import guru.qa.niffler.api.model.Authority;
 import guru.qa.niffler.db.dao.AbstractDao;
@@ -21,7 +21,7 @@ public class AuthAuthorityDaoJdbc extends AbstractDao<AuthAuthorityEntity> imple
     public AuthAuthorityEntity createAuthAuthority(AuthAuthorityEntity entity) {
         String sql = "INSERT INTO category (user_id, authority) " +
                 "VALUES(?, ?) RETURNING *";
-        return executeQuery(sql, entity.getUser(), entity.getAuthority());
+        return executeQuery(sql, entity.getUser().getId(), entity.getAuthority());
     }
 
     @Override

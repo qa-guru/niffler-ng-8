@@ -1,22 +1,24 @@
-package guru.qa.niffler.db.dao.impl;
+package guru.qa.niffler.db.dao.impl.spring_jdbc;
 
-import guru.qa.niffler.db.dao.AbstractDao;
 import guru.qa.niffler.db.dao.AuthUserDao;
+import guru.qa.niffler.db.dao.impl.spring_jdbc.mapper.AuthUserEntityRowMapper;
 import guru.qa.niffler.db.entity.auth.AuthUserEntity;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import javax.sql.DataSource;
 import java.util.Optional;
 import java.util.UUID;
 
-public class AuthUserDaoJdbc extends AbstractDao<AuthUserEntity> implements AuthUserDao {
+public class AuthUserDaoSpringJdbc implements AuthUserDao {
 
     private static final PasswordEncoder passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
+    private static final AuthUserEntityRowMapper AUTH_USER_ROW_MAPPER = AuthUserEntityRowMapper.INSTANCE;
+    private final JdbcTemplate jdbcTemplate;
 
-    public AuthUserDaoJdbc(String jdbcUrl) {
-        super(jdbcUrl);
+    public AuthUserDaoSpringJdbc(DataSource dataSource) {
+        this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
     @Override
@@ -24,8 +26,10 @@ public class AuthUserDaoJdbc extends AbstractDao<AuthUserEntity> implements Auth
         String sql = "INSERT INTO \"user\" (username, password, enabled, account_non_expired, account_non_locked, credentials_non_expired) " +
                 "VALUES(?, ?, ?, ?, ?, ?) RETURNING *";
         String password = passwordEncoder.encode(entity.getPassword());
-        return executeQuery(sql, entity.getUsername(), password, entity.getEnabled(),
-                entity.getAccountNonExpired(), entity.getAccountNonLocked(), entity.getCredentialsNonExpired());
+        return jdbcTemplate.queryForObject(sql, AUTH_USER_ROW_MAPPER,
+                entity.getUsername(), password, entity.getEnabled(), entity.getAccountNonExpired(),
+                entity.getAccountNonLocked(), entity.getCredentialsNonExpired()
+        );
     }
 
     @Override
@@ -33,38 +37,31 @@ public class AuthUserDaoJdbc extends AbstractDao<AuthUserEntity> implements Auth
         String sql = "UPDATE category SET username = ?, password = ?, enabled = ?, " +
                 "account_non_expired = ?, account_non_locked = ?, credentials_non_expired = ? WHERE id = ? RETURNING *";
         String password = passwordEncoder.encode(entity.getPassword());
-        return executeQuery(sql, entity.getUsername(), password, entity.getEnabled(),
-                entity.getAccountNonExpired(), entity.getAccountNonLocked(), entity.getCredentialsNonExpired(), entity.getId());
+        return jdbcTemplate.queryForObject(sql, AUTH_USER_ROW_MAPPER,
+                entity.getUsername(), password, entity.getEnabled(), entity.getAccountNonExpired(),
+                entity.getAccountNonLocked(), entity.getCredentialsNonExpired(), entity.getId()
+        );
     }
 
     @Override
     public Optional<AuthUserEntity> findAuthUserById(UUID id) {
         String sql = "SELECT * FROM \"user\" WHERE id = ?";
-        return executeQueryToOptional(sql, id);
+        AuthUserEntity entity = jdbcTemplate.queryForObject(sql, AUTH_USER_ROW_MAPPER, id);
+        return Optional.ofNullable(entity);
     }
 
     @Override
     public Optional<AuthUserEntity> findAuthUserByUsername(String username) {
         String sql = "SELECT * FROM \"user\" WHERE username = ?";
-        return executeQueryToOptional(sql, username);
+        AuthUserEntity entity = jdbcTemplate.queryForObject(sql, AUTH_USER_ROW_MAPPER, username);
+        return Optional.ofNullable(entity);
     }
 
     @Override
     public boolean deleteAuthUser(AuthUserEntity entity) {
         String sql = "DELETE FROM \"user\" WHERE id = ?";
-        return executeUpdateToBoolean(sql, entity.getId());
-    }
-
-    @Override
-    protected AuthUserEntity mapResultSet(ResultSet rs) throws SQLException {
-        return new AuthUserEntity()
-                .setId(rs.getObject("id", UUID.class))
-                .setUsername(rs.getString("username"))
-                .setPassword(rs.getString("password"))
-                .setEnabled(rs.getBoolean("enabled"))
-                .setAccountNonExpired(rs.getBoolean("account_non_expired"))
-                .setAccountNonLocked(rs.getBoolean("account_non_locked"))
-                .setCredentialsNonExpired(rs.getBoolean("credentials_non_expired"));
+        int rowsAffected = jdbcTemplate.update(sql, entity.getId());
+        return rowsAffected > 0;
     }
 
 }

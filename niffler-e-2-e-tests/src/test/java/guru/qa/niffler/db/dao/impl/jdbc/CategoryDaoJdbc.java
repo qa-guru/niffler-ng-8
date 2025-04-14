@@ -1,10 +1,11 @@
-package guru.qa.niffler.db.dao.impl;
+package guru.qa.niffler.db.dao.impl.jdbc;
 
 import guru.qa.niffler.db.dao.AbstractDao;
 import guru.qa.niffler.db.dao.CategoryDao;
 import guru.qa.niffler.db.entity.spend.CategoryEntity;
 
-import java.sql.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;

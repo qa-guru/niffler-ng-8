@@ -1,4 +1,4 @@
-package guru.qa.niffler.db.dao.impl;
+package guru.qa.niffler.db.dao.impl.jdbc;
 
 import guru.qa.niffler.api.model.CurrencyValues;
 import guru.qa.niffler.db.dao.AbstractDao;

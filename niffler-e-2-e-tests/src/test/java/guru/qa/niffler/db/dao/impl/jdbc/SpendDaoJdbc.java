@@ -1,4 +1,4 @@
-package guru.qa.niffler.db.dao.impl;
+package guru.qa.niffler.db.dao.impl.jdbc;
 
 import guru.qa.niffler.api.model.CurrencyValues;
 import guru.qa.niffler.db.dao.AbstractDao;
@@ -6,7 +6,8 @@ import guru.qa.niffler.db.dao.SpendDao;
 import guru.qa.niffler.db.entity.spend.CategoryEntity;
 import guru.qa.niffler.db.entity.spend.SpendEntity;
 
-import java.sql.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;

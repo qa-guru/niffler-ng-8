@@ -7,6 +7,7 @@ import guru.qa.niffler.config.Config;
 import guru.qa.niffler.jupiter.BrowserExtension;
 import guru.qa.niffler.jupiter.category.Category;
 import guru.qa.niffler.jupiter.spending.Spend;
+import guru.qa.niffler.jupiter.users.User;
 import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.model.CurrencyValues;
 import guru.qa.niffler.model.SpendJson;
@@ -104,10 +105,10 @@ public class LoginTest {
     }
 
 
-    @Category(
+    @User(
             username = "test",
-            archived = true
-    )
+            categories = @Category(
+                    archived = true))
     @Test
     void archivedCategoryCantBePresentedInCategoryList(CategoryJson category) {
         Selenide.open(CFG.frontUrl(), LoginPage.class)
@@ -119,10 +120,10 @@ public class LoginTest {
     }
 
 
-    @Category(
+    @User(
             username = "test",
-            archived = false
-    )
+            categories = @Category(
+                    archived = false))
     @Test
     void activeCategoryShouldPresentInCategoryList(CategoryJson category) {
         Selenide.open(CFG.frontUrl(), LoginPage.class)

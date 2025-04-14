@@ -10,7 +10,7 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
-@ExtendWith({CreateSpendingExtension.class, SpendingResolverExtension.class})
+@ExtendWith({SpendingExtension.class})
 public @interface Spend {
   String username();
 

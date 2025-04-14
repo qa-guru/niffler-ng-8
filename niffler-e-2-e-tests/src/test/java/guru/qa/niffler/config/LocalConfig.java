@@ -21,4 +21,24 @@ enum LocalConfig implements Config {
     public String mainUserPass() {
         return "12345";
     }
+
+    @Override
+    public String authUrl() {
+        return "http://127.0.0.1:9000/";
+    }
+
+    @Override
+    public String gatewayUrl() {
+        return null;
+    }
+
+    @Override
+    public String userdataUrl() {
+        return null;
+    }
+
+    @Override
+    public String ghUrl() {
+        return null;
+    }
 }

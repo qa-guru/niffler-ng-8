@@ -4,42 +4,35 @@ import com.codeborne.selenide.Selenide;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.jupiter.BrowserExtension;
 import guru.qa.niffler.jupiter.spending.Spend;
-import guru.qa.niffler.jupiter.users.UsersQueueExtension;
+import guru.qa.niffler.jupiter.users.User;
 import guru.qa.niffler.model.CurrencyValues;
 import guru.qa.niffler.model.SpendJson;
 import guru.qa.niffler.page.LoginPage;
 import guru.qa.niffler.page.MainPage;
-import io.qameta.allure.Allure;
-import org.apache.commons.lang3.time.StopWatch;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.api.extension.ExtensionContext;
-import org.junit.platform.commons.support.AnnotationSupport;
-
-import java.util.*;
-import java.util.concurrent.TimeUnit;
 
 @ExtendWith(BrowserExtension.class)
 public class SpendingTest {
 
-  private static final Config CFG = Config.getInstance();
+    private static final Config CFG = Config.getInstance();
 
-  @Spend(
-      username = "duck",
-      category = "Обучение",
-      description = "Обучение Niffler 2.0",
-      amount = 89000.00,
-      currency = CurrencyValues.RUB
-  )
-  @Test
-  void spendingDescriptionShouldBeUpdatedByTableAction(SpendJson spend) {
-    final String newDescription = "Обучение Niffler NG";
+    @User(
+            username = "test",
+            spendings = @Spend(username = "duck",
+                    category = "Обучение",
+                    description = "Обучение Niffler 2.0",
+                    amount = 89000.00,
+                    currency = CurrencyValues.RUB))
+    @Test
+    void spendingDescriptionShouldBeUpdatedByTableAction(SpendJson spend) {
+        final String newDescription = "Обучение Niffler NG";
 
-    Selenide.open(CFG.frontUrl(), LoginPage.class)
-        .doLogin("duck", "12345")
-        .editSpending(spend.description())
-        .editDescription(newDescription);
+        Selenide.open(CFG.frontUrl(), LoginPage.class)
+                .doLogin("duck", "12345")
+                .editSpending(spend.description())
+                .editDescription(newDescription);
 
-    new MainPage().checkThatTableContains(newDescription);
-  }
-  }
+        new MainPage().checkThatTableContains(newDescription);
+    }
+}

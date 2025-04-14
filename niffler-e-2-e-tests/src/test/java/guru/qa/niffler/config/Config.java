@@ -13,4 +13,13 @@ public interface Config {
     String mainUserLogin();
 
     String mainUserPass();
+
+    String authUrl();
+
+    String gatewayUrl();
+
+    String userdataUrl();
+
+    String ghUrl();
+
 }

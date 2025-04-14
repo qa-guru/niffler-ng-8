@@ -1,6 +1,6 @@
 package guru.qa.niffler.db.entity.auth;
 
-import guru.qa.niffler.api.model.UserJson;
+import guru.qa.niffler.api.model.AuthUserJson;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -41,9 +41,9 @@ public class AuthUserEntity implements Serializable {
         this.authorities.remove(authority);
     }
 
-    public static AuthUserEntity fromJson(UserJson json) {
+    public static AuthUserEntity fromJson(AuthUserJson json) {
         return new AuthUserEntity()
-                .setId(json.getAuthId())
+                .setId(json.getId())
                 .setUsername(json.getUsername())
                 .setPassword(json.getPassword())
                 .setEnabled(json.getEnabled())

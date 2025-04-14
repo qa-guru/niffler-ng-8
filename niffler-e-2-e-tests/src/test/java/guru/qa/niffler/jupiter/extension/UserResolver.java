@@ -1,6 +1,6 @@
 package guru.qa.niffler.jupiter.extension;
 
-import guru.qa.niffler.api.model.UserJson;
+import guru.qa.niffler.api.model.UserParts;
 import guru.qa.niffler.db.service.UserDbService;
 import guru.qa.niffler.jupiter.annotation.User;
 import guru.qa.niffler.web.model.WebUser;
@@ -42,7 +42,7 @@ public class UserResolver implements BeforeEachCallback, AfterEachCallback, Para
                     if (userAnno.value() == GEN) {
                         WebUser user = extensionContext.getStore(NAMESPACE).get(extensionContext.getUniqueId(), WebUser.class);
                         if (user != null) {
-                            userDbService.deleteUser(new UserJson().setUsername(user.username()));
+                            userDbService.deleteUser(UserParts.of(user.username()));
                         }
                     }
                 });
@@ -60,9 +60,7 @@ public class UserResolver implements BeforeEachCallback, AfterEachCallback, Para
     }
 
     private static void createUser(WebUser webUser) {
-        UserJson user = genDefaultUser();
-        user.setUsername(webUser.username());
-        user.setPassword(webUser.password());
+        UserParts user = genDefaultUser(webUser.username(), webUser.password());
         userDbService.createUser(user);
     }
 

@@ -1,9 +1,7 @@
 package guru.qa.niffler.util;
 
 import com.github.javafaker.Faker;
-import guru.qa.niffler.api.model.Authority;
-import guru.qa.niffler.api.model.AuthorityJson;
-import guru.qa.niffler.api.model.UserJson;
+import guru.qa.niffler.api.model.*;
 
 import java.util.List;
 
@@ -29,21 +27,27 @@ public final class RandomDataUtils {
         return FAKER.app().name() + Thread.currentThread().threadId();
     }
 
-    public static UserJson genDefaultUser() {
-        UserJson userJson = new UserJson();
+    public static UserParts genDefaultUser(String username, String password) {
         List<AuthorityJson> defaultAuthorities = List.of(
                 new AuthorityJson().setAuthority(Authority.write),
                 new AuthorityJson().setAuthority(Authority.write)
         );
-        return userJson
-                .setUsername(genUsername())
-                .setPassword(genPassword())
+        AuthUserJson authUserJson = new AuthUserJson()
+                .setUsername(username)
+                .setPassword(password)
                 .setEnabled(true)
                 .setAccountNonExpired(true)
                 .setAccountNonLocked(true)
                 .setCredentialsNonExpired(true)
-                .setAuthorities(defaultAuthorities)
+                .setAuthorities(defaultAuthorities);
+        UserdataUserJson userdataUserJson = new UserdataUserJson()
+                .setUsername(username)
                 .setCurrency(RUB);
+        return new UserParts(authUserJson, userdataUserJson);
+    }
+
+    public static UserParts genDefaultUser() {
+        return genDefaultUser(genUsername(), genPassword());
     }
 
 }

@@ -17,9 +17,10 @@ import static java.sql.Connection.TRANSACTION_READ_COMMITTED;
 public class AbstractDbClient {
 
     protected final static Config CFG = Config.getInstance();
+    private static final int TRANSACTION_NONE_SET = -1;
 
     public <T> T xaTransaction(Supplier<T> supplier, String... jdbcUrls) {
-        return xaTransaction(TRANSACTION_READ_COMMITTED, supplier, jdbcUrls);
+        return xaTransaction(TRANSACTION_NONE_SET, supplier, jdbcUrls);
     }
 
     public <T> T xaTransaction(Integer transactionIsolation,
@@ -29,7 +30,9 @@ public class AbstractDbClient {
         Map<String, Integer> previousIsolationByUrl = Map.of();
         try {
             ut.begin();
-            previousIsolationByUrl = setTransactionIsolationAndGetPrevious(transactionIsolation, jdbcUrls);
+            if (transactionIsolation != TRANSACTION_NONE_SET) {
+                previousIsolationByUrl = setTransactionIsolationAndGetPrevious(transactionIsolation, jdbcUrls);
+            }
             T result = supplier.get();
             ut.commit();
             return result;
@@ -42,12 +45,12 @@ public class AbstractDbClient {
             throw new RuntimeException(e);
 
         } finally {
-            setPreviousTransactionIsolation(jdbcUrls, previousIsolationByUrl);
+            setPreviousTransactionIsolation(previousIsolationByUrl);
         }
     }
 
     public void xaTransaction(Runnable runnable, String... jdbcUrls) {
-        xaTransaction(TRANSACTION_READ_COMMITTED, runnable, jdbcUrls);
+        xaTransaction(TRANSACTION_NONE_SET, runnable, jdbcUrls);
     }
 
     public void xaTransaction(Integer transactionIsolation, Runnable runnable, String... jdbcUrls) {
@@ -55,7 +58,9 @@ public class AbstractDbClient {
         Map<String, Integer> previousIsolationByUrl = Map.of();
         try {
             ut.begin();
-            previousIsolationByUrl = setTransactionIsolationAndGetPrevious(transactionIsolation, jdbcUrls);
+            if (transactionIsolation != TRANSACTION_NONE_SET) {
+                previousIsolationByUrl = setTransactionIsolationAndGetPrevious(transactionIsolation, jdbcUrls);
+            }
             runnable.run();
             ut.commit();
         } catch (Exception e) {
@@ -66,13 +71,13 @@ public class AbstractDbClient {
             }
             throw new RuntimeException(e);
         } finally {
-            setPreviousTransactionIsolation(jdbcUrls, previousIsolationByUrl);
+            setPreviousTransactionIsolation(previousIsolationByUrl);
         }
     }
 
     public <T> T transaction(Supplier<T> supplier,
                              String jdbcUrl) {
-        return transaction(TRANSACTION_READ_COMMITTED, supplier, jdbcUrl);
+        return transaction(TRANSACTION_NONE_SET, supplier, jdbcUrl);
     }
 
     public <T> T transaction(Integer transactionIsolation,
@@ -82,8 +87,10 @@ public class AbstractDbClient {
         int previousIsolation = TRANSACTION_READ_COMMITTED;
         try {
             connection = Databases.connection(jdbcUrl);
-            previousIsolation = connection.getTransactionIsolation();
-            connection.setTransactionIsolation(transactionIsolation);
+            if (transactionIsolation != TRANSACTION_NONE_SET) {
+                previousIsolation = connection.getTransactionIsolation();
+                connection.setTransactionIsolation(transactionIsolation);
+            }
             connection.setAutoCommit(false);
             T result = supplier.get();
             connection.commit();
@@ -101,7 +108,7 @@ public class AbstractDbClient {
             throw new RuntimeException(e);
         } finally {
             try {
-                if (connection != null) {
+                if (connection != null && transactionIsolation != TRANSACTION_NONE_SET) {
                     connection.setTransactionIsolation(previousIsolation);
                 }
             } catch (SQLException e) {
@@ -112,7 +119,7 @@ public class AbstractDbClient {
 
     public void transaction(Runnable runnable,
                             String jdbcUrl) {
-        transaction(TRANSACTION_READ_COMMITTED, runnable, jdbcUrl);
+        transaction(TRANSACTION_NONE_SET, runnable, jdbcUrl);
     }
 
     public void transaction(Integer transactionIsolation,
@@ -128,12 +135,11 @@ public class AbstractDbClient {
         );
     }
 
-    private void setPreviousTransactionIsolation(String[] jdbcUrls, Map<String, Integer> previousIsolationByUrl) {
-        for (String url : jdbcUrls) {
+    private void setPreviousTransactionIsolation(Map<String, Integer> previousIsolationByUrl) {
+        for (Map.Entry<String, Integer> isolationByUrl : previousIsolationByUrl.entrySet()) {
             try {
-                Integer isolateLevel = previousIsolationByUrl.get(url);
-                Connection connection = Databases.connection(url);
-                connection.setTransactionIsolation(isolateLevel);
+                Connection connection = Databases.connection(isolationByUrl.getKey());
+                connection.setTransactionIsolation(isolationByUrl.getValue());
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }

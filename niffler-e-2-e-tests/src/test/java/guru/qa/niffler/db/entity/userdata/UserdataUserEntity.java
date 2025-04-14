@@ -1,7 +1,7 @@
 package guru.qa.niffler.db.entity.userdata;
 
 import guru.qa.niffler.api.model.CurrencyValues;
-import guru.qa.niffler.api.model.UserJson;
+import guru.qa.niffler.api.model.UserdataUserJson;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -21,9 +21,9 @@ public class UserdataUserEntity implements Serializable {
     private byte[] photo;
     private byte[] photoSmall;
 
-    public static UserdataUserEntity fromJson(UserJson json) {
+    public static UserdataUserEntity fromJson(UserdataUserJson json) {
         return new UserdataUserEntity()
-                .setId(json.getUserdataId())
+                .setId(json.getId())
                 .setUsername(json.getUsername())
                 .setCurrency(json.getCurrency())
                 .setFirstname(json.getFirstname())

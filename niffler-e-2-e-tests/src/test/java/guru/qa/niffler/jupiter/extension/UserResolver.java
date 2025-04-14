@@ -1,19 +1,19 @@
 package guru.qa.niffler.jupiter.extension;
 
-import com.codeborne.selenide.Selenide;
-import guru.qa.niffler.config.Config;
+import guru.qa.niffler.api.model.UserParts;
+import guru.qa.niffler.db.service.UserDbService;
 import guru.qa.niffler.jupiter.annotation.User;
 import guru.qa.niffler.web.model.WebUser;
-import guru.qa.niffler.web.page.LoginPage;
 import org.junit.jupiter.api.extension.*;
 import org.junit.platform.commons.support.AnnotationSupport;
 
-import static guru.qa.niffler.util.RandomDataUtils.genPassword;
-import static guru.qa.niffler.util.RandomDataUtils.genUsername;
+import static guru.qa.niffler.jupiter.annotation.User.Mode.GEN;
+import static guru.qa.niffler.util.RandomDataUtils.*;
 
-public class UserResolver implements BeforeEachCallback, ParameterResolver {
+public class UserResolver implements BeforeEachCallback, AfterEachCallback, ParameterResolver {
 
     public static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(UserResolver.class);
+    private static final UserDbService userDbService = new UserDbService();
 
     @Override
     public void beforeEach(ExtensionContext extensionContext) {
@@ -35,6 +35,19 @@ public class UserResolver implements BeforeEachCallback, ParameterResolver {
         return extensionContext.getStore(NAMESPACE).get(extensionContext.getUniqueId(), WebUser.class);
     }
 
+    @Override
+    public void afterEach(ExtensionContext extensionContext) {
+        AnnotationSupport.findAnnotation(extensionContext.getRequiredTestMethod(), User.class)
+                .ifPresent(userAnno -> {
+                    if (userAnno.value() == GEN) {
+                        WebUser user = extensionContext.getStore(NAMESPACE).get(extensionContext.getUniqueId(), WebUser.class);
+                        if (user != null) {
+                            userDbService.deleteUser(UserParts.of(user.username()));
+                        }
+                    }
+                });
+    }
+
     public static WebUser resolve(User useUser) {
         return switch (useUser.value()) {
             case GEN -> {
@@ -46,11 +59,9 @@ public class UserResolver implements BeforeEachCallback, ParameterResolver {
         };
     }
 
-    private static void createUser(WebUser user) {
-        Selenide.open(Config.getInstance().frontUrl(), LoginPage.class)
-                .clickCreateNewUserBtn()
-                .registerUserSuccess(user.username(), user.password(), user.password())
-                .checkSuccessfulRegistrationPage();
+    private static void createUser(WebUser webUser) {
+        UserParts user = genDefaultUser(webUser.username(), webUser.password());
+        userDbService.createUser(user);
     }
 
 }

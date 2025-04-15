@@ -2,7 +2,6 @@ package guru.qa.niffler.jupiter.category;
 
 import guru.qa.niffler.RandomDataUtils;
 import guru.qa.niffler.api.SpendApiClient;
-import guru.qa.niffler.jupiter.spending.SpendingExtension;
 import guru.qa.niffler.jupiter.users.User;
 import guru.qa.niffler.model.CategoryJson;
 import org.junit.jupiter.api.extension.*;
@@ -10,7 +9,7 @@ import org.junit.platform.commons.support.AnnotationSupport;
 
 public class CategoryExtension implements BeforeEachCallback, AfterEachCallback, ParameterResolver {
 
-    public static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(SpendingExtension.class);
+    public static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(CategoryExtension.class);
     private final SpendApiClient spendApiClient = new SpendApiClient();
 
     @Override

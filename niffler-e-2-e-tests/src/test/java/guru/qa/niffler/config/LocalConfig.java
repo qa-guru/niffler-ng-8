@@ -13,6 +13,10 @@ enum LocalConfig implements Config {
         return "http://127.0.0.1:8093/";
     }
 
+    @Override
+    public String spendJdbcUrl() {
+        return "jdbc:postgresql://localhost:5432/niffler-spend";
+    }
 
     public String mainUserLogin() {
         return "test";
@@ -28,17 +32,32 @@ enum LocalConfig implements Config {
     }
 
     @Override
+    public String authJdbcUrl() {
+        return "jdbc:postgresql://localhost:5432/niffler-auth";
+    }
+
+    @Override
     public String gatewayUrl() {
-        return null;
+        return "http://127.0.0.1:8090/";
     }
 
     @Override
     public String userdataUrl() {
-        return null;
+        return "http://127.0.0.1:8082/";
+    }
+
+    @Override
+    public String userdataJdbcUrl() {
+        return "jdbc:postgresql://localhost:5432/niffler-userdata";
+    }
+
+    @Override
+    public String currencyJdbcUrl() {
+        return "jdbc:postgresql://localhost:5432/niffler-currency";
     }
 
     @Override
     public String ghUrl() {
-        return null;
+        return "https://api.github.com/";
     }
 }

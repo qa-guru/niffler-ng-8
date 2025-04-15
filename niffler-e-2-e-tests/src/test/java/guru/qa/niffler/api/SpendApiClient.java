@@ -59,7 +59,7 @@ public class SpendApiClient {
         } catch (IOException e) {
             throw new AssertionError(e);
         }
-//        assertEquals(200, response.code());
+        assertEquals(200, response.code());
         return response.body();
     }
 

@@ -1,7 +1,7 @@
 package guru.qa.niffler.jupiter.annotation.meta;
 
 import guru.qa.niffler.jupiter.annotation.Category;
-import guru.qa.niffler.jupiter.annotation.Spending;
+import guru.qa.niffler.jupiter.annotation.Spend;
 import guru.qa.niffler.jupiter.extension.CategoryExtension;
 import guru.qa.niffler.jupiter.extension.SpendingExtension;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,7 +16,7 @@ import java.lang.annotation.Target;
 @ExtendWith({CategoryExtension.class, SpendingExtension.class})
 public @interface User {
     Category[] categories() default {};
-    Spending[] spendings() default {};
+    Spend[] spendings() default {};
 
     String username() default "";
 }

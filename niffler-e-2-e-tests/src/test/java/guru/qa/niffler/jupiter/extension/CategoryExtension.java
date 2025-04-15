@@ -1,8 +1,8 @@
 package guru.qa.niffler.jupiter.extension;
 
-import guru.qa.niffler.api.SpendApiClient;
 import guru.qa.niffler.jupiter.annotation.meta.User;
 import guru.qa.niffler.model.CategoryJson;
+import guru.qa.niffler.service.SpendDbClient;
 import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -23,7 +23,7 @@ public class CategoryExtension implements
 
     public static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(CategoryExtension.class);
 
-    private final SpendApiClient spendApiClient = new SpendApiClient();
+    private final SpendDbClient spendDbClient = new SpendDbClient();
 
     @Override
     public void beforeEach(ExtensionContext context) {
@@ -37,7 +37,8 @@ public class CategoryExtension implements
                                 anno.categories()[0].archived()
                         );
 
-                        CategoryJson created = spendApiClient.addCategory(category);
+                        CategoryJson created = spendDbClient.createCategory(category);
+
                         if (anno.categories()[0].archived()) {
                             CategoryJson archivedCategory = new CategoryJson(
                                     created.id(),
@@ -45,7 +46,7 @@ public class CategoryExtension implements
                                     created.username(),
                                     true
                             );
-                            created = spendApiClient.updateCategory(archivedCategory);
+                            created = spendDbClient.updateCategory(archivedCategory);
                         }
 
                         context.getStore(NAMESPACE).put(
@@ -67,7 +68,7 @@ public class CategoryExtension implements
                                 category.username(),
                                 true
                         );
-                        spendApiClient.updateCategory(category);
+                        spendDbClient.updateCategory(category);
                     }
                 });
     }

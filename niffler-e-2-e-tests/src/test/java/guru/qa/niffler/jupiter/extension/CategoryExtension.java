@@ -11,19 +11,20 @@ import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
 import org.junit.platform.commons.support.AnnotationSupport;
+import guru.qa.niffler.DataUtils;
 
 public class CategoryExtension implements BeforeEachCallback, AfterEachCallback, ParameterResolver {
 
     public static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(CategoryExtension.class);
     private final SpendApiClient spendApiClient = new SpendApiClient();
-    private Faker faker = new Faker();
+    private DataUtils dataUtils = new DataUtils();
 
 
     @Override
     public void beforeEach(ExtensionContext context) {
         AnnotationSupport.findAnnotation(context.getRequiredTestMethod(), Category.class)
                 .ifPresent(anno -> {
-                    String categoryName = faker.commerce().department();
+                    String categoryName = dataUtils.generateCategoryName();
                     CategoryJson category = new CategoryJson(null, categoryName, anno.username(), false);
                     CategoryJson created = spendApiClient.createCategory(category);
                     if (anno.archived()) {

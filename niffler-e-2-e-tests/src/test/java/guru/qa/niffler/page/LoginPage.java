@@ -11,8 +11,8 @@ public class LoginPage {
   private final SelenideElement usernameInput = $("input[name='username']");
   private final SelenideElement passwordInput = $("input[name='password']");
   private final SelenideElement submitBtn = $("button[type='submit']");
-  private final SelenideElement registerBtn = $($(By.className("form__register")));
-  private final SelenideElement credentialsError = $($(By.className("form__error")));
+  private final SelenideElement registerBtn = $(".form__register");
+  private final SelenideElement credentialsError = $(".form__error");
 
   public MainPage doLogin(String username, String password) {
     usernameInput.setValue(username);
@@ -26,9 +26,9 @@ public class LoginPage {
     return new RegisterPage();
   }
 
-  public void credentialsError(String username) {
+  public void credentialsError(String username, String password) {
     usernameInput.setValue(username);
-    passwordInput.setValue("12346");
+    passwordInput.setValue(password);
     submitBtn.click();
     credentialsError.shouldHave(text("Bad credentials"));
   }

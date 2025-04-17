@@ -2,6 +2,7 @@ package guru.qa.niffler.test.web;
 
 import com.codeborne.selenide.Selenide;
 import com.github.javafaker.Faker;
+import guru.qa.niffler.DataUtils;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.jupiter.extension.BrowserExtension;
 import guru.qa.niffler.page.LoginPage;
@@ -13,21 +14,17 @@ import org.junit.jupiter.api.extension.ExtendWith;
 public class LoginTest {
 
     private static final Config CFG = Config.getInstance();
-    private Faker faker = new Faker();
-    private String username;
-    private String passworg;
+    private DataUtils dataUtils = new DataUtils();
+    private String username = dataUtils.generateUserName();
+    private String password = dataUtils.generateUserPassword();
+    private String uncorrectPassword = "12346";
 
-    @BeforeEach
-    void setUp() {
-        username = faker.name().username();
-        passworg = faker.internet().password(3, 6);
-    }
     @Test
     void mainPageShouldBeDisplayedAfterSuccessLogin() {
         Selenide.open(CFG.frontUrl(), LoginPage.class)
                 .clickRegisterNewAccount()
-                .doRegister(username, passworg)
-                .doLogin(username, passworg)
+                .doRegister(username, password)
+                .doLogin(username, password)
                 .checkLoadingMainPage();
     }
 
@@ -35,7 +32,7 @@ public class LoginTest {
     void userShouldStayOnLoginPageAfterLoginWithBadCredentials() {
         Selenide.open(CFG.frontUrl(), LoginPage.class)
                 .clickRegisterNewAccount()
-                .doRegister(username, passworg)
-                .credentialsError(username);
+                .doRegister(username, password)
+                .credentialsError(username, uncorrectPassword);
     }
 }

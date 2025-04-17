@@ -2,8 +2,9 @@ package guru.qa.niffler.test.web;
 
 import com.codeborne.selenide.Selenide;
 import guru.qa.niffler.config.Config;
-import guru.qa.niffler.jupiter.BrowserExtension;
-import guru.qa.niffler.jupiter.Spend;
+import guru.qa.niffler.jupiter.annotation.DisabledByIssue;
+import guru.qa.niffler.jupiter.extension.BrowserExtension;
+import guru.qa.niffler.jupiter.annotation.Spending;
 import guru.qa.niffler.model.CurrencyValues;
 import guru.qa.niffler.model.SpendJson;
 import guru.qa.niffler.page.LoginPage;
@@ -16,7 +17,7 @@ public class SpendingTest {
 
   private static final Config CFG = Config.getInstance();
 
-  @Spend(
+  @Spending(
       username = "duck",
       category = "Обучение",
       description = "Обучение Niffler 2.0",
@@ -24,6 +25,7 @@ public class SpendingTest {
       currency = CurrencyValues.RUB
   )
   @Test
+  @DisabledByIssue("2")
   void spendingDescriptionShouldBeUpdatedByTableAction(SpendJson spend) {
     final String newDescription = "Обучение Niffler NG";
 

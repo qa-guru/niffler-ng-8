@@ -35,7 +35,7 @@ public class SpendApiClient {
     catch (IOException e) {
       throw new AssertionError(e);
     }
-    assertEquals(200, response.code());
+    assertEquals(201, response.code());
     return response.body();
   }
 

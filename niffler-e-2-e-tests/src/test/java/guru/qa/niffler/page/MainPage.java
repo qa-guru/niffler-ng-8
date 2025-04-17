@@ -15,6 +15,7 @@ public class MainPage {
   private final SelenideElement historyOfSpendings = $("#spendings");
   private final SelenideElement personIcon = $("svg[data-testid='PersonIcon']");
   private final SelenideElement profileBtn  = $("a.nav-link[href='/profile']");
+  private final SelenideElement friendsBtn  = $("a.nav-link[href='/people/friends']");
 
 
   public EditSpendingPage editSpending(String spendingDescription) {
@@ -35,9 +36,15 @@ public class MainPage {
     historyOfSpendings.should(visible);
   }
 
-  public ProfilePage openProfile() {
+  public ProfilePage openProfilePage() {
     personIcon.click();
     profileBtn.click();
     return new ProfilePage();
+  }
+
+  public FriendsPage openFriendsPage() {
+    personIcon.click();
+    friendsBtn.click();
+    return new FriendsPage();
   }
 }

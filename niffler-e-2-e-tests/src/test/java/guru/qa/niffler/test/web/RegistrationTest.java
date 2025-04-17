@@ -3,7 +3,6 @@ package guru.qa.niffler.test.web;
 import com.codeborne.selenide.Selenide;
 import guru.qa.niffler.jupiter.extension.BrowserExtension;
 import guru.qa.niffler.page.LoginPage;
-import guru.qa.niffler.page.RegisterPage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -27,7 +26,8 @@ public class RegistrationTest extends BaseTest {
     void shouldNotRegisterUserWithExistingUsername() {
         String existingUser = "test";
 
-        Selenide.open(CFG.authUrl(), RegisterPage.class)
+        Selenide.open(CFG.frontUrl(), LoginPage.class)
+                .clickCreateNewAccount()
                 .doRegister(existingUser, password)
                 .checkValidationErrorUserFieldIsDisplayed(existingUser);
     }
@@ -36,7 +36,8 @@ public class RegistrationTest extends BaseTest {
     void shouldShowErrorIfPasswordAndConfirmPasswordAreNotEqual() {
         String notEqualPassword = randomPassword();
 
-        Selenide.open(CFG.authUrl(), RegisterPage.class)
+        Selenide.open(CFG.frontUrl(), LoginPage.class)
+                .clickCreateNewAccount()
                 .setUsername(username)
                 .setPassword(password)
                 .setPasswordSubmit(notEqualPassword)

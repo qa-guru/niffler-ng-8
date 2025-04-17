@@ -11,13 +11,13 @@ import static guru.qa.niffler.jupiter.extension.UsersQueueExtension.*;
 import static guru.qa.niffler.jupiter.extension.UsersQueueExtension.UserType.Type.*;
 
 @ExtendWith(BrowserExtension.class)
-public class FriendsWebTest extends BaseTest {
+public class FriendsTest extends BaseTest {
 
     @Test
     @ExtendWith(UsersQueueExtension.class)
     void friendShouldBePresentInFriendsTable(@UserType(WITH_FRIEND) StaticUser user) {
         Selenide.open(CFG.frontUrl(), LoginPage.class)
-                .doLogin("duck", "12345")
+                .doLogin(user.username(), user.password())
                 .goToFriendsTab()
                 .verifyUserVisibleInFriends(user.friend());
     }
@@ -26,7 +26,7 @@ public class FriendsWebTest extends BaseTest {
     @ExtendWith(UsersQueueExtension.class)
     void friendTableShouldBeEmptyForNewUser(@UserType(EMPTY) StaticUser user) {
         Selenide.open(CFG.frontUrl(), LoginPage.class)
-                .doLogin("bee", "12345")
+                .doLogin(user.username(), user.password())
                 .goToFriendsTab()
                 .verifyFriendsListIsEmpty();
     }
@@ -35,7 +35,7 @@ public class FriendsWebTest extends BaseTest {
     @ExtendWith(UsersQueueExtension.class)
     void incomeInvitationBePresentInFriendsTable(@UserType(WITH_INCOME_REQUEST) UsersQueueExtension.StaticUser user) {
         Selenide.open(CFG.frontUrl(), LoginPage.class)
-                .doLogin("dima", "12345")
+                .doLogin(user.username(), user.password())
                 .goToFriendsTab()
                 .verifyUserVisibleInRequests(user.income());
     }
@@ -44,7 +44,7 @@ public class FriendsWebTest extends BaseTest {
     @ExtendWith(UsersQueueExtension.class)
     void outcomeInvitationBePresentInAllPeoplesTable(@UserType(WITH_OUTCOME_REQUEST) UsersQueueExtension.StaticUser user) {
         Selenide.open(CFG.frontUrl(), LoginPage.class)
-                .doLogin("barsic", "12345")
+                .doLogin(user.username(), user.password())
                 .goToAllPeopleTab()
                 .verifyUserOutcomeVisibleInList(user.outcome());
     }

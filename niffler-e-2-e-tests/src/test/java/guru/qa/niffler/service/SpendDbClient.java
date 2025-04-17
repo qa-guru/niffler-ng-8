@@ -7,7 +7,7 @@ import guru.qa.niffler.data.entity.auth.AuthUserEntity;
 import guru.qa.niffler.data.entity.auth.AuthorityEntity;
 import guru.qa.niffler.data.entity.spend.CategoryEntity;
 import guru.qa.niffler.data.entity.spend.SpendEntity;
-import guru.qa.niffler.data.entity.user.UserEntity;
+import guru.qa.niffler.data.entity.userdata.UserEntity;
 import guru.qa.niffler.model.*;
 import guru.qa.niffler.utils.RandomDataUtils;
 import lombok.NonNull;
@@ -71,15 +71,16 @@ public class SpendDbClient {
                                                 Authority.write
                                         );
 
-                                        adj.create(AuthorityEntity.fromJson(authorityJsonWrite));
-
                                         AuthorityJson authorityJsonRead = new AuthorityJson(
                                                 null,
                                                 userId,
                                                 Authority.read
                                         );
 
-                                        adj.create(AuthorityEntity.fromJson(authorityJsonRead));
+                                        adj.create(
+                                                AuthorityEntity.fromJson(authorityJsonRead),
+                                                AuthorityEntity.fromJson(authorityJsonWrite)
+                                        );
                                     });
                     return null;
                 },
@@ -143,15 +144,16 @@ public class SpendDbClient {
                             Authority.write
                     );
 
-                    adj.create(AuthorityEntity.fromJson(authorityJsonWrite));
-
                     AuthorityJson authorityJsonRead = new AuthorityJson(
                             null,
                             userId,
                             Authority.read
                     );
 
-                    adj.create(AuthorityEntity.fromJson(authorityJsonRead));
+                    adj.create(
+                            AuthorityEntity.fromJson(authorityJsonRead),
+                            AuthorityEntity.fromJson(authorityJsonWrite)
+                    );
                     return password;
                 },
                         CFG.authJdbcUrl()

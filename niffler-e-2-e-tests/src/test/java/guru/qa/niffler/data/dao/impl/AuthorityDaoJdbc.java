@@ -19,27 +19,17 @@ public class AuthorityDaoJdbc implements AuthUserAuthorityDao {
     }
 
     @Override
-    public AuthorityEntity create(AuthorityEntity authority) {
+    public void create(AuthorityEntity... authorities) {
         try (PreparedStatement ps = connection.prepareStatement(
                 "INSERT INTO authority (user_id, authority) " +
-                        "VALaeS ( ?, ?)",
-                Statement.RETURN_GENERATED_KEYS
+                        "VALUES ( ?, ?)"
         )) {
-            ps.setObject(1, authority.getUserId());
-            ps.setString(2, authority.getAuthority().name());
-
-            ps.executeUpdate();
-
-            final UUID generatedKey;
-            try (ResultSet rs = ps.getGeneratedKeys()) {
-                if (rs.next()) {
-                    generatedKey = rs.getObject("id", UUID.class);
-                } else {
-                    throw new SQLException("Can`t find id in ResultSet");
-                }
+            for (AuthorityEntity authority : authorities) {
+                ps.setObject(1, authority.getUserId());
+                ps.setString(2, authority.getAuthority().name());
+                ps.addBatch();
             }
-            authority.setId(generatedKey);
-            return authority;
+            ps.executeBatch();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -78,6 +68,32 @@ public class AuthorityDaoJdbc implements AuthUserAuthorityDao {
                 "SELECT * FROM authority WHERE id = ?"
         )) {
             ps.setObject(1, userId);
+            ps.execute();
+            try (ResultSet rs = ps.getResultSet()) {
+                List<AuthorityEntity> list = new ArrayList<>();
+                while (rs.next()) {
+                    AuthorityEntity ae = new AuthorityEntity();
+                    ae.setId(rs.getObject("id", UUID.class));
+                    ae.setUserId(rs.getObject("user_id", UUID.class));
+                    ae.setAuthority(
+                            Authority.valueOf(
+                                    rs.getString("authority")
+                            )
+                    );
+                    list.add(ae);
+                }
+                return list;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public List<AuthorityEntity> findAll() {
+        try (PreparedStatement ps = connection.prepareStatement(
+                "SELECT * FROM authority"
+        )) {
             ps.execute();
             try (ResultSet rs = ps.getResultSet()) {
                 List<AuthorityEntity> list = new ArrayList<>();

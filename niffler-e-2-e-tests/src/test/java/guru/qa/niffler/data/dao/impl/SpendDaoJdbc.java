@@ -84,32 +84,32 @@ public class SpendDaoJdbc implements SpendDao {
 
     @Override
     public List<SpendEntity> findAllByUsername(String username) {
-            try (PreparedStatement ps = connection.prepareStatement(
-                    "SELECT * FROM spend WHERE username = ?"
-            )) {
-                ps.setString(1, username);
-                ps.execute();
-                try (ResultSet rs = ps.getResultSet()) {
-                    List<SpendEntity> list = new ArrayList<>();
-                    while (rs.next()) {
-                        SpendEntity se = new SpendEntity();
-                        se.setId(rs.getObject("id", UUID.class));
-                        se.setUsername(rs.getString("username"));
-                        se.setCurrency(rs.getObject("currency", CurrencyValues.class));
-                        se.setAmount(rs.getDouble("amount"));
-                        se.setDescription(rs.getString("description"));
-                        se.setCategory(
-                                new CategoryDaoJdbc(connection)
-                                        .findCategoryById(
-                                                rs.getObject("category_id", UUID.class)
-                                        )
-                                        .get()
-                        );
-                        list.add(se);
-                    }
-                    return list;
+        try (PreparedStatement ps = connection.prepareStatement(
+                "SELECT * FROM spend WHERE username = ?"
+        )) {
+            ps.setString(1, username);
+            ps.execute();
+            try (ResultSet rs = ps.getResultSet()) {
+                List<SpendEntity> list = new ArrayList<>();
+                while (rs.next()) {
+                    SpendEntity se = new SpendEntity();
+                    se.setId(rs.getObject("id", UUID.class));
+                    se.setUsername(rs.getString("username"));
+                    se.setCurrency(rs.getObject("currency", CurrencyValues.class));
+                    se.setAmount(rs.getDouble("amount"));
+                    se.setDescription(rs.getString("description"));
+                    se.setCategory(
+                            new CategoryDaoJdbc(connection)
+                                    .findCategoryById(
+                                            rs.getObject("category_id", UUID.class)
+                                    )
+                                    .get()
+                    );
+                    list.add(se);
                 }
-            } catch (SQLException e) {
+                return list;
+            }
+        } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
@@ -122,6 +122,37 @@ public class SpendDaoJdbc implements SpendDao {
                 ps.setObject(1, spend.getId());
                 ps.executeUpdate();
             } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public List<SpendEntity> findAll() {
+        try (PreparedStatement ps = connection.prepareStatement(
+                "SELECT * FROM spend"
+        )) {
+            ps.execute();
+            try (ResultSet rs = ps.getResultSet()) {
+                List<SpendEntity> list = new ArrayList<>();
+                while (rs.next()) {
+                    SpendEntity se = new SpendEntity();
+                    se.setId(rs.getObject("id", UUID.class));
+                    se.setUsername(rs.getString("username"));
+                    se.setCurrency(rs.getObject("currency", CurrencyValues.class));
+                    se.setAmount(rs.getDouble("amount"));
+                    se.setDescription(rs.getString("description"));
+                    se.setCategory(
+                            new CategoryDaoJdbc(connection)
+                                    .findCategoryById(
+                                            rs.getObject("category_id", UUID.class)
+                                    )
+                                    .get()
+                    );
+                    list.add(se);
+                }
+                return list;
+            }
+        } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }

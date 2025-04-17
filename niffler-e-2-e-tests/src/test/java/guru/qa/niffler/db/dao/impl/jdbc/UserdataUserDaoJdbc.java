@@ -1,7 +1,6 @@
 package guru.qa.niffler.db.dao.impl.jdbc;
 
 import guru.qa.niffler.api.model.CurrencyValues;
-import guru.qa.niffler.db.dao.AbstractDao;
 import guru.qa.niffler.db.dao.UserdataUserDao;
 import guru.qa.niffler.db.entity.userdata.UserdataUserEntity;
 
@@ -18,7 +17,7 @@ public class UserdataUserDaoJdbc extends AbstractDao<UserdataUserEntity> impleme
     }
 
     @Override
-    public UserdataUserEntity createUserdata(UserdataUserEntity entity) {
+    public UserdataUserEntity create(UserdataUserEntity entity) {
         String sql = "INSERT INTO \"user\" (username, currency, firstname, surname, full_name, photo, photo_small) " +
                 "VALUES(?, ?, ?, ?, ?, ?, ?) RETURNING *";
         return executeQuery(sql, entity.getUsername(), entity.getCurrency().name(), entity.getFirstname(),
@@ -26,25 +25,25 @@ public class UserdataUserDaoJdbc extends AbstractDao<UserdataUserEntity> impleme
     }
 
     @Override
-    public Optional<UserdataUserEntity> findUserdataById(UUID id) {
+    public Optional<UserdataUserEntity> findById(UUID id) {
         String sql = "SELECT * FROM \"user\" WHERE id = ?";
         return executeQueryToOptional(sql, id);
     }
 
     @Override
-    public Optional<UserdataUserEntity> findUserdataByUsername(String username) {
+    public Optional<UserdataUserEntity> findByUsername(String username) {
         String sql = "SELECT * FROM \"user\" WHERE username = ?";
         return executeQueryToOptional(sql, username);
     }
 
     @Override
-    public boolean deleteUserdata(UserdataUserEntity entity) {
+    public boolean delete(UserdataUserEntity entity) {
         String sql = "DELETE FROM \"user\" WHERE id = ?";
         return executeUpdateToBoolean(sql, entity.getId());
     }
 
     @Override
-    public List<UserdataUserEntity> findAllUserdata() {
+    public List<UserdataUserEntity> findAll() {
         String sql = "SELECT * FROM \"user\"";
         return executeQueryToList(sql);
     }

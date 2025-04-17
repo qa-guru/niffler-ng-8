@@ -1,6 +1,5 @@
 package guru.qa.niffler.db.dao.impl.jdbc;
 
-import guru.qa.niffler.db.dao.AbstractDao;
 import guru.qa.niffler.db.dao.CategoryDao;
 import guru.qa.niffler.db.entity.spend.CategoryEntity;
 
@@ -17,43 +16,43 @@ public class CategoryDaoJdbc extends AbstractDao<CategoryEntity> implements Cate
     }
 
     @Override
-    public CategoryEntity createCategory(CategoryEntity entity) {
+    public CategoryEntity create(CategoryEntity entity) {
         String sql = "INSERT INTO category (username, name, archived) VALUES(?, ?, ?) RETURNING *";
         return executeQuery(sql, entity.getUsername(), entity.getName(), entity.isArchived());
     }
 
     @Override
-    public CategoryEntity updateCategory(CategoryEntity entity) {
+    public CategoryEntity update(CategoryEntity entity) {
         String sql = "UPDATE category SET username = ?, name = ?, archived = ? WHERE id = ? RETURNING *";
         return executeQuery(sql, entity.getUsername(), entity.getName(), entity.isArchived(), entity.getId());
     }
 
     @Override
-    public Optional<CategoryEntity> findCategoryById(UUID id) {
+    public Optional<CategoryEntity> findById(UUID id) {
         String sql = "SELECT * FROM category WHERE id = ?";
         return executeQueryToOptional(sql, id);
     }
 
     @Override
-    public Optional<CategoryEntity> findCategoryByNameAndUsername(String name, String username) {
+    public Optional<CategoryEntity> findByNameAndUsername(String name, String username) {
         String sql = "SELECT * FROM category WHERE name = ? and username = ?";
         return executeQueryToOptional(sql, name, username);
     }
 
     @Override
-    public List<CategoryEntity> findAllCategoryByUsername(String username) {
+    public List<CategoryEntity> findAllByUsername(String username) {
         String sql = "SELECT * FROM category WHERE username = ?";
         return executeQueryToList(sql, username);
     }
 
     @Override
-    public boolean deleteCategory(CategoryEntity entity) {
+    public boolean delete(CategoryEntity entity) {
         String sql = "DELETE FROM category WHERE id = ?";
         return executeUpdateToBoolean(sql, entity.getId());
     }
 
     @Override
-    public List<CategoryEntity> findAllCategories() {
+    public List<CategoryEntity> findAll() {
         String sql = "SELECT * FROM category";
         return executeQueryToList(sql);
     }

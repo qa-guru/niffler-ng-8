@@ -1,7 +1,7 @@
 package guru.qa.niffler.test.web;
 
-import guru.qa.niffler.api.model.AuthUserJson;
 import guru.qa.niffler.api.model.UserParts;
+import guru.qa.niffler.api.model.UserdataUserJson;
 import guru.qa.niffler.db.service.UserDbService;
 import org.junit.jupiter.api.Test;
 
@@ -13,15 +13,17 @@ public class UserDbTest {
     private final UserDbService userDbService = new UserDbService();
 
     @Test
-    void userWillNotBeCreatedIfAccountNonExpiredIsMissing() {
+    void userWillNotBeCreatedIfUsernameIsMissing() {
         UserParts userJson = genDefaultUser();
-        AuthUserJson authUser = userJson.authUserJson();
-        authUser.setAccountNonExpired(null);
+        UserdataUserJson authUser = userJson.userdataUserJson();
+        String username = authUser.getUsername();
+        authUser.setUsername(null);
 
         Exception exception = assertThrows(RuntimeException.class, () -> userDbService.createUser(userJson));
-        assertTrue(exception.getMessage().contains("org.postgresql.util.PSQLException: ERROR: null value in column " +
-                "\"account_non_expired\" of relation \"user\" violates not-null constraint"));
-        authUser.setAccountNonExpired(true);
+        assertTrue(exception.getMessage().contains("ERROR: null value in column " +
+                "\"username\" of relation \"user\" violates not-null constraint"));
+
+        authUser.setUsername(username);
         assertDoesNotThrow(() -> userDbService.createUser(userJson));
         userDbService.deleteUser(userJson);
     }

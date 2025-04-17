@@ -1,13 +1,14 @@
 package guru.qa.niffler.jupiter.extension;
 
-import guru.qa.niffler.db.Databases;
+import guru.qa.niffler.db.tpl.Connections;
+import guru.qa.niffler.db.tpl.XaTransactionTemplate;
 
 public class DatabasesExtension implements SuiteExtension {
 
     @Override
     public void afterSuite() {
-        Databases.closeAllConnection();
-        Databases.closeTransactionManager();
+        Connections.closeAllConnections();
+        XaTransactionTemplate.closeTransactionManager();
     }
 
 }

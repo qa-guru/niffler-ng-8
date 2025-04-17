@@ -1,7 +1,6 @@
 package guru.qa.niffler.db.dao.impl.jdbc;
 
 import guru.qa.niffler.api.model.Authority;
-import guru.qa.niffler.db.dao.AbstractDao;
 import guru.qa.niffler.db.dao.AuthAuthorityDao;
 import guru.qa.niffler.db.entity.auth.AuthAuthorityEntity;
 
@@ -18,38 +17,38 @@ public class AuthAuthorityDaoJdbc extends AbstractDao<AuthAuthorityEntity> imple
     }
 
     @Override
-    public AuthAuthorityEntity createAuthAuthority(AuthAuthorityEntity entity) {
+    public AuthAuthorityEntity create(AuthAuthorityEntity entity) {
         String sql = "INSERT INTO category (user_id, authority) " +
                 "VALUES(?, ?) RETURNING *";
         return executeQuery(sql, entity.getUser().getId(), entity.getAuthority());
     }
 
     @Override
-    public AuthAuthorityEntity updateAuthAuthority(AuthAuthorityEntity entity) {
+    public AuthAuthorityEntity update(AuthAuthorityEntity entity) {
         String sql = "UPDATE authority SET user_id = ?, authority = ? WHERE id = ? RETURNING *";
         return executeQuery(sql, entity.getUser(), entity.getAuthority(), entity.getId());
     }
 
     @Override
-    public Optional<AuthAuthorityEntity> findAuthAuthorityById(UUID id) {
+    public Optional<AuthAuthorityEntity> findById(UUID id) {
         String sql = "SELECT * FROM authority WHERE id = ?";
         return executeQueryToOptional(sql, id);
     }
 
     @Override
-    public List<AuthAuthorityEntity> findAuthAuthorityByUserId(UUID userId) {
+    public List<AuthAuthorityEntity> findByUserId(UUID userId) {
         String sql = "SELECT * FROM authority WHERE user_id = ?";
         return executeQueryToList(sql, userId);
     }
 
     @Override
-    public boolean deleteAuthAuthority(AuthAuthorityEntity entity) {
+    public boolean delete(AuthAuthorityEntity entity) {
         String sql = "DELETE FROM authority WHERE id = ?";
         return executeUpdateToBoolean(sql, entity.getId());
     }
 
     @Override
-    public List<AuthAuthorityEntity> findAllAuthAuthorities() {
+    public List<AuthAuthorityEntity> findAll() {
         String sql = "SELECT * FROM authority";
         return executeQueryToList(sql);
     }

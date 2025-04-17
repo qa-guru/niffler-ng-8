@@ -1,6 +1,6 @@
-package guru.qa.niffler.db.dao;
+package guru.qa.niffler.db.dao.impl.jdbc;
 
-import guru.qa.niffler.db.Databases;
+import guru.qa.niffler.db.tpl.Connections;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -81,7 +81,7 @@ public abstract class AbstractDao<E> {
     }
 
     public Connection getConnection() {
-        return Databases.connection(jdbcUrl);
+        return Connections.holder(jdbcUrl).connection();
     }
 
 }

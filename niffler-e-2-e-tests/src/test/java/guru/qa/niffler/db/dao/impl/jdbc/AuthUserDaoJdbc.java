@@ -1,6 +1,5 @@
 package guru.qa.niffler.db.dao.impl.jdbc;
 
-import guru.qa.niffler.db.dao.AbstractDao;
 import guru.qa.niffler.db.dao.AuthUserDao;
 import guru.qa.niffler.db.entity.auth.AuthUserEntity;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
@@ -21,7 +20,7 @@ public class AuthUserDaoJdbc extends AbstractDao<AuthUserEntity> implements Auth
     }
 
     @Override
-    public AuthUserEntity createAuthUser(AuthUserEntity entity) {
+    public AuthUserEntity create(AuthUserEntity entity) {
         String sql = "INSERT INTO \"user\" (username, password, enabled, account_non_expired, account_non_locked, credentials_non_expired) " +
                 "VALUES(?, ?, ?, ?, ?, ?) RETURNING *";
         String password = passwordEncoder.encode(entity.getPassword());
@@ -30,7 +29,7 @@ public class AuthUserDaoJdbc extends AbstractDao<AuthUserEntity> implements Auth
     }
 
     @Override
-    public AuthUserEntity updateAuthUser(AuthUserEntity entity) {
+    public AuthUserEntity update(AuthUserEntity entity) {
         String sql = "UPDATE category SET username = ?, password = ?, enabled = ?, " +
                 "account_non_expired = ?, account_non_locked = ?, credentials_non_expired = ? WHERE id = ? RETURNING *";
         String password = passwordEncoder.encode(entity.getPassword());
@@ -39,25 +38,25 @@ public class AuthUserDaoJdbc extends AbstractDao<AuthUserEntity> implements Auth
     }
 
     @Override
-    public Optional<AuthUserEntity> findAuthUserById(UUID id) {
+    public Optional<AuthUserEntity> findById(UUID id) {
         String sql = "SELECT * FROM \"user\" WHERE id = ?";
         return executeQueryToOptional(sql, id);
     }
 
     @Override
-    public Optional<AuthUserEntity> findAuthUserByUsername(String username) {
+    public Optional<AuthUserEntity> findByUsername(String username) {
         String sql = "SELECT * FROM \"user\" WHERE username = ?";
         return executeQueryToOptional(sql, username);
     }
 
     @Override
-    public boolean deleteAuthUser(AuthUserEntity entity) {
+    public boolean delete(AuthUserEntity entity) {
         String sql = "DELETE FROM \"user\" WHERE id = ?";
         return executeUpdateToBoolean(sql, entity.getId());
     }
 
     @Override
-    public List<AuthUserEntity> findAllAuthUsers() {
+    public List<AuthUserEntity> findAll() {
         String sql = "SELECT * FROM \"user\"";
         return executeQueryToList(sql);
     }

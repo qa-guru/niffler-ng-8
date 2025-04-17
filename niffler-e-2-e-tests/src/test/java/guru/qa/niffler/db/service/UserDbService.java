@@ -6,37 +6,38 @@ import guru.qa.niffler.api.model.UserdataUserJson;
 import guru.qa.niffler.db.dao.AuthAuthorityDao;
 import guru.qa.niffler.db.dao.AuthUserDao;
 import guru.qa.niffler.db.dao.UserdataUserDao;
-import guru.qa.niffler.db.dao.impl.jdbc.AuthAuthorityDaoJdbc;
-import guru.qa.niffler.db.dao.impl.jdbc.AuthUserDaoJdbc;
-import guru.qa.niffler.db.dao.impl.jdbc.UserdataUserDaoJdbc;
+import guru.qa.niffler.db.dao.impl.spring_jdbc.AuthAuthorityDaoSpringJdbc;
+import guru.qa.niffler.db.dao.impl.spring_jdbc.AuthUserDaoSpringJdbc;
+import guru.qa.niffler.db.dao.impl.spring_jdbc.UserdataUserDaoSpringJdbc;
 import guru.qa.niffler.db.entity.auth.AuthAuthorityEntity;
 import guru.qa.niffler.db.entity.auth.AuthUserEntity;
 import guru.qa.niffler.db.entity.userdata.UserdataUserEntity;
+import guru.qa.niffler.db.tpl.XaTransactionTemplate;
 
 import java.util.List;
-import java.util.function.Supplier;
 
 public class UserDbService extends AbstractDbClient {
 
     private final String AUTH_DB_URL = CFG.authJdbcUrl();
-    private final AuthUserDao authUserDao = new AuthUserDaoJdbc(AUTH_DB_URL);
-    private final AuthAuthorityDao authAuthorityDao = new AuthAuthorityDaoJdbc(AUTH_DB_URL);
+    private final AuthUserDao authUserDao = new AuthUserDaoSpringJdbc(AUTH_DB_URL);
+    private final AuthAuthorityDao authAuthorityDao = new AuthAuthorityDaoSpringJdbc(AUTH_DB_URL);
 
     private final String USERDATA_DB_URL = CFG.userdataJdbcUrl();
-    private final UserdataUserDao userdataUserDao = new UserdataUserDaoJdbc(USERDATA_DB_URL);
+    private final UserdataUserDao userdataUserDao = new UserdataUserDaoSpringJdbc(USERDATA_DB_URL);
+
+    private final XaTransactionTemplate xaTxTemplate = new XaTransactionTemplate(AUTH_DB_URL, USERDATA_DB_URL);
 
     public UserParts createUser(UserParts userJson) {
-        return xaTransaction(() -> {
-            AuthUserEntity authUser = AuthUserEntity.fromJson(userJson.authUserJson());
+        return xaTxTemplate.execute(() -> {
             UserdataUserEntity userdataUser = UserdataUserEntity.fromJson(userJson.userdataUserJson());
-
-            authUser = authUserDao.createAuthUser(authUser);
+            AuthUserEntity authUser = AuthUserEntity.fromJson(userJson.authUserJson());
+            authUser = authUserDao.create(authUser);
             for (AuthAuthorityEntity authority : authUser.getAuthorities()) {
                 authority.setUser(authUser);
-                AuthAuthorityEntity authAuthority = authAuthorityDao.createAuthAuthority(authority);
+                AuthAuthorityEntity authAuthority = authAuthorityDao.create(authority);
                 authUser.addAuthorities(authAuthority);
             }
-            userdataUser = userdataUserDao.createUserdata(userdataUser);
+            userdataUser = userdataUserDao.create(userdataUser);
             UserdataUserJson userdataUserJson = UserdataUserJson.fromEntity(userdataUser);
             AuthUserJson authUserJson = AuthUserJson.fromEntity(authUser);
             return new UserParts(authUserJson, userdataUserJson);
@@ -44,7 +45,7 @@ public class UserDbService extends AbstractDbClient {
     }
 
     public void deleteUser(UserParts userJson) {
-        xaTransaction(() -> {
+        xaTxTemplate.execute(() -> {
             deleteAuthUserAndAuthority(userJson.authUserJson());
             deleteUserdataUser(userJson.userdataUserJson());
         });
@@ -55,14 +56,14 @@ public class UserDbService extends AbstractDbClient {
         if (userJson.getId() != null) {
             userdataUser = UserdataUserEntity.fromJson(userJson);
         } else if (userJson.getUsername() != null) {
-            userdataUser = userdataUserDao.findUserdataByUsername(userJson.getUsername())
+            userdataUser = userdataUserDao.findByUsername(userJson.getUsername())
                     .orElseThrow(() -> new IllegalArgumentException(
                             "У пользователя невозможно удалить, т.к. отсутствует id и не получается найти по username"
                     ));
         } else {
             throw new IllegalArgumentException("id и username == null");
         }
-        userdataUserDao.deleteUserdata(userdataUser);
+        userdataUserDao.delete(userdataUser);
     }
 
     private void deleteAuthUserAndAuthority(AuthUserJson userJson) {
@@ -70,27 +71,19 @@ public class UserDbService extends AbstractDbClient {
         if (userJson.getId() != null) {
             authUser = AuthUserEntity.fromJson(userJson);
         } else if (userJson.getUsername() != null) {
-            authUser = authUserDao.findAuthUserByUsername(userJson.getUsername())
+            authUser = authUserDao.findByUsername(userJson.getUsername())
                     .orElseThrow(() -> new IllegalArgumentException(
                             "У пользователя невозможно удалить, т.к. отсутствует id и не получается найти по username"
                     ));
-            List<AuthAuthorityEntity> authorities = authAuthorityDao.findAuthAuthorityByUserId(authUser.getId());
+            List<AuthAuthorityEntity> authorities = authAuthorityDao.findByUserId(authUser.getId());
             authUser.addAuthorities(authorities);
         } else {
             throw new IllegalArgumentException("id и username == null");
         }
         for (AuthAuthorityEntity authority : authUser.getAuthorities()) {
-            authAuthorityDao.deleteAuthAuthority(authority);
+            authAuthorityDao.delete(authority);
         }
-        authUserDao.deleteAuthUser(authUser);
-    }
-
-    public <T> T xaTransaction(Supplier<T> supplier) {
-        return xaTransaction(supplier, AUTH_DB_URL, USERDATA_DB_URL);
-    }
-
-    public void xaTransaction(Runnable runnable) {
-        xaTransaction(runnable, AUTH_DB_URL, USERDATA_DB_URL);
+        authUserDao.delete(authUser);
     }
 
 }

@@ -8,16 +8,16 @@ import java.util.UUID;
 
 public interface AuthUserDao {
 
-    AuthUserEntity createAuthUser(AuthUserEntity entity);
+    AuthUserEntity create(AuthUserEntity entity);
 
-    AuthUserEntity updateAuthUser(AuthUserEntity entity);
+    AuthUserEntity update(AuthUserEntity entity);
 
-    Optional<AuthUserEntity> findAuthUserById(UUID id);
+    Optional<AuthUserEntity> findById(UUID id);
 
-    Optional<AuthUserEntity> findAuthUserByUsername(String username);
+    Optional<AuthUserEntity> findByUsername(String username);
 
-    boolean deleteAuthUser(AuthUserEntity entity);
+    boolean delete(AuthUserEntity entity);
 
-    List<AuthUserEntity> findAllAuthUsers();
+    List<AuthUserEntity> findAll();
 
 }

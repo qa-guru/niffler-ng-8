@@ -8,16 +8,16 @@ import java.util.UUID;
 
 public interface AuthAuthorityDao {
 
-    AuthAuthorityEntity createAuthAuthority(AuthAuthorityEntity entity);
+    AuthAuthorityEntity create(AuthAuthorityEntity entity);
 
-    AuthAuthorityEntity updateAuthAuthority(AuthAuthorityEntity entity);
+    AuthAuthorityEntity update(AuthAuthorityEntity entity);
 
-    Optional<AuthAuthorityEntity> findAuthAuthorityById(UUID id);
+    Optional<AuthAuthorityEntity> findById(UUID id);
 
-    List<AuthAuthorityEntity> findAuthAuthorityByUserId(UUID userId);
+    List<AuthAuthorityEntity> findByUserId(UUID userId);
 
-    boolean deleteAuthAuthority(AuthAuthorityEntity entity);
+    boolean delete(AuthAuthorityEntity entity);
 
-    List<AuthAuthorityEntity> findAllAuthAuthorities();
+    List<AuthAuthorityEntity> findAll();
 
 }

@@ -1,7 +1,6 @@
 package guru.qa.niffler.db.dao.impl.jdbc;
 
 import guru.qa.niffler.api.model.CurrencyValues;
-import guru.qa.niffler.db.dao.AbstractDao;
 import guru.qa.niffler.db.dao.SpendDao;
 import guru.qa.niffler.db.entity.spend.CategoryEntity;
 import guru.qa.niffler.db.entity.spend.SpendEntity;
@@ -19,7 +18,7 @@ public class SpendDaoJdbc extends AbstractDao<SpendEntity> implements SpendDao {
     }
 
     @Override
-    public SpendEntity createSpend(SpendEntity entity) {
+    public SpendEntity create(SpendEntity entity) {
         String sql = "INSERT INTO spend (username, spend_date, currency, amount, description, category_id) " +
                 "VALUES(?, ?, ?, ?, ?, ?) RETURNING *";
         return executeQuery(sql, entity.getUsername(), entity.getSpendDate(), entity.getCurrency().name(),
@@ -27,31 +26,31 @@ public class SpendDaoJdbc extends AbstractDao<SpendEntity> implements SpendDao {
     }
 
     @Override
-    public Optional<SpendEntity> findSpendById(UUID id) {
+    public Optional<SpendEntity> findById(UUID id) {
         String sql = "SELECT * FROM spend WHERE id = ?";
         return executeQueryToOptional(sql, id);
     }
 
     @Override
-    public List<SpendEntity> findAllSpendByUsername(String username) {
+    public List<SpendEntity> findAllByUsername(String username) {
         String sql = "SELECT * FROM spend WHERE username = ?";
         return executeQueryToList(sql, username);
     }
 
     @Override
-    public List<SpendEntity> findAllSpendByCategoryId(UUID categoryId) {
+    public List<SpendEntity> findAllByCategoryId(UUID categoryId) {
         String sql = "SELECT * FROM spend WHERE category_id = ?";
         return executeQueryToList(sql, categoryId);
     }
 
     @Override
-    public boolean deleteSpend(SpendEntity entity) {
+    public boolean delete(SpendEntity entity) {
         String sql = "DELETE FROM spend WHERE id = ?";
         return executeUpdateToBoolean(sql, entity.getId());
     }
 
     @Override
-    public List<SpendEntity> findAllSpends() {
+    public List<SpendEntity> findAll() {
         String sql = "SELECT * FROM spend";
         return executeQueryToList(sql);
     }

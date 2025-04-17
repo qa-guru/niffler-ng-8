@@ -74,7 +74,7 @@ public class CategoryDaoJdbc implements CategoryDao {
   }
 
   @Override
-  public Optional<CategoryEntity> findCategoryById(UUID id) {
+  public Optional<CategoryEntity> findById(UUID id) {
     try (Connection connection = Databases.connection(CFG.spendJdbcUrl())) {
       try (PreparedStatement ps = connection.prepareStatement(
           "SELECT * FROM category WHERE id = ?"

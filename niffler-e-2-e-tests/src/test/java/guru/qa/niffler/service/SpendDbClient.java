@@ -43,7 +43,7 @@ public class SpendDbClient {
 
   public CategoryJson updateCategory(CategoryJson category) {
 
-    categoryDao.findCategoryById(category.id())
+    categoryDao.findById(category.id())
             .orElseThrow(() -> new RuntimeException("Category not found: " + category.id()));
 
     CategoryEntity updatedCategory = categoryDao.update(CategoryEntity.fromJson(category));

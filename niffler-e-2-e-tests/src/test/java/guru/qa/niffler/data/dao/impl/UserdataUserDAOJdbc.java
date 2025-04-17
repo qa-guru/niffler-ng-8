@@ -49,7 +49,7 @@ public class UserdataUserDAOJdbc implements UserdataUserDao {
     }
 
     @Override
-    public Optional<UserEntity> findSById(UUID id) {
+    public Optional<UserEntity> findById(UUID id) {
         try (Connection connection = Databases.connection(CFG.userdataJdbcUrl())) {
             try (PreparedStatement ps = connection.prepareStatement(
                     "SELECT * FROM user WHERE id = ?"

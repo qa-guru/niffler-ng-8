@@ -39,16 +39,6 @@ public class CategoryExtension implements
 
                         CategoryJson created = spendDbClient.createCategory(category);
 
-                        if (anno.categories()[0].archived()) {
-                            CategoryJson archivedCategory = new CategoryJson(
-                                    created.id(),
-                                    created.name(),
-                                    created.username(),
-                                    true
-                            );
-                            created = spendDbClient.updateCategory(archivedCategory);
-                        }
-
                         context.getStore(NAMESPACE).put(
                                 context.getUniqueId(),
                                 created

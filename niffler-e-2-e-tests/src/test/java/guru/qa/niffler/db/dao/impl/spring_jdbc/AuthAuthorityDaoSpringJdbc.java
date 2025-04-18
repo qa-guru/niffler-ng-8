@@ -4,6 +4,7 @@ import guru.qa.niffler.db.dao.AuthAuthorityDao;
 import guru.qa.niffler.db.dao.impl.spring_jdbc.mapper.AuthAuthorityEntityRowMapper;
 import guru.qa.niffler.db.entity.auth.AuthAuthorityEntity;
 
+import javax.sql.DataSource;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -12,6 +13,10 @@ public class AuthAuthorityDaoSpringJdbc extends AbstractSpringDao<AuthAuthorityE
 
     public AuthAuthorityDaoSpringJdbc(String jdbcUrl) {
         super(jdbcUrl, AuthAuthorityEntityRowMapper.INSTANCE);
+    }
+
+    public AuthAuthorityDaoSpringJdbc(DataSource dataSource) {
+        super(dataSource, AuthAuthorityEntityRowMapper.INSTANCE);
     }
 
     @Override

@@ -28,11 +28,11 @@ import static org.junit.jupiter.api.Assertions.*;
  * <p>
  * ТЕСТЫ:
  * 1) SpringJDBC + XA - Отсутствует username в Userdata
- * 2) SpringJDBC + XA - Отсутствует account_non_expired в Userdata
+ * 2) SpringJDBC + XA - Отсутствует account_non_expired в AuthUser
  * 3) JDBC + XA - Отсутствует username в Userdata
- * 4) JDBC + XA - Отсутствует account_non_expired в Userdata
+ * 4) JDBC + XA - Отсутствует account_non_expired в AuthUser
  * 5) SpringJDBC + chained - Отсутствует username в Userdata
- * 6)SpringJDBC + chained - Отсутствует account_non_expired в Userdata
+ * 6)SpringJDBC + chained - Отсутствует account_non_expired в AuthUser
  */
 public class ChainedTransactionManagerTest {
 

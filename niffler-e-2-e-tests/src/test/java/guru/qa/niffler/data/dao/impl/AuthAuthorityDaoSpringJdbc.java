@@ -8,6 +8,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import javax.sql.DataSource;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 public class AuthAuthorityDaoSpringJdbc implements AuthAuthorityDao {
 
@@ -36,4 +39,24 @@ public class AuthAuthorityDaoSpringJdbc implements AuthAuthorityDao {
         }
     );
   }
+
+    @Override
+    public AuthorityEntity create(AuthorityEntity authority) {
+        return null;
+    }
+
+    @Override
+    public Optional<AuthorityEntity> findById(UUID id) {
+        return Optional.empty();
+    }
+
+    @Override
+    public List<AuthorityEntity> findByUserId(UUID userId) {
+        return List.of();
+    }
+
+    @Override
+    public void delete(AuthorityEntity authority) {
+
+    }
 }

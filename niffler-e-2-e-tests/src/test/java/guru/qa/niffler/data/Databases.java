@@ -16,6 +16,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
+import static java.sql.Connection.TRANSACTION_READ_COMMITTED;
+
 public class Databases {
     private Databases() {
     }
@@ -52,15 +54,17 @@ public class Databases {
         }
     }
 
-    public static <T> T xaTransaction(int isolationLevel, XaFunction<T>... actions) {
+    public static <T> T transaction(Function<Connection, T> function, String jdbcUrl) {
+        return transaction(function, jdbcUrl, TRANSACTION_READ_COMMITTED);
+    }
+
+    public static <T> T xaTransaction(XaFunction<T>... actions) {
         UserTransaction ut = new UserTransactionImp();
         try {
             ut.begin();
             T result = null;
             for (XaFunction<T> action : actions) {
-                Connection conn = connection(action.jdbcUrl());
-                conn.setTransactionIsolation(isolationLevel);
-                result = action.function.apply(conn);
+                result = action.function.apply(connection(action.jdbcUrl));
             }
             ut.commit();
             return result;
@@ -97,25 +101,27 @@ public class Databases {
         }
     }
 
-    public static void xaTransaction(int isolationLevel, XaConsumer... actions) {
-        UserTransaction ut = new UserTransactionImp();
-        try {
-            ut.begin();
-            for (XaConsumer action : actions) {
-                Connection conn = connection(action.jdbcUrl());
-                conn.setTransactionIsolation(isolationLevel);
-                action.function.accept(conn);
-            }
-            ut.commit();
-        } catch (Exception e) {
-            try {
-                ut.rollback();
-            } catch (SystemException ex) {
-                throw new RuntimeException(ex);
-            }
-            throw new RuntimeException(e);
-        }
+    public static void transaction(Consumer<Connection> consumer, String jdbcUrl) {
+        transaction(consumer, jdbcUrl, TRANSACTION_READ_COMMITTED);
     }
+
+  public static void xaTransaction(XaConsumer... actions) {
+    UserTransaction ut = new UserTransactionImp();
+    try {
+      ut.begin();
+      for (XaConsumer action : actions) {
+        action.function.accept(connection(action.jdbcUrl));
+      }
+      ut.commit();
+    } catch (Exception e) {
+      try {
+        ut.rollback();
+      } catch (SystemException ex) {
+        throw new RuntimeException(ex);
+      }
+      throw new RuntimeException(e);
+    }
+  }
 
     private static DataSource dataSource(String jdbcUrl) {
         return dataSources.computeIfAbsent(

@@ -1,34 +1,26 @@
 package guru.qa.niffler.test.web;
 
 import com.codeborne.selenide.Selenide;
-import com.github.javafaker.Faker;
+import guru.qa.niffler.Utils.RandomDataUtils;
 import guru.qa.niffler.config.Config;
-import guru.qa.niffler.jupiter.extension.BrowserExtension;
+import guru.qa.niffler.jupiter.annotation.meta.WebTest;
 import guru.qa.niffler.page.LoginPage;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 
-@ExtendWith(BrowserExtension.class)
+@WebTest
 public class RegistrationTest {
 
     private static final Config CFG = Config.getInstance();
-    private Faker faker = new Faker();
-    private String username;
-    private String passworg;
-
-    @BeforeEach
-    void setUp() {
-        username = faker.name().username();
-        passworg = faker.internet().password(3, 6);
-    }
+    private final RandomDataUtils dataUtils = new RandomDataUtils();
+    private final String username = dataUtils.randomUserName();
+    private final String password = dataUtils.randomUserPassword();
 
     @Test
     void shouldRegisterNewUser() {
         Selenide.open(CFG.frontUrl(), LoginPage.class)
                 .clickRegisterNewAccount()
-                .doRegister(username, passworg)
-                .doLogin(username, passworg)
+                .doRegister(username, password)
+                .doLogin(username, password)
                 .checkLoadingMainPage();
     }
 
@@ -36,12 +28,12 @@ public class RegistrationTest {
     void shouldNotRegisterUserWithExistingUsername() {
         Selenide.open(CFG.frontUrl(), LoginPage.class)
                 .clickRegisterNewAccount()
-                .doRegister(username, passworg);
+                .doRegister(username, password);
         Selenide.open(CFG.frontUrl(), LoginPage.class)
                 .clickRegisterNewAccount()
                 .setUsername(username)
-                .setPassword(passworg)
-                .setPasswordSubmit(passworg)
+                .setPassword(password)
+                .setPasswordSubmit(password)
                 .submitExistingUser(username);
     }
 
@@ -50,7 +42,7 @@ public class RegistrationTest {
         Selenide.open(CFG.frontUrl(), LoginPage.class)
                 .clickRegisterNewAccount()
                 .setUsername(username)
-                .setPassword(passworg)
+                .setPassword(password)
                 .setPasswordSubmit("12345")
                 .assertEqualPasswordError();
     }

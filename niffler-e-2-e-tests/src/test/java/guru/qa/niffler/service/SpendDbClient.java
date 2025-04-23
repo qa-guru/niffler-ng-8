@@ -26,4 +26,12 @@ public class SpendDbClient {
     public CategoryJson createCategory(CategoryJson category) {
         return CategoryJson.fromEntity(categoryDao.create(CategoryEntity.fromJson(category)));
     }
+
+    public void deleteCategory(CategoryJson category) {
+       categoryDao.deleteCategory(CategoryEntity.fromJson(category));
+    }
+
+    public void deleteSpend(SpendJson spend) {
+       spendDao.deleteSpend(SpendEntity.fromJson(spend));
+    }
 }

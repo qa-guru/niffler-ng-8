@@ -35,14 +35,8 @@ public class CategoryExtension implements BeforeEachCallback, AfterEachCallback,
     @Override
     public void afterEach(ExtensionContext context) throws Exception {
         CategoryJson category = context.getStore(NAMESPACE).get(context.getUniqueId(), CategoryJson.class);
-        if (category != null && !category.archived()) {
-            spendApiClient.updateCategories(new CategoryJson(
-                    category.id(),
-                    category.name(),
-                    category.username(),
-                    true
-            ));
-        }
+        SpendDbClient db = new SpendDbClient();
+        db.deleteCategory(category);
     }
 
     @Override

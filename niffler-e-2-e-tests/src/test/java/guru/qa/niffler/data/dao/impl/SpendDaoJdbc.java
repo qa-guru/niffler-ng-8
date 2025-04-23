@@ -84,12 +84,11 @@ public class SpendDaoJdbc implements SpendDao {
     }
 
     @Override
-    public List<SpendEntity> findAllByUsername(String username) {
+    public List<SpendEntity> findAll() {
         List<SpendEntity> seList = new ArrayList<>();
         try (PreparedStatement ps = connection.prepareStatement(
-                "SELECT * FROM spend WHERE username = ?"
+                "SELECT * FROM spend"
         )) {
-            ps.setObject(1, username);
             ps.execute();
             try (ResultSet rs = ps.getResultSet()) {
                 while (rs.next()) {
@@ -107,7 +106,7 @@ public class SpendDaoJdbc implements SpendDao {
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Failed to find spend with username: " + username, e);
+            throw new RuntimeException("Failed to find spend: ", e);
         }
         return seList;
     }

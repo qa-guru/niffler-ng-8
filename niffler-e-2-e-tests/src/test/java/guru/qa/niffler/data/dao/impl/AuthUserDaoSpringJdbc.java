@@ -10,20 +10,20 @@ import org.springframework.jdbc.support.KeyHolder;
 import javax.sql.DataSource;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 public class AuthUserDaoSpringJdbc implements AuthUserDao {
 
-  private final DataSource dataSource;
+  private final JdbcTemplate jdbcTemplate;
 
   public AuthUserDaoSpringJdbc(DataSource dataSource) {
-    this.dataSource = dataSource;
+    this.jdbcTemplate = new JdbcTemplate(dataSource);
   }
 
   @Override
   public AuthUserEntity create(AuthUserEntity user) {
-    JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
     KeyHolder kh = new GeneratedKeyHolder();
     jdbcTemplate.update(con -> {
       PreparedStatement ps = con.prepareStatement(
@@ -33,10 +33,10 @@ public class AuthUserDaoSpringJdbc implements AuthUserDao {
       );
       ps.setString(1, user.getUsername());
       ps.setString(2, user.getPassword());
-      ps.setBoolean(3, user.getEnabled());
-      ps.setBoolean(4, user.getAccountNonExpired());
-      ps.setBoolean(5, user.getAccountNonLocked());
-      ps.setBoolean(6, user.getCredentialsNonExpired());
+      ps.setBoolean(3, user.isEnabled());
+      ps.setBoolean(4, user.isAccountNonExpired());
+      ps.setBoolean(5, user.isAccountNonLocked());
+      ps.setBoolean(6, user.isCredentialsNonExpired());
       return ps;
     }, kh);
 
@@ -47,7 +47,6 @@ public class AuthUserDaoSpringJdbc implements AuthUserDao {
 
   @Override
   public Optional<AuthUserEntity> findById(UUID id) {
-    JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
     return Optional.ofNullable(
         jdbcTemplate.queryForObject(
             "SELECT * FROM \"user\" WHERE id = ?",
@@ -55,5 +54,23 @@ public class AuthUserDaoSpringJdbc implements AuthUserDao {
             id
         )
     );
+  }
+
+  @Override
+  public List<AuthUserEntity> findAll() {
+    return jdbcTemplate.query(
+            "SELECT * FROM \"authority\"",
+            AuthUserEntityRowMapper.instance
+    );
+  }
+
+  @Override
+  public Optional<AuthUserEntity> findByUsername(String username) {
+    return Optional.empty();
+  }
+
+  @Override
+  public void delete(AuthUserEntity user) {
+
   }
 }

@@ -93,10 +93,39 @@ public class AuthAuthorityDaoJdbc implements AuthAuthorityDao {
     }
 
     @Override
+    public List<AuthorityEntity> findAll() {
+
+      List<AuthorityEntity> authorityList = new ArrayList<>();
+
+      try(PreparedStatement ps = connection.prepareStatement(
+              "SELECT * FROM \"authority\""
+      )) {
+          ps.execute();
+          try (ResultSet rs = ps.getResultSet()) {
+
+              while (rs.next()) {
+                  AuthorityEntity authority = new AuthorityEntity();
+                  authority.setId(rs.getObject("id", UUID.class));
+                  authority.setUserId(rs.getObject("user_id", UUID.class));
+                  authority.setAuthority(
+                          Authority.valueOf(
+                                  rs.getString("authority")
+                          )
+                  );
+                  authorityList.add(authority);
+              }
+          }
+      } catch (SQLException e) {
+          throw new RuntimeException(e);
+      }
+        return authorityList;
+    }
+
+    @Override
     public List<AuthorityEntity> findByUserId(UUID userId) {
         List<AuthorityEntity> authorityList = new ArrayList<>();
         try (PreparedStatement ps = connection.prepareStatement(
-                "SELECT * FROM authority WHERE user_id = ?"
+                "SELECT * FROM \"authority\" WHERE user_id = ?"
         )) {
             ps.setObject(1, userId);
             ps.execute();
@@ -122,7 +151,7 @@ public class AuthAuthorityDaoJdbc implements AuthAuthorityDao {
     @Override
     public void delete(AuthorityEntity authority) {
         try (PreparedStatement ps = connection.prepareStatement(
-                "DELETE FROM authority WHERE id = ?"
+                "DELETE FROM \"authority\" WHERE id = ?"
         )) {
             ps.setObject(1, authority.getId());
             ps.executeUpdate();

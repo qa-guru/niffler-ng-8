@@ -1,6 +1,8 @@
 package guru.qa.niffler.data.dao.impl;
 
 import guru.qa.niffler.data.dao.UdUserDao;
+import guru.qa.niffler.data.entity.spend.CategoryEntity;
+import guru.qa.niffler.data.entity.spend.SpendEntity;
 import guru.qa.niffler.data.entity.userdata.UserEntity;
 import guru.qa.niffler.model.CurrencyValues;
 
@@ -8,6 +10,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -66,6 +70,32 @@ public class UdUserDaoJdbc implements UdUserDao {
     } catch (SQLException e) {
       throw new RuntimeException(e);
     }
+  }
+
+  @Override
+  public List<UserEntity> findAll() {
+    List<UserEntity> ueList = new ArrayList<>();
+    try (PreparedStatement ps = connection.prepareStatement(
+            "SELECT * FROM \"user\""
+    )) {
+      ps.execute();
+      try (ResultSet rs = ps.getResultSet()) {
+        while (rs.next()) {
+          UserEntity result = new UserEntity();
+          result.setId(rs.getObject("id", UUID.class));
+          result.setUsername(rs.getString("username"));
+          result.setCurrency(CurrencyValues.valueOf(rs.getString("currency")));
+          result.setFirstname(rs.getString("firstname"));
+          result.setSurname(rs.getString("surname"));
+          result.setPhoto(rs.getBytes("photo"));
+          result.setPhotoSmall(rs.getBytes("photo_small"));
+          ueList.add(result);
+        }
+      }
+    } catch (SQLException e) {
+      throw new RuntimeException("Failed to find users", e);
+    }
+    return ueList;
   }
 
   @Override

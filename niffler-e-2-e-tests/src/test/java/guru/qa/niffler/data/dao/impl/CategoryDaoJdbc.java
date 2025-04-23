@@ -121,14 +121,13 @@ public class CategoryDaoJdbc implements CategoryDao {
     }
 
     @Override
-    public List<CategoryEntity> findAllByUsername(String username) {
+    public List<CategoryEntity> findAll() {
 
         List<CategoryEntity> ceList = new ArrayList<>();
 
         try (PreparedStatement ps = connection.prepareStatement(
-                "SELECT * FROM category WHERE username = ?"
+                "SELECT * FROM category"
         )) {
-            ps.setObject(1, username);
             ps.execute();
             try (ResultSet rs = ps.getResultSet()) {
                 while (rs.next()) {
@@ -141,7 +140,7 @@ public class CategoryDaoJdbc implements CategoryDao {
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Failed to find category with username: " + username, e);
+            throw new RuntimeException("Failed to find category", e);
         }
         return ceList;
     }

@@ -14,5 +14,5 @@ public interface UserDao {
 
     List<UserEntity> findByUsername(String username);
 
-    void deleteSpend(UserEntity user);
+    void deleteUser(UserEntity user);
 }

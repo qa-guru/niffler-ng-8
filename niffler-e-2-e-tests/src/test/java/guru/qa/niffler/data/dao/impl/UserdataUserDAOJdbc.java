@@ -20,23 +20,23 @@ public class UserdataUserDAOJdbc implements UserDao {
     public UserEntity create(UserEntity user) {
         try (Connection connection = DataBases.connection(CFG.spendJdbcUrl())) {
             try (PreparedStatement ps = connection.prepareStatement(
-                    "INSERT INTO user (username,currency,firstname,surname,photo,photo_small,full_name)" +
+                    "INSERT INTO 'user' (username,currency,firstname,surname,photo,photo_small,full_name)" +
                             "VALUES (?,?,?,?,?,?,?)",
                     Statement.RETURN_GENERATED_KEYS
             )) {
-                ps.setString(2, user.getUsername());
-                ps.setString(3, String.valueOf(user.getCurrency()));
-                ps.setString(4, user.getFirstName());
+                ps.setString(1, user.getUsername());
+                ps.setString(2, String.valueOf(user.getCurrency()));
+                ps.setString(3, user.getFirstName());
 
-                ps.setString(5, user.getSurname());
-                ps.setBytes(6, user.getPhoto());
-                ps.setBytes(7, user.getPhotoSmall());
-                ps.setString(8, user.getFullName());
+                ps.setString(4, user.getSurname());
+                ps.setBytes(5, user.getPhoto());
+                ps.setBytes(6, user.getPhotoSmall());
+                ps.setString(7, user.getFullName());
 
                 ps.executeUpdate();
 
                 final UUID generatedKey;
-                try (ResultSet rs = ps.getResultSet()) {
+                try (ResultSet rs = ps.getGeneratedKeys()) {
                     if (rs.next()) {
                         generatedKey = rs.getObject("id", UUID.class);
                     } else throw new SQLException("Can't find id in ResultSet");
@@ -56,7 +56,7 @@ public class UserdataUserDAOJdbc implements UserDao {
                     "SELECT * FROM user WHERE id=?")) {
                 ps.setObject(1, uuid);
                 ps.execute();
-                try (ResultSet rs = ps.getResultSet()) {
+                try (ResultSet rs =  ps.getGeneratedKeys()) {
                     if (rs.next()) {
                         UserEntity ue = new UserEntity();
 
@@ -66,7 +66,6 @@ public class UserdataUserDAOJdbc implements UserDao {
                         ue.setSurname(rs.getString("surname"));
                         ue.setPhoto(rs.getBytes("photo"));
                         ue.setPhotoSmall(rs.getBytes("photo_small"));
-                        ue.setPhotoSmall(rs.getBytes("photo_small_small"));
                         ue.setFullName(rs.getString("full_name"));
                         return Optional.of(ue);
                     } else {
@@ -95,7 +94,6 @@ public class UserdataUserDAOJdbc implements UserDao {
                         ue.setSurname(rs.getString("surname"));
                         ue.setPhoto(rs.getBytes("photo"));
                         ue.setPhotoSmall(rs.getBytes("photo_small"));
-                        ue.setPhotoSmall(rs.getBytes("photo_small_small"));
                         ue.setFullName(rs.getString("full_name"));
                         users.add(ue);
                     }
@@ -108,7 +106,7 @@ public class UserdataUserDAOJdbc implements UserDao {
     }
 
     @Override
-    public void deleteSpend(UserEntity user) {
+    public void deleteUser(UserEntity user) {
         try (Connection connection = DataBases.connection(CFG.spendJdbcUrl())) {
             try (PreparedStatement ps = connection.prepareStatement(
                     "DELETE FROM user WHERE id=?")) {

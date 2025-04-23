@@ -4,6 +4,7 @@ import guru.qa.niffler.RandomDataUtils;
 import guru.qa.niffler.api.SpendApiClient;
 import guru.qa.niffler.jupiter.users.User;
 import guru.qa.niffler.model.CategoryJson;
+import guru.qa.niffler.service.SpendDbClient;
 import org.junit.jupiter.api.extension.*;
 import org.junit.platform.commons.support.AnnotationSupport;
 
@@ -14,26 +15,19 @@ public class CategoryExtension implements BeforeEachCallback, AfterEachCallback,
 
     @Override
     public void beforeEach(ExtensionContext context) {
+        SpendDbClient db = new SpendDbClient();
         AnnotationSupport.findAnnotation(context.getRequiredTestMethod(), User.class)
                 .ifPresent(user -> {
                     if (user.categories() == null || user.categories().length == 0) {
                         return;
                     }
-                    Category category = user.categories()[0];
-                    CategoryJson categoryJson = spendApiClient.addSpendCategories(new CategoryJson(
+                    CategoryJson categoryJson = db.createCategory(new CategoryJson(
                             null,
                             RandomDataUtils.categoryName(),
                             user.username(),
-                            false
+                            user.categories()[0].archived()
+
                     ));
-                    if (category.archived()) {
-                        categoryJson = spendApiClient.updateCategories(new CategoryJson(
-                                categoryJson.id(),
-                                categoryJson.name(),
-                                categoryJson.username(),
-                                true
-                        ));
-                    }
                     context.getStore(NAMESPACE).put(context.getUniqueId(), categoryJson);
                 });
     }
@@ -41,14 +35,8 @@ public class CategoryExtension implements BeforeEachCallback, AfterEachCallback,
     @Override
     public void afterEach(ExtensionContext context) throws Exception {
         CategoryJson category = context.getStore(NAMESPACE).get(context.getUniqueId(), CategoryJson.class);
-        if (category != null && !category.archived()) {
-            spendApiClient.updateCategories(new CategoryJson(
-                    category.id(),
-                    category.name(),
-                    category.username(),
-                    true
-            ));
-        }
+        SpendDbClient db = new SpendDbClient();
+        db.deleteCategory(category);
     }
 
     @Override

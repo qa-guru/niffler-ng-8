@@ -1,9 +1,7 @@
 package guru.qa.niffler.data.mapper;
 
 import guru.qa.niffler.config.Config;
-import guru.qa.niffler.data.dao.impl.CategoryDaoJdbc;
 import guru.qa.niffler.data.dao.impl.CategoryDaoSpringJdbc;
-import guru.qa.niffler.data.entity.spend.CategoryEntity;
 import guru.qa.niffler.data.entity.spend.SpendEntity;
 import guru.qa.niffler.model.CurrencyValues;
 import org.springframework.jdbc.core.RowMapper;
@@ -11,8 +9,6 @@ import org.springframework.jdbc.core.RowMapper;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.UUID;
-
-import static guru.qa.niffler.data.Databases.dataSource;
 
 public class SpendEntityRowMapper  implements RowMapper<SpendEntity> {
     public static final SpendEntityRowMapper instance = new SpendEntityRowMapper();
@@ -28,7 +24,7 @@ public class SpendEntityRowMapper  implements RowMapper<SpendEntity> {
         se.setAmount(rs.getDouble("amount"));
         se.setDescription(rs.getString("description"));
         se.setCategory(
-                new CategoryDaoSpringJdbc(dataSource(Config.getInstance().spendJdbcUrl()))
+                new CategoryDaoSpringJdbc()
                         .findCategoryById(
                                 rs.getObject("category_id", UUID.class)
                         )

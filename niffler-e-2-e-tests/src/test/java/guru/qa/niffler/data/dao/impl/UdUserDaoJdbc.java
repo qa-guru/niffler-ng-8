@@ -1,6 +1,7 @@
 package guru.qa.niffler.data.dao.impl;
 
-import guru.qa.niffler.data.dao.UserDao;
+import guru.qa.niffler.config.Config;
+import guru.qa.niffler.data.dao.UdUserDao;
 import guru.qa.niffler.data.entity.userdata.UserEntity;
 import guru.qa.niffler.model.CurrencyValues;
 
@@ -10,16 +11,15 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public class UserDaoJdbc implements UserDao {
+import static guru.qa.niffler.data.tpl.Connections.holder;
 
-    private final Connection connection;
+public class UdUserDaoJdbc implements UdUserDao {
 
-    public UserDaoJdbc(Connection connection) {
-        this.connection = connection;
-    }
+    private static final Config CFG = Config.getInstance();
+    private final String url = CFG.userdataJdbcUrl();
     @Override
     public UserEntity create(UserEntity user) {
-        try (PreparedStatement ps = connection.prepareStatement(
+        try (PreparedStatement ps = holder(url).connection().prepareStatement(
                 "INSERT INTO user (username, currency, fullname, firstname, surname, photo, photo_small) " +
                         "VALUES ( ?, ?, ?, ?, ?, ?, ?)",
                 Statement.RETURN_GENERATED_KEYS
@@ -51,7 +51,7 @@ public class UserDaoJdbc implements UserDao {
 
     @Override
     public Optional<UserEntity> findById(UUID id) {
-            try (PreparedStatement ps = connection.prepareStatement(
+            try (PreparedStatement ps = holder(url).connection().prepareStatement(
                     "SELECT * FROM user WHERE id = ?"
             )) {
                 ps.setObject(1, id);
@@ -79,7 +79,7 @@ public class UserDaoJdbc implements UserDao {
 
     @Override
     public Optional<UserEntity> findByUsername(String username) {
-            try (PreparedStatement ps = connection.prepareStatement(
+            try (PreparedStatement ps = holder(url).connection().prepareStatement(
                     "SELECT * FROM user WHERE username = ?"
             )) {
                 ps.setString(1, username);
@@ -107,7 +107,7 @@ public class UserDaoJdbc implements UserDao {
 
     @Override
     public void delete(UserEntity user) {
-        try (PreparedStatement ps = connection.prepareStatement(
+        try (PreparedStatement ps = holder(url).connection().prepareStatement(
                 "DELETE FROM user WHERE id = ?"
         )) {
             ps.setObject(1, user.getId());
@@ -119,7 +119,7 @@ public class UserDaoJdbc implements UserDao {
 
     @Override
     public List<UserEntity> findAll() {
-        try (PreparedStatement ps = connection.prepareStatement(
+        try (PreparedStatement ps = holder(url).connection().prepareStatement(
                 "SELECT * FROM user"
         )) {
             ps.execute();

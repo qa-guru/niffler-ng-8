@@ -11,6 +11,8 @@ import guru.qa.niffler.data.tpl.JdbcTransactionTemplate;
 import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.model.SpendJson;
 
+import java.util.Optional;
+
 
 public class SpendDbClient {
 
@@ -37,32 +39,28 @@ public class SpendDbClient {
     );
   }
     public CategoryJson createCategory(CategoryJson category) {
-        return transaction(connection -> {
-                    Optional<CategoryEntity> existingCategory = new CategoryDaoJdbc(connection)
+        return jdbcTxTemplate.execute(() -> {
+                    Optional<CategoryEntity> existingCategory = categoryDao
                             .findCategoryByUsernameAndCategoryName(category.username(), category.name());
 
                     if (existingCategory.isPresent()) {
                         return CategoryJson.fromEntity(existingCategory.get());
                     }
-                    CategoryEntity createdCategory = new CategoryDaoJdbc(connection)
+                    CategoryEntity createdCategory = categoryDao
                             .create(CategoryEntity.fromJson(category));
                     return CategoryJson.fromEntity(createdCategory);
-                },
-                CFG.spendJdbcUrl(),
-                Connection.TRANSACTION_READ_UNCOMMITTED
+                }
         );
     }
 
     public CategoryJson updateCategory(CategoryJson category) {
-        return transaction(connection -> {
-                    new CategoryDaoJdbc(connection).findById(category.id())
+        return jdbcTxTemplate.execute(() -> {
+            categoryDao.findById(category.id())
                             .orElseThrow(() -> new RuntimeException("Category not found: " + category.id()));
-                    CategoryEntity updatedCategory = new CategoryDaoJdbc(connection)
+                    CategoryEntity updatedCategory = categoryDao
                             .update(CategoryEntity.fromJson(category));
                     return CategoryJson.fromEntity(updatedCategory);
-                },
-                CFG.spendJdbcUrl(),
-                Connection.TRANSACTION_READ_UNCOMMITTED
+                }
         );
 
     }

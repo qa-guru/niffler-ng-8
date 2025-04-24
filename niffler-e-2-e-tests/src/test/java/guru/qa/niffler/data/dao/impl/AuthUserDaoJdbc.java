@@ -49,28 +49,28 @@ public class AuthUserDaoJdbc implements AuthUserDao {
 
   @Override
   public Optional<AuthUserEntity> findById(UUID id) {
-    try (PreparedStatement ps = holder(CFG.authJdbcUrl()).connection().prepareStatement("SELECT * FROM \"user\" WHERE id = ?")) {
-      ps.setObject(1, id);
+      try (PreparedStatement ps = holder(CFG.authJdbcUrl()).connection().prepareStatement("SELECT * FROM \"user\" WHERE id = ?")) {
+          ps.setObject(1, id);
 
-      ps.execute();
+          ps.execute();
 
-      try (ResultSet rs = ps.getResultSet()) {
-        if (rs.next()) {
-          AuthUserEntity result = new AuthUserEntity();
-          result.setId(rs.getObject("id", UUID.class));
-          result.setUsername(rs.getString("username"));
-          result.setPassword(rs.getString("password"));
-          result.setEnabled(rs.getBoolean("enabled"));
-          result.setAccountNonExpired(rs.getBoolean("account_non_expired"));
-          result.setAccountNonLocked(rs.getBoolean("account_non_locked"));
-          result.setCredentialsNonExpired(rs.getBoolean("credentials_non_expired"));
-          return Optional.of(result);
-        } else {
-          return Optional.empty();
-        }
-      }
-    } catch (SQLException e) {
-      throw new RuntimeException(e);
+          try (ResultSet rs = ps.getResultSet()) {
+              if (rs.next()) {
+                  AuthUserEntity result = new AuthUserEntity();
+                  result.setId(rs.getObject("id", UUID.class));
+                  result.setUsername(rs.getString("username"));
+                  result.setPassword(rs.getString("password"));
+                  result.setEnabled(rs.getBoolean("enabled"));
+                  result.setAccountNonExpired(rs.getBoolean("account_non_expired"));
+                  result.setAccountNonLocked(rs.getBoolean("account_non_locked"));
+                  result.setCredentialsNonExpired(rs.getBoolean("credentials_non_expired"));
+                  return Optional.of(result);
+              } else {
+                  return Optional.empty();
+              }
+          }
+      } catch (SQLException e) {
+          throw new RuntimeException(e);
     }
     }
 
@@ -79,7 +79,7 @@ public class AuthUserDaoJdbc implements AuthUserDao {
 
         List<AuthUserEntity> authUserEntities = new ArrayList<>();
 
-        try(PreparedStatement ps = connection.prepareStatement(
+        try(PreparedStatement ps = holder(CFG.authJdbcUrl()).connection().prepareStatement(
                 "SELECT * FROM \"user\""
         )) {
             ps.execute();
@@ -105,7 +105,7 @@ public class AuthUserDaoJdbc implements AuthUserDao {
 
     @Override
     public Optional<AuthUserEntity> findByUsername(String username) {
-        try (PreparedStatement ps = connection.prepareStatement(
+        try (PreparedStatement ps = holder(CFG.authJdbcUrl()).connection().prepareStatement(
                 "SELECT * FROM \"user\" WHERE username = ?"
         )) {
             ps.setString(1, username);
@@ -132,7 +132,7 @@ public class AuthUserDaoJdbc implements AuthUserDao {
 
     @Override
     public void delete(AuthUserEntity user) {
-        try (PreparedStatement ps = connection.prepareStatement(
+        try (PreparedStatement ps = holder(CFG.authJdbcUrl()).connection().prepareStatement(
                 "DELETE FROM \"user\" WHERE id = ?"
         )) {
             ps.setObject(1, user.getId());

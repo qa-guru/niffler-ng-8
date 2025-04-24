@@ -7,7 +7,6 @@ import guru.qa.niffler.data.tpl.DataSources;
 import guru.qa.niffler.data.mapper.AuthorityEntityRowMapper;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.lang.NonNullApi;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -18,11 +17,6 @@ import java.util.UUID;
 public class AuthAuthorityDaoSpringJdbc implements AuthAuthorityDao {
 
   private static final Config CFG = Config.getInstance();
-    private final JdbcTemplate jdbcTemplate;
-
-    public AuthAuthorityDaoSpringJdbc(DataSource dataSource) {
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
-    }
 
   @Override
   public void create(AuthorityEntity... authority) {
@@ -56,6 +50,7 @@ public class AuthAuthorityDaoSpringJdbc implements AuthAuthorityDao {
 
     @Override
     public List<AuthorityEntity> findAll() {
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.authJdbcUrl()));
         return jdbcTemplate.query(
                 "SELECT * FROM \"authority\"",
                 AuthorityEntityRowMapper.instance

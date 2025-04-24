@@ -2,8 +2,6 @@ package guru.qa.niffler.data.dao.impl;
 
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.dao.UdUserDao;
-import guru.qa.niffler.data.entity.spend.CategoryEntity;
-import guru.qa.niffler.data.entity.spend.SpendEntity;
 import guru.qa.niffler.data.entity.userdata.UserEntity;
 import guru.qa.niffler.model.CurrencyValues;
 
@@ -73,7 +71,7 @@ public class UdUserDaoJdbc implements UdUserDao {
   @Override
   public List<UserEntity> findAll() {
     List<UserEntity> ueList = new ArrayList<>();
-    try (PreparedStatement ps = connection.prepareStatement(
+    try (PreparedStatement ps = holder(CFG.authJdbcUrl()).connection().prepareStatement(
             "SELECT * FROM \"user\""
     )) {
       ps.execute();
@@ -98,7 +96,7 @@ public class UdUserDaoJdbc implements UdUserDao {
 
   @Override
   public Optional<UserEntity> findByUsername(String username) {
-    try (PreparedStatement ps = connection.prepareStatement(
+    try (PreparedStatement ps = holder(CFG.authJdbcUrl()).connection().prepareStatement(
             "SELECT * FROM \"user\" WHERE username = ?"
     )) {
       ps.setObject(1, username);
@@ -127,7 +125,7 @@ public class UdUserDaoJdbc implements UdUserDao {
 
   @Override
   public void delete(UserEntity user) {
-    try (PreparedStatement ps = connection.prepareStatement(
+    try (PreparedStatement ps = holder(CFG.authJdbcUrl()).connection().prepareStatement(
             "DELETE FROM \"user\" WHERE id = ?"
     )) {
       ps.setObject(1, user.getId());

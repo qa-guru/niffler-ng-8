@@ -51,7 +51,7 @@ public class CategoryDaoJdbc implements CategoryDao {
         if (category.getId() == null) {
             throw new IllegalArgumentException("Category ID must not be null");
         }
-        try (PreparedStatement ps = connection.prepareStatement(
+        try (PreparedStatement ps = holder(CFG.authJdbcUrl()).connection().prepareStatement(
                 "UPDATE category SET name = ?, username = ?, archived = ? WHERE id = ?"
         )) {
             ps.setString(1, category.getName());
@@ -70,7 +70,7 @@ public class CategoryDaoJdbc implements CategoryDao {
 
     @Override
     public Optional<CategoryEntity> findById(UUID id) {
-        try (PreparedStatement ps = connection.prepareStatement(
+        try (PreparedStatement ps = holder(CFG.authJdbcUrl()).connection().prepareStatement(
                 "SELECT * FROM category WHERE id = ?"
         )) {
             ps.setObject(1, id);
@@ -95,7 +95,7 @@ public class CategoryDaoJdbc implements CategoryDao {
 
     @Override
     public Optional<CategoryEntity> findCategoryByUsernameAndCategoryName(String username, String categoryName) {
-        try (PreparedStatement ps = connection.prepareStatement(
+        try (PreparedStatement ps = holder(CFG.authJdbcUrl()).connection().prepareStatement(
                 "SELECT * FROM category WHERE username = ? AND name = ?"
         )) {
             ps.setObject(1, username);
@@ -123,7 +123,7 @@ public class CategoryDaoJdbc implements CategoryDao {
 
         List<CategoryEntity> ceList = new ArrayList<>();
 
-        try (PreparedStatement ps = connection.prepareStatement(
+        try (PreparedStatement ps = holder(CFG.authJdbcUrl()).connection().prepareStatement(
                 "SELECT * FROM category"
         )) {
             ps.execute();
@@ -148,7 +148,7 @@ public class CategoryDaoJdbc implements CategoryDao {
         if (category == null || category.getId() == null) {
             return;
         }
-        try (PreparedStatement ps = connection.prepareStatement(
+        try (PreparedStatement ps = holder(CFG.authJdbcUrl()).connection().prepareStatement(
                 "DELETE FROM category WHERE id = ?"
         )) {
             ps.setObject(1, category.getId());

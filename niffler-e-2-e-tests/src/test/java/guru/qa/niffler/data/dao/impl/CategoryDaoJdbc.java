@@ -73,4 +73,23 @@ public class CategoryDaoJdbc implements CategoryDao {
       throw new RuntimeException(e);
     }
   }
+
+  public CategoryEntity update(CategoryEntity category) {
+    try (PreparedStatement ps = connection.prepareStatement(
+            "UPDATE category SET name = ?, archived = ? WHERE id = ?"
+    )) {
+      ps.setString(1, category.getName());
+      ps.setBoolean(2, category.isArchived());
+      ps.setObject(3, category.getId());
+
+      int rowsAffected = ps.executeUpdate();
+      if (rowsAffected > 0) {
+        return category;  // Возвращаем обновленную категорию
+      } else {
+        throw new SQLException("Category with ID " + category.getId() + " not found.");
+      }
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+  }
 }

@@ -67,4 +67,38 @@ public class UdUserDaoJdbc implements UdUserDao {
       throw new RuntimeException(e);
     }
   }
+
+  @Override
+  public Optional<UserEntity> findByUsername(String username) {
+    try (PreparedStatement ps = connection.prepareStatement("SELECT * FROM \"user\" WHERE username = ?")) {
+      ps.setString(1, username);
+      try (ResultSet rs = ps.executeQuery()) {
+        if (rs.next()) {
+          UserEntity result = new UserEntity();
+          result.setId(rs.getObject("id", UUID.class));
+          result.setUsername(rs.getString("username"));
+          result.setCurrency(CurrencyValues.valueOf(rs.getString("currency")));
+          result.setFirstname(rs.getString("firstname"));
+          result.setSurname(rs.getString("surname"));
+          result.setPhoto(rs.getBytes("photo"));
+          result.setPhotoSmall(rs.getBytes("photo_small"));
+          return Optional.of(result);
+        } else {
+          return Optional.empty();
+        }
+      }
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  @Override
+  public void delete(UUID id) {
+    try (PreparedStatement ps = connection.prepareStatement("DELETE FROM \"user\" WHERE id = ?")) {
+      ps.setObject(1, id);
+      ps.executeUpdate();
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+  }
 }

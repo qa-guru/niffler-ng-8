@@ -18,10 +18,11 @@ import static guru.qa.niffler.data.tpl.Connections.holder;
 public class UdUserDaoJdbc implements UdUserDao {
 
   private static final Config CFG = Config.getInstance();
+  private final String url = CFG.userdataJdbcUrl();
 
   @Override
   public UserEntity create(UserEntity user) {
-    try (PreparedStatement ps = holder(CFG.userdataJdbcUrl()).connection().prepareStatement(
+    try (PreparedStatement ps = holder(url).connection().prepareStatement(
         "INSERT INTO \"user\" (username, currency) VALUES (?, ?)",
         PreparedStatement.RETURN_GENERATED_KEYS)) {
       ps.setString(1, user.getUsername());
@@ -44,7 +45,7 @@ public class UdUserDaoJdbc implements UdUserDao {
 
   @Override
   public Optional<UserEntity> findById(UUID id) {
-    try (PreparedStatement ps = holder(CFG.userdataJdbcUrl()).connection().prepareStatement("SELECT * FROM \"user\" WHERE id = ? ")) {
+    try (PreparedStatement ps = holder(url).connection().prepareStatement("SELECT * FROM \"user\" WHERE id = ? ")) {
       ps.setObject(1, id);
 
       ps.execute();
@@ -70,69 +71,69 @@ public class UdUserDaoJdbc implements UdUserDao {
 
   @Override
   public List<UserEntity> findAll() {
-    List<UserEntity> ueList = new ArrayList<>();
-    try (PreparedStatement ps = holder(CFG.authJdbcUrl()).connection().prepareStatement(
-            "SELECT * FROM \"user\""
-    )) {
+    try (PreparedStatement ps = holder(url).connection().prepareStatement(
+        "SELECT * FROM spend")) {
       ps.execute();
+      List<UserEntity> result = new ArrayList<>();
       try (ResultSet rs = ps.getResultSet()) {
         while (rs.next()) {
-          UserEntity result = new UserEntity();
-          result.setId(rs.getObject("id", UUID.class));
-          result.setUsername(rs.getString("username"));
-          result.setCurrency(CurrencyValues.valueOf(rs.getString("currency")));
-          result.setFirstname(rs.getString("firstname"));
-          result.setSurname(rs.getString("surname"));
-          result.setPhoto(rs.getBytes("photo"));
-          result.setPhotoSmall(rs.getBytes("photo_small"));
-          ueList.add(result);
-        }
-      }
-    } catch (SQLException e) {
-      throw new RuntimeException("Failed to find users", e);
-    }
-    return ueList;
-  }
-
-  @Override
-  public Optional<UserEntity> findByUsername(String username) {
-    try (PreparedStatement ps = holder(CFG.authJdbcUrl()).connection().prepareStatement(
-            "SELECT * FROM \"user\" WHERE username = ?"
-    )) {
-      ps.setObject(1, username);
-      ps.execute();
-      try (ResultSet rs = ps.getResultSet()) {
-        if (rs.next()) {
           UserEntity ue = new UserEntity();
           ue.setId(rs.getObject("id", UUID.class));
           ue.setUsername(rs.getString("username"));
           ue.setCurrency(CurrencyValues.valueOf(rs.getString("currency")));
           ue.setFirstname(rs.getString("firstname"));
           ue.setSurname(rs.getString("surname"));
+          ue.setFullname(rs.getString("full_name"));
           ue.setPhoto(rs.getBytes("photo"));
           ue.setPhotoSmall(rs.getBytes("photo_small"));
-          ue.setFullname(rs.getString("full_name"));
-          return Optional.of(ue);
-        } else {
-          return Optional.empty();
+          result.add(ue);
         }
-
       }
+      return result;
     } catch (SQLException e) {
-      throw new RuntimeException("Failed to find user with username: " + username, e);
+      throw new RuntimeException(e);
     }
   }
 
-  @Override
-  public void delete(UserEntity user) {
-    try (PreparedStatement ps = holder(CFG.authJdbcUrl()).connection().prepareStatement(
-            "DELETE FROM \"user\" WHERE id = ?"
-    )) {
-      ps.setObject(1, user.getId());
-      ps.executeUpdate();
+    @Override
+    public Optional<UserEntity> findByUsername(String username) {
+        try (PreparedStatement ps = holder(CFG.authJdbcUrl()).connection().prepareStatement(
+                "SELECT * FROM \"user\" WHERE username = ?"
+        )) {
+            ps.setObject(1, username);
+            ps.execute();
+            try (ResultSet rs = ps.getResultSet()) {
+                if (rs.next()) {
+                    UserEntity ue = new UserEntity();
+                    ue.setId(rs.getObject("id", UUID.class));
+                    ue.setUsername(rs.getString("username"));
+                    ue.setCurrency(CurrencyValues.valueOf(rs.getString("currency")));
+                    ue.setFirstname(rs.getString("firstname"));
+                    ue.setSurname(rs.getString("surname"));
+                    ue.setPhoto(rs.getBytes("photo"));
+                    ue.setPhotoSmall(rs.getBytes("photo_small"));
+                    ue.setFullname(rs.getString("full_name"));
+                    return Optional.of(ue);
+                } else {
+                    return Optional.empty();
+                }
 
-    } catch (SQLException e) {
-      throw new RuntimeException("Error deleting user with Id:  " + user.getId(), e);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to find user with username: " + username, e);
+        }
     }
-  }
+
+    @Override
+    public void delete(UserEntity user) {
+        try (PreparedStatement ps = holder(CFG.authJdbcUrl()).connection().prepareStatement(
+                "DELETE FROM \"user\" WHERE id = ?"
+        )) {
+            ps.setObject(1, user.getId());
+            ps.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Error deleting user with Id:  " + user.getId(), e);
+        }
+    }
 }

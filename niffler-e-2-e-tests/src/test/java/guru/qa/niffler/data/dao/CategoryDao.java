@@ -7,6 +7,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface CategoryDao {
+
   CategoryEntity create(CategoryEntity category);
 
   CategoryEntity update(CategoryEntity category);

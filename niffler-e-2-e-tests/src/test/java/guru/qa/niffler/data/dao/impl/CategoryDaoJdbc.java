@@ -18,10 +18,11 @@ import static guru.qa.niffler.data.tpl.Connections.holder;
 public class CategoryDaoJdbc implements CategoryDao {
 
   private static final Config CFG = Config.getInstance();
+  private final String url = CFG.spendJdbcUrl();
 
   @Override
   public CategoryEntity create(CategoryEntity category) {
-    try (PreparedStatement ps = holder(CFG.spendJdbcUrl()).connection().prepareStatement(
+    try (PreparedStatement ps = holder(url).connection().prepareStatement(
         "INSERT INTO category (username, name, archived) " +
             "VALUES (?, ?, ?)",
         Statement.RETURN_GENERATED_KEYS
@@ -70,7 +71,7 @@ public class CategoryDaoJdbc implements CategoryDao {
 
     @Override
     public Optional<CategoryEntity> findById(UUID id) {
-        try (PreparedStatement ps = holder(CFG.authJdbcUrl()).connection().prepareStatement(
+        try (PreparedStatement ps = holder(url).connection().prepareStatement(
                 "SELECT * FROM category WHERE id = ?"
         )) {
             ps.setObject(1, id);
@@ -120,13 +121,10 @@ public class CategoryDaoJdbc implements CategoryDao {
 
     @Override
     public List<CategoryEntity> findAll() {
-
-        List<CategoryEntity> ceList = new ArrayList<>();
-
-        try (PreparedStatement ps = holder(CFG.authJdbcUrl()).connection().prepareStatement(
-                "SELECT * FROM category"
-        )) {
+        try (PreparedStatement ps = holder(url).connection().prepareStatement(
+                "SELECT * FROM category")) {
             ps.execute();
+            List<CategoryEntity> result = new ArrayList<>();
             try (ResultSet rs = ps.getResultSet()) {
                 while (rs.next()) {
                     CategoryEntity ce = new CategoryEntity();
@@ -134,13 +132,13 @@ public class CategoryDaoJdbc implements CategoryDao {
                     ce.setUsername(rs.getString("username"));
                     ce.setName(rs.getString("name"));
                     ce.setArchived(rs.getBoolean("archived"));
-                    ceList.add(ce);
+                    result.add(ce);
                 }
             }
+            return result;
         } catch (SQLException e) {
-            throw new RuntimeException("Failed to find category", e);
+            throw new RuntimeException(e);
         }
-        return ceList;
     }
 
     @Override

@@ -16,7 +16,6 @@ import java.util.UUID;
 public class SpendingExtension implements BeforeEachCallback, AfterEachCallback, ParameterResolver {
 
     public static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(SpendingExtension.class);
-    private final SpendApiClient spendApiClient = new SpendApiClient();
 
     @Override
     public void beforeEach(ExtensionContext context) {
@@ -48,16 +47,18 @@ public class SpendingExtension implements BeforeEachCallback, AfterEachCallback,
                 });
     }
 
-
     @Override
     public void afterEach(ExtensionContext context) throws Exception {
         CategoryJson category = context.getStore(NAMESPACE).get(context.getUniqueId(), CategoryJson.class);
         SpendJson spend = context.getStore(NAMESPACE).get(context.getUniqueId(), SpendJson.class);
         SpendDbClient db = new SpendDbClient();
-        db.deleteSpend(spend);
-        db.deleteCategory(category);
+        if (spend != null) {
+            db.deleteSpend(spend);
+        }
+        if (category != null) {
+            db.deleteCategory(category);
+        }
     }
-
 
     @Override
     public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {

@@ -38,7 +38,7 @@ public class AuthAuthorityDaoJdbc implements AuthAuthorityDao {
 
     @Override
     public AuthorityEntity create(AuthorityEntity authority) {
-        try (PreparedStatement ps = connection.prepareStatement(
+        try (PreparedStatement ps = holder(CFG.authJdbcUrl()).connection().prepareStatement(
                 "INSERT INTO \"authority\" (user_id, authority)" +
                         "VALUES (?, ?)",
                 Statement.RETURN_GENERATED_KEYS
@@ -65,7 +65,7 @@ public class AuthAuthorityDaoJdbc implements AuthAuthorityDao {
 
     @Override
     public Optional<AuthorityEntity> findById(UUID id) {
-        try (PreparedStatement ps = connection.prepareStatement(
+        try (PreparedStatement ps = holder(CFG.authJdbcUrl()).connection().prepareStatement(
                 "SELECT * FROM \"authority\" WHERE id = ?"
         )) {
             ps.setObject(1, id);
@@ -95,7 +95,7 @@ public class AuthAuthorityDaoJdbc implements AuthAuthorityDao {
 
       List<AuthorityEntity> authorityList = new ArrayList<>();
 
-      try(PreparedStatement ps = connection.prepareStatement(
+      try(PreparedStatement ps = holder(CFG.authJdbcUrl()).connection().prepareStatement(
               "SELECT * FROM \"authority\""
       )) {
           ps.execute();
@@ -122,7 +122,7 @@ public class AuthAuthorityDaoJdbc implements AuthAuthorityDao {
     @Override
     public List<AuthorityEntity> findByUserId(UUID userId) {
         List<AuthorityEntity> authorityList = new ArrayList<>();
-        try (PreparedStatement ps = connection.prepareStatement(
+        try (PreparedStatement ps = holder(CFG.authJdbcUrl()).connection().prepareStatement(
                 "SELECT * FROM \"authority\" WHERE user_id = ?"
         )) {
             ps.setObject(1, userId);
@@ -148,7 +148,7 @@ public class AuthAuthorityDaoJdbc implements AuthAuthorityDao {
 
     @Override
     public void delete(AuthorityEntity authority) {
-        try (PreparedStatement ps = connection.prepareStatement(
+        try (PreparedStatement ps = holder(CFG.authJdbcUrl()).connection().prepareStatement(
                 "DELETE FROM \"authority\" WHERE id = ?"
         )) {
             ps.setObject(1, authority.getId());

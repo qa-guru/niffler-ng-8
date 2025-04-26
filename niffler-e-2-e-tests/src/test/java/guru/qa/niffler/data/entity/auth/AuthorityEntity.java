@@ -56,7 +56,7 @@ public class AuthorityEntity implements Serializable {
     public static AuthorityEntity fromJson(AuthorityJson json) {
         AuthorityEntity authAuthority = new AuthorityEntity();
         authAuthority.setId(json.id());
-        authAuthority.setUserId(json.userId());
+        authAuthority.getUser().setId(json.userId());
         authAuthority.setAuthority(json.authority());
         return authAuthority;
     }

@@ -12,6 +12,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public class SpendDaoSpringJdbc implements SpendDao {
@@ -44,11 +45,21 @@ public class SpendDaoSpringJdbc implements SpendDao {
   }
 
   @Override
+  public Optional<SpendEntity> findSpendById(UUID id) {
+    return Optional.empty();
+  }
+
+  @Override
   public List<SpendEntity> findAll() {
     JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(url));
     return jdbcTemplate.query(
         "SELECT * FROM \"spend\"",
         SpendEntityRowMapper.instance
     );
+  }
+
+  @Override
+  public void deleteSpend(SpendEntity spend) {
+
   }
 }

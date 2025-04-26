@@ -42,6 +42,11 @@ public class CategoryDaoSpringJdbc implements CategoryDao {
   }
 
   @Override
+  public CategoryEntity update(CategoryEntity category) {
+    return null;
+  }
+
+  @Override
   public Optional<CategoryEntity> findCategoryById(UUID id) {
     JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(url));
     return Optional.ofNullable(
@@ -54,11 +59,21 @@ public class CategoryDaoSpringJdbc implements CategoryDao {
   }
 
   @Override
+  public Optional<CategoryEntity> findCategoryByUsernameAndCategoryName(String username, String categoryName) {
+    return Optional.empty();
+  }
+
+  @Override
   public List<CategoryEntity> findAll() {
     JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(url));
     return jdbcTemplate.query(
         "SELECT * FROM \"category\"",
         CategoryEntityRowMapper.instance
     );
+  }
+
+  @Override
+  public void deleteCategory(CategoryEntity category) {
+
   }
 }

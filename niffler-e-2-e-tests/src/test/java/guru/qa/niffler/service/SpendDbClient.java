@@ -55,7 +55,7 @@ public class SpendDbClient {
 
     public CategoryJson updateCategory(CategoryJson category) {
         return jdbcTxTemplate.execute(() -> {
-            categoryDao.findById(category.id())
+            categoryDao.findCategoryById(category.id())
                             .orElseThrow(() -> new RuntimeException("Category not found: " + category.id()));
                     CategoryEntity updatedCategory = categoryDao
                             .update(CategoryEntity.fromJson(category));

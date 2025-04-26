@@ -58,13 +58,18 @@ public class Databases {
     return transaction(function, jdbcUrl, TRANSACTION_READ_COMMITTED);
   }
 
-  public static <T> T xaTransaction(XaFunction<T>... actions) {
+  public static <T> T xaTransaction(int isolationLvl, XaFunction<T>... actions) {
     UserTransaction ut = new UserTransactionImp();
     try {
       ut.begin();
       T result = null;
       for (XaFunction<T> action : actions) {
-        result = action.function.apply(connection(action.jdbcUrl));
+        Connection connection = connection(action.jdbcUrl);
+        connection.setTransactionIsolation(isolationLvl);
+        connection.setAutoCommit(false);
+        result = action.function.apply(connection);
+        connection.commit();
+        connection.setAutoCommit(true);
       }
       ut.commit();
       return result;
@@ -76,6 +81,10 @@ public class Databases {
       }
       throw new RuntimeException(e);
     }
+  }
+
+  public static <T> T xaTransaction(XaFunction<T>... actions) {
+    return xaTransaction(TRANSACTION_READ_COMMITTED, actions);
   }
 
   public static void transaction(Consumer<Connection> consumer, String jdbcUrl, int isolationLvl) {
@@ -104,12 +113,17 @@ public class Databases {
     transaction(consumer, jdbcUrl, TRANSACTION_READ_COMMITTED);
   }
 
-  public static void xaTransaction(XaConsumer... actions) {
+  public static void xaTransaction(int isolationLvl, XaConsumer... actions) {
     UserTransaction ut = new UserTransactionImp();
     try {
       ut.begin();
       for (XaConsumer action : actions) {
-        action.function.accept(connection(action.jdbcUrl));
+        Connection connection = connection(action.jdbcUrl);
+        connection.setTransactionIsolation(isolationLvl);
+        connection.setAutoCommit(false);
+        action.function.accept(connection);
+        connection.commit();
+        connection.setAutoCommit(true);
       }
       ut.commit();
     } catch (Exception e) {
@@ -120,6 +134,10 @@ public class Databases {
       }
       throw new RuntimeException(e);
     }
+  }
+
+  public static void xaTransaction(XaConsumer... actions) {
+    xaTransaction(TRANSACTION_READ_COMMITTED, actions);
   }
 
   public static DataSource dataSource(String jdbcUrl) {

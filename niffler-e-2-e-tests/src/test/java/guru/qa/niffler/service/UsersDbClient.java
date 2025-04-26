@@ -26,7 +26,6 @@ public class UsersDbClient {
   private static final Config CFG = Config.getInstance();
   private static final PasswordEncoder pe = PasswordEncoderFactories.createDelegatingPasswordEncoder();
 
-
   public UserJson createUserSpringJdbc(UserJson user) {
     AuthUserEntity authUser = new AuthUserEntity();
     authUser.setUsername(user.username());
@@ -59,7 +58,6 @@ public class UsersDbClient {
         null
     );
   }
-
 
   public UserJson createUser(UserJson user) {
     return UserJson.fromEntity(

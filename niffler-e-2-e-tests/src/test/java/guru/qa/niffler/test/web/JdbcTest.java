@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Date;
 
-@Disabled
+//@Disabled
 public class JdbcTest {
 
   @Test
@@ -31,7 +31,7 @@ public class JdbcTest {
             CurrencyValues.RUB,
             1000.0,
             "spend-name-tx",
-            null
+            "dima"
         )
     );
 

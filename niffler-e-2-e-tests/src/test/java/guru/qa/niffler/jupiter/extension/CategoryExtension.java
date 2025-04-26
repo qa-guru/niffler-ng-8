@@ -25,8 +25,6 @@ public class CategoryExtension implements
                 .ifPresent(userAnno -> {
                     if (ArrayUtils.isNotEmpty(userAnno.categories())) {
                         Category categoryAnno = userAnno.categories()[0];
-
-
                         CategoryJson category = new CategoryJson(
                                 null,
                                 randomCategoryName(),
@@ -36,18 +34,6 @@ public class CategoryExtension implements
 
                         CategoryJson created = spendDbClient.createCategory(category);
 
-                        if (categoryAnno.archived()) {
-
-                            CategoryJson archivedCategory = new CategoryJson(
-                                    created.id(),
-                                    created.name(),
-                                    created.username(),
-                                    true
-                            );
-
-                            created = spendDbClient.updateCategory(archivedCategory);
-                        }
-
                         context.getStore(NAMESPACE).put(
                                 context.getUniqueId(),
                                 created
@@ -55,6 +41,7 @@ public class CategoryExtension implements
                     }
                 });
     }
+
 
     @Override
     public void afterTestExecution(ExtensionContext context) throws Exception {

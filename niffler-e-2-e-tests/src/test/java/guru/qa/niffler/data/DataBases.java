@@ -119,8 +119,8 @@ public class DataBases {
         }
     }
 
-
-    private static DataSource dataSource(String jdbcUrl) {
+//public временно
+    public static DataSource dataSource(String jdbcUrl) {
         return datasource.computeIfAbsent(
                 jdbcUrl,
                 key -> {

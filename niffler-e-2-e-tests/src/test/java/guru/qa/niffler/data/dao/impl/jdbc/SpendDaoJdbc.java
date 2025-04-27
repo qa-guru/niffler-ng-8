@@ -1,8 +1,8 @@
-package guru.qa.niffler.data.dao.impl;
+package guru.qa.niffler.data.dao.impl.jdbc;
 
 
 import guru.qa.niffler.config.Config;
-import guru.qa.niffler.data.dao.SpendDao;
+import guru.qa.niffler.data.dao.interfaces.SpendDao;
 import guru.qa.niffler.data.entity.category.CategoryEntity;
 import guru.qa.niffler.data.entity.spend.SpendEntity;
 import guru.qa.niffler.model.CurrencyValues;
@@ -130,5 +130,10 @@ public class SpendDaoJdbc implements SpendDao {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public List<SpendEntity> findAll() {
+        return List.of();
     }
 }

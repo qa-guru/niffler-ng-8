@@ -1,6 +1,6 @@
-package guru.qa.niffler.data.dao.impl;
+package guru.qa.niffler.data.dao.impl.jdbc;
 
-import guru.qa.niffler.data.dao.CategoryDao;
+import guru.qa.niffler.data.dao.interfaces.CategoryDao;
 import guru.qa.niffler.data.entity.category.CategoryEntity;
 
 import java.sql.*;
@@ -126,5 +126,10 @@ public class CategoryDaoJdbc implements CategoryDao {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public List<CategoryEntity> findAll() {
+        return List.of();
     }
 }

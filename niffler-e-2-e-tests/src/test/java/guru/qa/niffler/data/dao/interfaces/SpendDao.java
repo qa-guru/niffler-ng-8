@@ -1,6 +1,7 @@
-package guru.qa.niffler.data.dao;
+package guru.qa.niffler.data.dao.interfaces;
 
 import guru.qa.niffler.data.entity.spend.SpendEntity;
+import guru.qa.niffler.data.entity.user.UserEntity;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,4 +15,6 @@ public interface SpendDao {
     List<SpendEntity> findAllByUsername(String username);
 
     void deleteSpend(SpendEntity spend);
+
+    List<SpendEntity> findAll();
 }

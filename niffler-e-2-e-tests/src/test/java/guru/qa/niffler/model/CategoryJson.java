@@ -3,6 +3,7 @@ package guru.qa.niffler.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import guru.qa.niffler.data.entity.category.CategoryEntity;
 
+import java.util.Optional;
 import java.util.UUID;
 
 public record CategoryJson(
@@ -23,6 +24,15 @@ public record CategoryJson(
                         entity.getUsername(),
                         entity.isArchived()
                 );
+    }
+
+    public static CategoryJson fromEntity(Optional<CategoryEntity> optionalEntity) {
+        return optionalEntity.map(entity -> new CategoryJson(
+                entity.getId(),
+                entity.getName(),
+                entity.getUsername(),
+                entity.isArchived()
+        )).orElse(null);
     }
 
     @Override

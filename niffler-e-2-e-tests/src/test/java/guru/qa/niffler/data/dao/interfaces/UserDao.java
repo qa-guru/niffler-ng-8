@@ -1,4 +1,4 @@
-package guru.qa.niffler.data.dao;
+package guru.qa.niffler.data.dao.interfaces;
 
 import guru.qa.niffler.data.entity.user.UserEntity;
 
@@ -12,7 +12,7 @@ public interface UserDao {
 
     Optional<UserEntity> findById(UUID uuid);
 
-    List<UserEntity> findByUsername(String username);
-
-    void deleteUser(UserEntity user);
+    List<UserEntity> findAll();
+//
+//    void deleteUser(UserEntity user);
 }

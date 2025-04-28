@@ -5,6 +5,7 @@ import guru.qa.niffler.data.entity.category.CategoryEntity;
 import guru.qa.niffler.data.entity.spend.SpendEntity;
 
 import java.util.Date;
+import java.util.Optional;
 import java.util.UUID;
 
 public record SpendJson(

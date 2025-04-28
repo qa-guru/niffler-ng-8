@@ -11,6 +11,9 @@ import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.model.SpendJson;
 import guru.qa.niffler.model.TransactionIsolation;
 
+import java.util.Optional;
+import java.util.UUID;
+
 import static guru.qa.niffler.data.DataBases.dataSource;
 import static guru.qa.niffler.data.DataBases.transaction;
 
@@ -28,8 +31,6 @@ public class SpendDbClient {
 
         return SpendJson.fromEntity(
                 new SpendDaoSpringJdbc(dataSource(CFG.spendJdbcUrl())).create(spendEntity));
-
-
     }
 
     public SpendJson createSpend(SpendJson spend) {
@@ -65,5 +66,11 @@ public class SpendDbClient {
                     new SpendDaoJdbc(connection).deleteSpend(SpendEntity.fromJson(spend));
                 },
                 CFG.spendJdbcUrl());
+    }
+
+    public CategoryJson findCategoryById(UUID id) {
+        Optional<CategoryEntity> categoryEntity = new CategoryDaoSpringJdbc(
+                dataSource(CFG.spendJdbcUrl())).findCategoryById(id);
+        return CategoryJson.fromEntity(categoryEntity);
     }
 }

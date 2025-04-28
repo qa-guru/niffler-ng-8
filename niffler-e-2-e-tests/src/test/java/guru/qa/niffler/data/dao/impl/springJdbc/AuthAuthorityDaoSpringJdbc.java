@@ -37,7 +37,7 @@ public class AuthAuthorityDaoSpringJdbc implements AuthAuthorityDao {
                     }
                 }
         );
-        return null;
+        return authority[0];
     }
 
     @Override

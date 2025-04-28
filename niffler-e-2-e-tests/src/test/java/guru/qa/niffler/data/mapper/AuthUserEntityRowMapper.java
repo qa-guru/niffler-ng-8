@@ -21,9 +21,9 @@ public class AuthUserEntityRowMapper implements RowMapper<AuthUserEntity> {
         user.setUsername(rs.getString("username"));
         user.setPassword(rs.getString("password"));
         user.setEnabled(rs.getBoolean("enabled"));
-        user.setAccountNonExpired(rs.getBoolean("accountNonExpired"));
-        user.setAccountNonLocked(rs.getBoolean("accountNonLocked"));
-        user.setCredentialsNonExpired(rs.getBoolean("credentialsNonExpired"));
+        user.setAccountNonExpired(rs.getBoolean("account_non_expired"));
+        user.setAccountNonLocked(rs.getBoolean("account_non_locked"));
+        user.setCredentialsNonExpired(rs.getBoolean("credentials_non_expired"));
         return user;
     }
 }

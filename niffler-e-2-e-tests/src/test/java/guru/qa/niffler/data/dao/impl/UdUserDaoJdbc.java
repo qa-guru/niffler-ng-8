@@ -20,7 +20,7 @@ public class UdUserDaoJdbc implements UdUserDao {
     @Override
     public UserEntity create(UserEntity user) {
         try (PreparedStatement ps = holder(url).connection().prepareStatement(
-                "INSERT INTO user (username, currency, fullname, firstname, surname, photo, photo_small) " +
+                "INSERT INTO \"user\" (username, currency, full_name, firstname, surname, photo, photo_small) " +
                         "VALUES ( ?, ?, ?, ?, ?, ?, ?)",
                 Statement.RETURN_GENERATED_KEYS
         )) {

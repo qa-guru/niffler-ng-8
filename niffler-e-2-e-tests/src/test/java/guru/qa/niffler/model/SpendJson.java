@@ -3,6 +3,7 @@ package guru.qa.niffler.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import guru.qa.niffler.data.entity.spend.CategoryEntity;
 import guru.qa.niffler.data.entity.spend.SpendEntity;
+import guru.qa.niffler.utils.RandomDataUtils;
 
 import java.util.Date;
 import java.util.UUID;
@@ -40,6 +41,23 @@ public record SpendJson(
                 entity.getAmount(),
                 entity.getDescription(),
                 username
+        );
+    }
+
+    public static SpendJson spendJson(String username, String categoryName){
+        return new SpendJson(
+                null,
+                new Date(),
+                new CategoryJson(
+                        null,
+                        categoryName,
+                        username,
+                        false
+                ),
+                CurrencyValues.RUB,
+                100.0,
+                "test desc",
+                RandomDataUtils.randomUsername()
         );
     }
 }

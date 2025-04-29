@@ -1,14 +1,15 @@
 package guru.qa.niffler.data.dao.impl.springJdbc;
 
+import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.dao.interfaces.UserDao;
 import guru.qa.niffler.data.entity.user.UserEntity;
 import guru.qa.niffler.data.mapper.UdUserEntityRowMapper;
+import guru.qa.niffler.data.tpl.DataSources;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 
-import javax.sql.DataSource;
 import java.sql.PreparedStatement;
 import java.util.List;
 import java.util.Optional;
@@ -16,15 +17,11 @@ import java.util.UUID;
 
 public class UserDaoSpringJdbc implements UserDao {
 
-    private DataSource dataSource;
-
-    public UserDaoSpringJdbc(DataSource dataSource) {
-        this.dataSource = dataSource;
-    }
+    private static final Config CFG = Config.getInstance();
 
     @Override
     public UserEntity create(UserEntity user) {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.userdataJdbcUrl()));
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(
@@ -49,7 +46,7 @@ public class UserDaoSpringJdbc implements UserDao {
 
     @Override
     public Optional<UserEntity> findById(UUID uuid) {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.userdataJdbcUrl()));
         try {
             return Optional.ofNullable(
                     jdbcTemplate.queryForObject(
@@ -65,7 +62,7 @@ public class UserDaoSpringJdbc implements UserDao {
 
     @Override
     public List<UserEntity> findAll() {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.userdataJdbcUrl()));
         return jdbcTemplate.query(
                 "SELECT * FROM \"user\"",
                 UdUserEntityRowMapper.INSTANCE

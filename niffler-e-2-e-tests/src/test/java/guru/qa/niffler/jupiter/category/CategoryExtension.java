@@ -21,7 +21,7 @@ public class CategoryExtension implements BeforeEachCallback, AfterEachCallback,
                     if (user.categories() == null || user.categories().length == 0) {
                         return;
                     }
-                    CategoryJson categoryJson = db.createCategory(new CategoryJson(
+                    CategoryJson categoryJson = db.createTxCategory(new CategoryJson(
                             null,
                             RandomDataUtils.categoryName(),
                             user.username(),
@@ -36,7 +36,7 @@ public class CategoryExtension implements BeforeEachCallback, AfterEachCallback,
     public void afterEach(ExtensionContext context) throws Exception {
         CategoryJson category = context.getStore(NAMESPACE).get(context.getUniqueId(), CategoryJson.class);
         SpendDbClient db = new SpendDbClient();
-        db.deleteCategory(category);
+        db.deleteTxCategory(category);
     }
 
     @Override

@@ -1,4 +1,4 @@
-package guru.qa.niffler.data.repository.impl;
+package guru.qa.niffler.data.repository.impl.hibernate;
 
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.entity.userdata.FriendshipStatus;
@@ -46,21 +46,11 @@ public class UserdataUserRepositoryHibernate implements UserdataUserRepository {
     }
 
     @Override
-    public void addIncomeInvitation(UserEntity requester, UserEntity addressee) {
+    public void addInvitation(UserEntity requester, UserEntity addressee,FriendshipStatus status) {
         entityManager.joinTransaction();
-        addressee.addFriends(FriendshipStatus.PENDING, requester);
-    }
-
-    @Override
-    public void addOutcomeInvitation(UserEntity requester, UserEntity addressee) {
-        entityManager.joinTransaction();
-        requester.addFriends(FriendshipStatus.PENDING, addressee);
-    }
-
-    @Override
-    public void addFriend(UserEntity requester, UserEntity addressee) {
-        entityManager.joinTransaction();
-        requester.addFriends(FriendshipStatus.ACCEPTED, addressee);
-        addressee.addFriends(FriendshipStatus.ACCEPTED, requester);
+        requester.addFriends(status, addressee);
+        if(status == FriendshipStatus.ACCEPTED){
+            addressee.addFriends(status, requester);
+        }
     }
 }

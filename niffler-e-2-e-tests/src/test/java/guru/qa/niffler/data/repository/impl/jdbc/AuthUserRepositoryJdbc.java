@@ -35,7 +35,7 @@ public class AuthUserRepositoryJdbc implements AuthUserRepository {
                      "INSERT INTO \"authority\" (user_id, authority) " +
                              "VALUES (?, ? )")) {
             userPs.setString(1, user.getUsername());
-            userPs.setString(2, user.getPassword());
+            userPs.setString(2, pe.encode(user.getPassword()));
             userPs.setBoolean(3, user.getEnabled());
             userPs.setBoolean(4, user.getAccountNonExpired());
             userPs.setBoolean(5, user.getAccountNonLocked());
@@ -82,15 +82,6 @@ public class AuthUserRepositoryJdbc implements AuthUserRepository {
                     ae.setId(rs.getObject("a.id", UUID.class));
                     ae.setAuthority(Authority.valueOf(rs.getString("authority")));
                     authorityEntities.add(ae);
-
-                    AuthUserEntity ue = new AuthUserEntity();
-                    ue.setId(rs.getObject("id", UUID.class));
-                    ue.setUsername(rs.getString("username"));
-                    ue.setPassword(rs.getString("password"));
-                    ue.setEnabled((rs.getBoolean("enabled")));
-                    ue.setAccountNonExpired((rs.getBoolean("account_non_expired")));
-                    ue.setAccountNonLocked((rs.getBoolean("account_non_locked")));
-                    ue.setCredentialsNonExpired((rs.getBoolean("credentials_non_expired")));
                 }
                 if (user == null){
                     return Optional.empty();

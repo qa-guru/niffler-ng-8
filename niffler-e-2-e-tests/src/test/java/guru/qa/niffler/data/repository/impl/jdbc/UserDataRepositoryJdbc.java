@@ -95,8 +95,8 @@ public class UserDataRepositoryJdbc implements UserdataUserRepository {
                     ue.setFirstname((rs.getString("firstname")));
                     ue.setSurname((rs.getString("surname")));
                     ue.setFullname((rs.getString("full_name")));
-                    ue.setPhoto((rs.getBytes("photo_small")));
-                    ue.setPhotoSmall((rs.getBytes("photoSmall")));
+                    ue.setPhoto((rs.getBytes("photo")));
+                    ue.setPhotoSmall((rs.getBytes("photo_small")));
                     return Optional.ofNullable(ue);
                 } else {
                     return Optional.empty();

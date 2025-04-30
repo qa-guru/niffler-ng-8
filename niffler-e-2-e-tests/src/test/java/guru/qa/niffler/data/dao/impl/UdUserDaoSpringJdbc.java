@@ -60,11 +60,11 @@ public class UdUserDaoSpringJdbc implements UdUserDao {
 
   @Override
   public Optional<UserEntity> findByUsername(String username) {
-    return Optional.empty();
+    throw new UnsupportedOperationException("findByUsername() is not yet implemented");
   }
 
   @Override
   public void delete(UUID id) {
-
+    throw new UnsupportedOperationException("delete() is not yet implemented");
   }
 }

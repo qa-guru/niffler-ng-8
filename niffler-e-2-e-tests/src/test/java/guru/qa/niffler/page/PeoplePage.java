@@ -22,10 +22,7 @@ public class PeoplePage {
 
     public PeoplePage sendFriendRequestTo(String username) {
         SelenideElement button = findUserRow(username).$("button");
-        if (button.has(text("Add friend"))) {
-            button.shouldBe(visible, enabled).click();
-            button.shouldHave(text("Waiting..."));
-        }
+        button.shouldHave(text("Add friend")).click();
         return this;
     }
 }

@@ -18,7 +18,7 @@ public class AuthAuthorityDaoJdbc extends AbstractDao<AuthAuthorityEntity> imple
 
     @Override
     public AuthAuthorityEntity create(AuthAuthorityEntity entity) {
-        String sql = "INSERT INTO category (user_id, authority) " +
+        String sql = "INSERT INTO authority (user_id, authority) " +
                 "VALUES(?, ?) RETURNING *";
         return executeQuery(sql, entity.getUser().getId(), entity.getAuthority());
     }

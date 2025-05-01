@@ -86,7 +86,7 @@ dependencies {
     testImplementation "org.springframework.security:spring-security-crypto:${springCryptoVersion}"
     testImplementation "com.atomikos:transactions-jta:${atomikOsVersion}:jakarta"
     testImplementation "com.atomikos:transactions-hibernate4:${atomikOsVersion}:jakarta"
-    testImplementation "com.atomikos:transactions-jdbc:${atomikOsVersion}:jakarta"
+    testImplementation "com.atomikos:transactions-jdbc:${atomikOsVersion}"
     // Allure
     testImplementation "io.qameta.allure:allure-attachments:${allureVersion}"
     testImplementation("io.qameta.allure:allure-junit5:${allureVersion}") {

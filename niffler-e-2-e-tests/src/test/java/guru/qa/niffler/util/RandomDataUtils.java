@@ -30,7 +30,7 @@ public final class RandomDataUtils {
     public static UserParts genDefaultUser(String username, String password) {
         List<AuthorityJson> defaultAuthorities = List.of(
                 new AuthorityJson().setAuthority(Authority.write),
-                new AuthorityJson().setAuthority(Authority.write)
+                new AuthorityJson().setAuthority(Authority.read)
         );
         AuthUserJson authUserJson = new AuthUserJson()
                 .setUsername(username)

@@ -4,6 +4,7 @@ import guru.qa.niffler.db.dao.UserdataUserDao;
 import guru.qa.niffler.db.dao.impl.spring_jdbc.mapper.UserdataUserEntityRowMapper;
 import guru.qa.niffler.db.entity.userdata.UserdataUserEntity;
 
+import javax.sql.DataSource;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -12,6 +13,10 @@ public class UserdataUserDaoSpringJdbc extends AbstractSpringDao<UserdataUserEnt
 
     public UserdataUserDaoSpringJdbc(String jdbcUrl) {
         super(jdbcUrl, UserdataUserEntityRowMapper.INSTANCE);
+    }
+
+    public UserdataUserDaoSpringJdbc(DataSource dataSource) {
+        super(dataSource, UserdataUserEntityRowMapper.INSTANCE);
     }
 
     @Override

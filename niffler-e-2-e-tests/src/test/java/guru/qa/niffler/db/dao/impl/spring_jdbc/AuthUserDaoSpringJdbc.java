@@ -6,6 +6,7 @@ import guru.qa.niffler.db.entity.auth.AuthUserEntity;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import javax.sql.DataSource;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -16,6 +17,10 @@ public class AuthUserDaoSpringJdbc extends AbstractSpringDao<AuthUserEntity> imp
 
     public AuthUserDaoSpringJdbc(String jdbcUrl) {
         super(jdbcUrl, AuthUserEntityRowMapper.INSTANCE);
+    }
+
+    public AuthUserDaoSpringJdbc(DataSource dataSource) {
+        super(dataSource, AuthUserEntityRowMapper.INSTANCE);
     }
 
     @Override

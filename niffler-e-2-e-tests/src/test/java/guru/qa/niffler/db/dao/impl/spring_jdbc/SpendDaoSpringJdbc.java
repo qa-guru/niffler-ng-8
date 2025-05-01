@@ -4,6 +4,7 @@ import guru.qa.niffler.db.dao.SpendDao;
 import guru.qa.niffler.db.dao.impl.spring_jdbc.mapper.SpendEntityRowMapper;
 import guru.qa.niffler.db.entity.spend.SpendEntity;
 
+import javax.sql.DataSource;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -12,6 +13,10 @@ public class SpendDaoSpringJdbc extends AbstractSpringDao<SpendEntity> implement
 
     public SpendDaoSpringJdbc(String jdbcUrl) {
         super(jdbcUrl, SpendEntityRowMapper.INSTANCE);
+    }
+
+    public SpendDaoSpringJdbc(DataSource dataSource) {
+        super(dataSource, SpendEntityRowMapper.INSTANCE);
     }
 
     @Override

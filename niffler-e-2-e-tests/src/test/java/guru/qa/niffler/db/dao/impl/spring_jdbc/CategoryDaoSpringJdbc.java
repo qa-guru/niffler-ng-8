@@ -4,6 +4,7 @@ import guru.qa.niffler.db.dao.CategoryDao;
 import guru.qa.niffler.db.dao.impl.spring_jdbc.mapper.CategoryEntityRowMapper;
 import guru.qa.niffler.db.entity.spend.CategoryEntity;
 
+import javax.sql.DataSource;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -12,6 +13,10 @@ public class CategoryDaoSpringJdbc extends AbstractSpringDao<CategoryEntity> imp
 
     public CategoryDaoSpringJdbc(String jdbcUrl) {
         super(jdbcUrl, CategoryEntityRowMapper.INSTANCE);
+    }
+
+    public CategoryDaoSpringJdbc(DataSource dataSource) {
+        super(dataSource, CategoryEntityRowMapper.INSTANCE);
     }
 
     @Override

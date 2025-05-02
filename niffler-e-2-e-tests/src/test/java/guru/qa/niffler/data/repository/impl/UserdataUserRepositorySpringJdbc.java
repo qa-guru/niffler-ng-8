@@ -59,27 +59,13 @@ public class UserdataUserRepositorySpringJdbc implements UserdataUserRepository 
                 )
         );
     }
-
     @Override
-    public void addIncomeInvitation(UserEntity requester, UserEntity addressee) {
+    public void sendInvitation(UserEntity requester, UserEntity addressee){
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(url));
         jdbcTemplate.update(
                 "INSERT INTO friendship (requester_id, addressee_id, status) VALUES (?, ?, ?)",
-                UserdataEntityResultSetExtractor.instance,
                 requester.getId(),
                 addressee.getId(),
-                FriendshipStatus.PENDING.name()
-        );
-    }
-
-    @Override
-    public void addOutcomeInvitation(UserEntity requester, UserEntity addressee) {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(url));
-        jdbcTemplate.update(
-                "INSERT INTO friendship (requester_id, addressee_id, status) VALUES (?, ?, ?)",
-                UserdataEntityResultSetExtractor.instance,
-                addressee.getId(),
-                requester.getId(),
                 FriendshipStatus.PENDING.name()
         );
     }
@@ -90,7 +76,6 @@ public class UserdataUserRepositorySpringJdbc implements UserdataUserRepository 
         jdbcTemplate.update(
                 "INSERT INTO \"friendship\" (requester_id, addressee_id, status, created_date)" +
                         " VALUES (?, ?, ?, ?)",
-                UserdataEntityResultSetExtractor.instance,
                 requester.getId(),
                 addressee.getId(),
                 FriendshipStatus.ACCEPTED.name(),
@@ -100,7 +85,6 @@ public class UserdataUserRepositorySpringJdbc implements UserdataUserRepository 
         jdbcTemplate.update(
                 "INSERT INTO \"friendship\" (requester_id, addressee_id, status, created_date)" +
                         " VALUES (?, ?, ?, ?)",
-                UserdataEntityResultSetExtractor.instance,
                 addressee.getId(),
                 requester.getId(),
                 FriendshipStatus.ACCEPTED.name(),

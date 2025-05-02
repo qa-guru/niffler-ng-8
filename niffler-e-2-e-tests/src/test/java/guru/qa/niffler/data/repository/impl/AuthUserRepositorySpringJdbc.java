@@ -5,6 +5,7 @@ import guru.qa.niffler.data.entity.auth.AuthUserEntity;
 import guru.qa.niffler.data.extractor.AuthUserEntityResultSetExtractor;
 import guru.qa.niffler.data.repository.AuthUserRepository;
 import guru.qa.niffler.data.tpl.DataSources;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -65,15 +66,19 @@ public class AuthUserRepositorySpringJdbc implements AuthUserRepository {
     @Override
     public Optional<AuthUserEntity> findById(UUID id) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(url));
-        return Optional.ofNullable(
-                jdbcTemplate.query(
-                        "SELECT a.id AS authority_id, a.authority, a.user_id, " +
-                                "u.username, u.password, u.enabled, u.account_non_expired, u.account_non_locked, u.credentials_non_expired " +
-                                "FROM \"user\" u JOIN public.authority a ON u.id = a.user_id " +
-                                "WHERE u.id = ?",
-                        AuthUserEntityResultSetExtractor.instance,
-                        id
-                )
-        );
+        try {
+            return Optional.ofNullable(
+                    jdbcTemplate.query(
+                            "SELECT a.id AS authority_id, a.authority, a.user_id, " +
+                                    "u.username, u.password, u.enabled, u.account_non_expired, u.account_non_locked, u.credentials_non_expired " +
+                                    "FROM \"user\" u JOIN public.authority a ON u.id = a.user_id " +
+                                    "WHERE u.id = ?",
+                            AuthUserEntityResultSetExtractor.instance,
+                            id
+                    )
+            );
+        } catch (DataAccessException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

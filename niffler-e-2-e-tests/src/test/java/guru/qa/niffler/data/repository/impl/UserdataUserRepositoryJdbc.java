@@ -120,55 +120,42 @@ public class UserdataUserRepositoryJdbc implements UserdataUserRepository {
         }
     }
 
-            @Override
-            public void addIncomeInvitation (UserEntity requester, UserEntity addressee){
-                try (PreparedStatement ps = holder(url).connection().prepareStatement(
-                        "INSERT INTO \"friendship\" (requester_id, addressee_id, status, created_date)" +
-                                " VALUES (?, ?, ?, ?)")) {
-                    ps.setObject(1, requester.getId());
-                    ps.setObject(2, addressee.getId());
-                    ps.setObject(3, FriendshipStatus.PENDING.name());
-                    ps.setDate(4, new java.sql.Date(System.currentTimeMillis()));
-                    ps.executeUpdate();
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-
-            @Override
-            public void addOutcomeInvitation (UserEntity requester, UserEntity addressee){
-                try (PreparedStatement ps = holder(url).connection().prepareStatement(
-                        "INSERT INTO \"friendship\" (requester_id, addressee_id, status, created_date)" +
-                                " VALUES (?, ?, ?, ?)")) {
-                    ps.setObject(1, addressee.getId());
-                    ps.setObject(2, requester.getId());
-                    ps.setObject(3, FriendshipStatus.PENDING.name());
-                    ps.setDate(4, new java.sql.Date(System.currentTimeMillis()));
-                    ps.executeUpdate();
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-
-            @Override
-            public void addFriend (UserEntity requester, UserEntity addressee){
-                try (PreparedStatement ps = holder(url).connection().prepareStatement(
-                        "INSERT INTO \"friendship\" (requester_id, addressee_id, status, created_date)" +
-                                " VALUES (?, ?, ?, ?)")) {
-                    ps.setObject(1, requester.getId());
-                    ps.setObject(2, addressee.getId());
-                    ps.setObject(3, FriendshipStatus.ACCEPTED.name());
-                    ps.setDate(4, new java.sql.Date(System.currentTimeMillis()));
-                    ps.executeUpdate();
-
-                    ps.setObject(1, addressee.getId());
-                    ps.setObject(2, requester.getId());
-                    ps.setObject(3, FriendshipStatus.ACCEPTED.name());
-                    ps.setDate(4, new java.sql.Date(System.currentTimeMillis()));
-                    ps.executeUpdate();
-
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
-            }
+    @Override
+    public void sendInvitation(UserEntity requester, UserEntity addressee) {
+        try (PreparedStatement ps = holder(url).connection().prepareStatement(
+                "INSERT INTO \"friendship\" (requester_id, addressee_id, status, created_date)" +
+                        " VALUES (?, ?, ?, ?)")) {
+            ps.setObject(1, requester.getId());
+            ps.setObject(2, addressee.getId());
+            ps.setObject(3, FriendshipStatus.PENDING.name());
+            ps.setDate(4, new java.sql.Date(System.currentTimeMillis()));
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public void addFriend(UserEntity requester, UserEntity addressee) {
+        try (PreparedStatement ps = holder(url).connection().prepareStatement(
+                "INSERT INTO \"friendship\" (requester_id, addressee_id, status, created_date)" +
+                        " VALUES (?, ?, ?, ?)")) {
+            ps.setObject(1, requester.getId());
+            ps.setObject(2, addressee.getId());
+            ps.setObject(3, FriendshipStatus.ACCEPTED.name());
+            ps.setDate(4, new java.sql.Date(System.currentTimeMillis()));
+            ps.addBatch();
+
+            ps.setObject(1, addressee.getId());
+            ps.setObject(2, requester.getId());
+            ps.setObject(3, FriendshipStatus.ACCEPTED.name());
+            ps.setDate(4, new java.sql.Date(System.currentTimeMillis()));
+            ps.addBatch();
+
+            ps.executeBatch();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+}

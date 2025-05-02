@@ -1,16 +1,16 @@
 package guru.qa.niffler.db.entity.userdata;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
+import lombok.experimental.Accessors;
 import org.hibernate.proxy.HibernateProxy;
 
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 
-@Getter
-@Setter
+@Data
+@Accessors(chain = true)
 @Entity
 @Table(name = "friendship")
 @IdClass(FriendShipId.class)
@@ -49,4 +49,13 @@ public class UserdataFriendshipEntity implements Serializable {
         return Objects.hash(requester, addressee);
     }
 
+    @Override
+    public String toString() {
+        return "UserdataFriendshipEntity{" +
+                "addressee={id: %s, username: %s}".formatted(addressee.getId(), addressee.getUsername()) +
+                ", requester={id: %s, username: %s}".formatted(requester.getId(), requester.getUsername()) +
+                ", createdDate=" + createdDate +
+                ", status=" + status +
+                '}';
+    }
 }

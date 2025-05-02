@@ -86,8 +86,7 @@ public class AuthUserRepositoryJdbc implements AuthUserRepository {
         authorityExec.executeUpdateToBoolean(authoritySql, userId);
 
         String userSql = "DELETE FROM \"user\" WHERE id = ?";
-        boolean isUserDeleted = userExec.executeUpdateToBoolean(userSql, userId);
-        return isUserDeleted;
+        return userExec.executeUpdateToBoolean(userSql, userId);
     }
 
     @Override

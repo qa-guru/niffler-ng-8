@@ -49,6 +49,16 @@ public class UserdataUserEntity implements Serializable {
     @OneToMany(mappedBy = "addressee", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UserdataFriendshipEntity> friendshipAddressees = new ArrayList<>();
 
+    public UserdataUserEntity setId(String id) {
+        this.id = UUID.fromString(id);
+        return this;
+    }
+
+    public UserdataUserEntity setId(UUID id) {
+        this.id = id;
+        return this;
+    }
+
     public void addFriends(FriendshipStatus status, UserdataUserEntity... friends) {
         List<UserdataFriendshipEntity> friendsEntities = Stream.of(friends)
                 .map(f -> {

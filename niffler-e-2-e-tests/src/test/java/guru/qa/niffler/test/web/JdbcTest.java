@@ -63,7 +63,7 @@ public class JdbcTest {
     UserJson user = usersDbClient.createUserSpringJdbc(
         new UserJson(
             null,
-            "valentin-5",
+            "valentin-6",
             null,
             null,
             null,

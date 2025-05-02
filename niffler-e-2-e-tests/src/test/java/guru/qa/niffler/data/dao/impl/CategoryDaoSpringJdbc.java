@@ -62,4 +62,17 @@ public class CategoryDaoSpringJdbc implements CategoryDao {
                 CategoryEntityRowMapper.instance
         );
     }
+
+    @Override
+    public CategoryEntity update(CategoryEntity category) {
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+        jdbcTemplate.update(
+                "UPDATE category SET name = ?, username = ?, archived = ? WHERE id = ?",
+                category.getName(),
+                category.getUsername(),
+                category.isArchived(),
+                category.getId()
+        );
+        return category;
+    }
 }

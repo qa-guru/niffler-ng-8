@@ -1,16 +1,20 @@
-package guru.qa.niffler.data.dao.impl;
+package guru.qa.niffler.data.dao.impl.spring;
 
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.dao.UdUserDao;
+import guru.qa.niffler.data.entity.userdata.FriendshipEntity;
 import guru.qa.niffler.data.entity.userdata.UserEntity;
 import guru.qa.niffler.data.mapper.UdUserEntityRowMapper;
 import guru.qa.niffler.data.tpl.DataSources;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 
 import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -46,6 +50,63 @@ public class UserDaoSpringJdbc implements UdUserDao {
     }
 
     @Override
+    public UserEntity update(UserEntity user) {
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(url));
+
+        jdbcTemplate.update("""
+            UPDATE "user"
+               SET currency = ?,
+                   full_name = ?,
+                   firstname = ?,
+                   surname = ?,
+                   photo = ?,
+                   photo_small = ?
+             WHERE id = ?
+            """,
+                user.getCurrency().name(),
+                user.getFullname(),
+                user.getFirstname(),
+                user.getSurname(),
+                user.getPhoto(),
+                user.getPhotoSmall(),
+                user.getId()
+        );
+
+        List<FriendshipEntity> allFriendships = new ArrayList<>();
+        for (FriendshipEntity fe : user.getFriendshipRequests()) {
+            allFriendships.add(fe);
+        }
+        for (FriendshipEntity fe : user.getFriendshipAddressees()) {
+            allFriendships.add(fe);
+        }
+
+        jdbcTemplate.batchUpdate("""
+            INSERT INTO friendship (requester_id, addressee_id, status)
+            VALUES (?, ?, ?)
+            ON CONFLICT (requester_id, addressee_id)
+            DO UPDATE SET status = ?
+            """,
+                new BatchPreparedStatementSetter() {
+                    @Override
+                    public void setValues(PreparedStatement ps, int i) throws SQLException {
+                        FriendshipEntity fe = allFriendships.get(i);
+                        ps.setObject(1, fe.getRequester().getId());
+                        ps.setObject(2, fe.getAddressee().getId());
+                        ps.setString(3, fe.getStatus().name());
+                        ps.setString(4, fe.getStatus().name());
+                    }
+
+                    @Override
+                    public int getBatchSize() {
+                        return allFriendships.size();
+                    }
+                });
+
+        return user;
+    }
+
+
+    @Override
     public Optional<UserEntity> findById(UUID id) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(url));
         return Optional.ofNullable(
@@ -72,6 +133,14 @@ public class UserDaoSpringJdbc implements UdUserDao {
     @Override
     public void delete(UserEntity user) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(url));
+
+        jdbcTemplate.update("""
+        DELETE FROM friendship
+         WHERE requester_id = ?
+            OR addressee_id = ?
+    """, user.getId(), user.getId());
+
+
         jdbcTemplate.update(
                 "DELETE FROM \"user\" WHERE id = ?",
                 user.getId()

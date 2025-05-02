@@ -79,19 +79,6 @@ public class UserEntity implements Serializable {
         this.friendshipRequests.addAll(friendsEntities);
     }
 
-    public void addInvitations(UserEntity... invitations) {
-        List<FriendshipEntity> invitationsEntities = Stream.of(invitations)
-                .map(i -> {
-                    FriendshipEntity fe = new FriendshipEntity();
-                    fe.setRequester(i);
-                    fe.setAddressee(this);
-                    fe.setStatus(FriendshipStatus.PENDING);
-                    fe.setCreatedDate(new Date());
-                    return fe;
-                }).toList();
-        this.friendshipAddressees.addAll(invitationsEntities);
-    }
-
     public void removeFriends(UserEntity... friends) {
         List<UUID> idsToBeRemoved = Arrays.stream(friends).map(UserEntity::getId).toList();
         for (Iterator<FriendshipEntity> i = getFriendshipRequests().iterator(); i.hasNext(); ) {

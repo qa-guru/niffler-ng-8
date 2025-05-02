@@ -1,4 +1,4 @@
-package guru.qa.niffler.data.dao.impl;
+package guru.qa.niffler.data.dao.impl.spring;
 
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.dao.AuthAuthorityDao;
@@ -39,6 +39,31 @@ public class AuthAuthorityDaoSpringJdbc implements AuthAuthorityDao {
                 }
         );
     }
+
+    @Override
+    public void update(AuthorityEntity... authority) {
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(url));
+        jdbcTemplate.batchUpdate(
+                """
+                INSERT INTO authority (user_id, authority)
+                VALUES (?, ?)
+                ON CONFLICT (user_id, authority) DO NOTHING
+                """,
+                new BatchPreparedStatementSetter() {
+                    @Override
+                    public void setValues(PreparedStatement ps, int i) throws SQLException {
+                        ps.setObject(1, authority[i].getUser().getId());
+                        ps.setString(2, authority[i].getAuthority().name());
+                    }
+
+                    @Override
+                    public int getBatchSize() {
+                        return authority.length;
+                    }
+                }
+        );
+    }
+
 
     @Override
     public Optional<AuthorityEntity> findById(UUID id) {

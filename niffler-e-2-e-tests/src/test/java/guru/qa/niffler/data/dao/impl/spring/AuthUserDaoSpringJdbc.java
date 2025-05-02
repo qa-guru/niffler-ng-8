@@ -1,4 +1,4 @@
-package guru.qa.niffler.data.dao.impl;
+package guru.qa.niffler.data.dao.impl.spring;
 
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.dao.AuthUserDao;
@@ -40,6 +40,33 @@ public class AuthUserDaoSpringJdbc implements AuthUserDao {
 
         final UUID generatedKey = (UUID) kh.getKeys().get("id");
         user.setId(generatedKey);
+        return user;
+    }
+
+    @Override
+    public AuthUserEntity update(AuthUserEntity user) {
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.authJdbcUrl()));
+
+        jdbcTemplate.update("""
+            UPDATE "user"
+            SET 
+                username = ?,
+                password = ?,
+                enabled = ?,
+                account_non_expired = ?,
+                account_non_locked = ?,
+                credentials_non_expired = ?
+            WHERE id = ?
+        """,
+                user.getUsername(),
+                user.getPassword(),
+                user.getEnabled(),
+                user.getAccountNonExpired(),
+                user.getAccountNonLocked(),
+                user.getCredentialsNonExpired(),
+                user.getId()
+        );
+
         return user;
     }
 

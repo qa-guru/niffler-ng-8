@@ -1,7 +1,8 @@
-package guru.qa.niffler.data.dao.impl;
+package guru.qa.niffler.data.dao.impl.spring;
 
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.dao.SpendDao;
+import guru.qa.niffler.data.entity.spend.CategoryEntity;
 import guru.qa.niffler.data.entity.spend.SpendEntity;
 import guru.qa.niffler.data.mapper.SpendEntityRowMapper;
 import guru.qa.niffler.data.tpl.DataSources;
@@ -38,6 +39,44 @@ public class SpendDaoSpringJdbc implements SpendDao {
         },kh);
         final UUID generatedKey = (UUID) kh.getKeys().get("id");
         spend.setId(generatedKey);
+        return spend;
+    }
+
+    @Override
+    public SpendEntity update(SpendEntity spend) {
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(url));
+
+        jdbcTemplate.update("""
+                        UPDATE spend
+                            SET username = ?,
+                            spend_date   = ?,
+                            currency     = ?,
+                            amount       = ?,
+                            description  = ?,
+                            category_id  = ?
+                            WHERE id = ?
+                        """,
+                spend.getUsername(),
+                spend.getSpendDate(),
+                spend.getCurrency(),
+                spend.getAmount(),
+                spend.getDescription(),
+                spend.getCategory().getId(),
+                spend.getId()
+        );
+        CategoryEntity ce = spend.getCategory();
+        jdbcTemplate.update("""
+                             INSERT INTO category (username, name, archived)
+                              VALUES (?, ?, ?)
+                              ON CONFLICT (username, name)
+                                DO UPDATE SET archived = ?
+                             """,
+                ce.getUsername(),
+                ce.getName(),
+                ce.isArchived(),
+                ce.isArchived()
+        );
+
         return spend;
     }
 

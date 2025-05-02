@@ -14,6 +14,9 @@ public interface UserdataUserRepository {
 
     Optional<UserEntity> findByUsername(String username);
 
+    UserEntity update(UserEntity user);
+
     void addInvitation(UserEntity requester, UserEntity addressee, FriendshipStatus status);
 
+    void remove(UserEntity user);
 }

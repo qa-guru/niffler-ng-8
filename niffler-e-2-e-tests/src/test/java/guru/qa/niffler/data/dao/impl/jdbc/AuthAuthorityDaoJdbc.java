@@ -1,4 +1,4 @@
-package guru.qa.niffler.data.dao.impl;
+package guru.qa.niffler.data.dao.impl.jdbc;
 
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.dao.AuthAuthorityDao;
@@ -23,6 +23,27 @@ public class AuthAuthorityDaoJdbc implements AuthAuthorityDao {
         try (PreparedStatement ps = holder(url).connection().prepareStatement(
                 "INSERT INTO authority (user_id, authority) " +
                         "VALUES ( ?, ?)"
+        )) {
+            for (AuthorityEntity authority : authorities) {
+                ps.setObject(1, authority.getUser().getId());
+                ps.setString(2, authority.getAuthority().name());
+                ps.addBatch();
+                ps.clearParameters();
+            }
+            ps.executeBatch();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void update(AuthorityEntity... authorities) {
+        try (PreparedStatement ps = holder(url).connection().prepareStatement(
+                """
+                INSERT INTO authority (user_id, authority)
+                VALUES (?, ?)
+                ON CONFLICT (user_id, authority) DO NOTHING
+                """
         )) {
             for (AuthorityEntity authority : authorities) {
                 ps.setObject(1, authority.getUser().getId());

@@ -1,7 +1,6 @@
 package guru.qa.niffler.data.mapper;
 
-import guru.qa.niffler.config.Config;
-import guru.qa.niffler.data.dao.impl.CategoryDaoSpringJdbc;
+import guru.qa.niffler.data.dao.impl.spring.CategoryDaoSpringJdbc;
 import guru.qa.niffler.data.entity.spend.SpendEntity;
 import guru.qa.niffler.model.CurrencyValues;
 import org.springframework.jdbc.core.RowMapper;

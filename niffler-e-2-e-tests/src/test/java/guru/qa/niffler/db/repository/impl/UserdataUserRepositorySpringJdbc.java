@@ -1,6 +1,7 @@
 package guru.qa.niffler.db.repository.impl;
 
 import guru.qa.niffler.db.dao.impl.spring_jdbc.mapper.UserdataFriendshipEntityRowMapper;
+import guru.qa.niffler.db.dao.impl.spring_jdbc.mapper.UserdataUserEntityRowMapper;
 import guru.qa.niffler.db.entity.userdata.FriendshipStatus;
 import guru.qa.niffler.db.entity.userdata.UserdataFriendshipEntity;
 import guru.qa.niffler.db.entity.userdata.UserdataUserEntity;
@@ -9,7 +10,6 @@ import guru.qa.niffler.db.repository.mapper.UserdataUserEntityListResultSetExtra
 import guru.qa.niffler.db.tpl.DataSources;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.ResultSetExtractor;
-import org.springframework.jdbc.core.RowMapper;
 
 import java.util.List;
 import java.util.Optional;
@@ -48,12 +48,10 @@ public class UserdataUserRepositorySpringJdbc implements UserdataUserRepository 
             """;
 
     private final JdbcTemplate jdbcTemplate;
-    private final RowMapper<UserdataFriendshipEntity> friendshipRowMapper;
     private final ResultSetExtractor<List<UserdataUserEntity>> userListResultSetExtractor;
 
     public UserdataUserRepositorySpringJdbc(String jdbcUrl) {
         this.jdbcTemplate = new JdbcTemplate(DataSources.dataSource(jdbcUrl));
-        this.friendshipRowMapper = UserdataFriendshipEntityRowMapper.INSTANCE;
         this.userListResultSetExtractor = UserdataUserEntityListResultSetExtractor.INSTANCE;
     }
 
@@ -61,11 +59,10 @@ public class UserdataUserRepositorySpringJdbc implements UserdataUserRepository 
     public UserdataUserEntity create(UserdataUserEntity entity) {
         String sql = "INSERT INTO \"user\" (username, currency, firstname, surname, full_name, photo, photo_small) " +
                 "VALUES(?, ?, ?, ?, ?, ?, ?) RETURNING *";
-        return jdbcTemplate.query(sql, userListResultSetExtractor,
+        return jdbcTemplate.queryForObject(sql, UserdataUserEntityRowMapper.INSTANCE,
                         entity.getUsername(), entity.getCurrency().name(), entity.getFirstname(),
                         entity.getSurname(), entity.getFullname(), entity.getPhoto(), entity.getPhotoSmall()
-                ).stream()
-                .findFirst().get();
+        );
     }
 
     @Override
@@ -103,7 +100,9 @@ public class UserdataUserRepositorySpringJdbc implements UserdataUserRepository 
     @Override
     public UserdataFriendshipEntity createFriendship(UserdataUserEntity requester, UserdataUserEntity addressee, FriendshipStatus status) {
         String sql = "INSERT INTO friendship (requester_id, addressee_id, created_date, status)  VALUES (?, ?, NOW(), ?) RETURNING *";
-        return jdbcTemplate.queryForObject(sql, friendshipRowMapper, requester.getId(), addressee.getId(), status.name());
+        return jdbcTemplate.queryForObject(sql, UserdataFriendshipEntityRowMapper.INSTANCE,
+                requester.getId(), addressee.getId(), status.name()
+        );
     }
 
 }

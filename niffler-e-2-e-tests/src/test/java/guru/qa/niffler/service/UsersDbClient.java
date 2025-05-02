@@ -66,7 +66,7 @@ public class UsersDbClient {
               AuthUserEntity authUser = authUserEntity(username, "12345");
               authUserRepository.create(authUser);
               UserEntity adressee = userdataUserRepository.create(userEntity(username));
-              userdataUserRepository.addIncomeInvitation(targetEntity, adressee);
+              userdataUserRepository.sendInvitation(targetEntity, adressee);
               return null;
             }
         );
@@ -86,7 +86,7 @@ public class UsersDbClient {
               AuthUserEntity authUser = authUserEntity(username, "12345");
               authUserRepository.create(authUser);
               UserEntity adressee = userdataUserRepository.create(userEntity(username));
-              userdataUserRepository.addOutcomeInvitation(targetEntity, adressee);
+              userdataUserRepository.sendInvitation(targetEntity, adressee);
               return null;
             }
         );

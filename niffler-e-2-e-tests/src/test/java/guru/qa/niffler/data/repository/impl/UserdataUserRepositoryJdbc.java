@@ -121,6 +121,11 @@ public class UserdataUserRepositoryJdbc implements UserdataUserRepository {
     }
 
     @Override
+    public Optional<UserEntity> findByUsername(String username) {
+        return Optional.empty();
+    }
+
+    @Override
     public void sendInvitation(UserEntity requester, UserEntity addressee) {
         try (PreparedStatement ps = holder(url).connection().prepareStatement(
                 "INSERT INTO \"friendship\" (requester_id, addressee_id, status, created_date)" +

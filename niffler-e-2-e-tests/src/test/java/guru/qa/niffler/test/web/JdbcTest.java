@@ -1,5 +1,9 @@
 package guru.qa.niffler.test.web;
 
+import guru.qa.niffler.data.dao.AuthUserDao;
+import guru.qa.niffler.data.dao.impl.AuthUserDaoSpringJdbc;
+import guru.qa.niffler.data.entity.auth.AuthUserEntity;
+import guru.qa.niffler.data.entity.auth.AuthorityEntity;
 import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.model.CurrencyValues;
 import guru.qa.niffler.model.SpendJson;
@@ -10,6 +14,10 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.util.Date;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 //@Disabled
 public class JdbcTest {
@@ -74,5 +82,25 @@ public class JdbcTest {
         )
     );
     System.out.println(user);
+  }
+
+  @Test
+  void findAllWithAuthoritiesTest() {
+    AuthUserDao authUserDao = new AuthUserDaoSpringJdbc();
+    List<AuthUserEntity> usersWithAuthorities = authUserDao.findAllWithAuthorities();
+
+    assertNotNull(usersWithAuthorities);
+    assertFalse(usersWithAuthorities.isEmpty());
+
+    for (AuthUserEntity user : usersWithAuthorities) {
+      System.out.printf("User: %s (%s)%n", user.getUsername(), user.getId());
+      if (user.getAuthorities() != null) {
+        for (AuthorityEntity authority : user.getAuthorities()) {
+          System.out.printf("  Authority: %s%n", authority.getAuthority());
+        }
+      } else {
+        System.out.println("  No authorities");
+      }
+    }
   }
 }

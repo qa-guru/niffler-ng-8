@@ -9,6 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -74,5 +75,10 @@ public class AuthUserDaoJdbc implements AuthUserDao {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public List<AuthUserEntity> findAllWithAuthorities() {
+        return List.of();
     }
 }

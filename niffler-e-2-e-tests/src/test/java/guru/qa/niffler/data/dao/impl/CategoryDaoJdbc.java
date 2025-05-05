@@ -53,7 +53,7 @@ public class CategoryDaoJdbc implements CategoryDao {
             throw new IllegalArgumentException("Category ID must not be null");
         }
         try (PreparedStatement ps = holder(CFG.authJdbcUrl()).connection().prepareStatement(
-                "UPDATE category SET name = ?, username = ?, archived = ? WHERE id = ?"
+                "UPDATE \"category\" SET name = ?, username = ?, archived = ? WHERE id = ?"
         )) {
             ps.setString(1, category.getName());
             ps.setString(2, category.getUsername());
@@ -96,8 +96,8 @@ public class CategoryDaoJdbc implements CategoryDao {
 
     @Override
     public Optional<CategoryEntity> findCategoryByUsernameAndCategoryName(String username, String categoryName) {
-        try (PreparedStatement ps = holder(CFG.authJdbcUrl()).connection().prepareStatement(
-                "SELECT * FROM category WHERE username = ? AND name = ?"
+        try (PreparedStatement ps = holder(url).connection().prepareStatement(
+                "SELECT * FROM \"category\" WHERE username = ? AND name = ?"
         )) {
             ps.setObject(1, username);
             ps.setObject(2, categoryName);
@@ -146,7 +146,7 @@ public class CategoryDaoJdbc implements CategoryDao {
         if (category == null || category.getId() == null) {
             return;
         }
-        try (PreparedStatement ps = holder(CFG.authJdbcUrl()).connection().prepareStatement(
+        try (PreparedStatement ps = holder(url).connection().prepareStatement(
                 "DELETE FROM category WHERE id = ?"
         )) {
             ps.setObject(1, category.getId());

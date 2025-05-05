@@ -1,6 +1,8 @@
 package guru.qa.niffler.data.repository.impl;
 
 import guru.qa.niffler.config.Config;
+import guru.qa.niffler.data.dao.UdUserDao;
+import guru.qa.niffler.data.dao.impl.UdUserDaoSpringJdbc;
 import guru.qa.niffler.data.entity.userdata.FriendshipStatus;
 import guru.qa.niffler.data.entity.userdata.UserEntity;
 import guru.qa.niffler.data.extractor.UserdataEntityResultSetExtractor;
@@ -19,6 +21,8 @@ public class UserdataUserRepositorySpringJdbc implements UserdataUserRepository 
 
     private static final Config CFG = Config.getInstance();
     private final String url = CFG.userdataJdbcUrl();
+
+    private UdUserDao udUserDao = new UdUserDaoSpringJdbc();
 
     @Override
     public UserEntity create(UserEntity user) {
@@ -50,7 +54,8 @@ public class UserdataUserRepositorySpringJdbc implements UserdataUserRepository 
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(url));
         return Optional.ofNullable(
                 jdbcTemplate.query(
-                        "SELECT u.*, f.requester_id, f.addressee_id, f.status, f.created_date " +
+                        "SELECT u.id AS user_id, u.username, u.currency, u.firstname, u.surname, " +
+                                "u.photo, u.photo_small, f.requester_id, f.addressee_id, f.status, f.created_date " +
                                 "FROM \"user\" u " +
                                 "LEFT JOIN friendship f ON u.id = f.requester_id OR u.id = f.addressee_id " +
                                 "WHERE u.id = ?",
@@ -62,7 +67,13 @@ public class UserdataUserRepositorySpringJdbc implements UserdataUserRepository 
 
     @Override
     public Optional<UserEntity> findByUsername(String username) {
-        return Optional.empty();
+        return udUserDao.findByUsername(username);
+    }
+
+    @Override
+    public UserEntity update(UserEntity user) {
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(url));
+        return udUserDao.update(user);
     }
 
     @Override
@@ -96,5 +107,16 @@ public class UserdataUserRepositorySpringJdbc implements UserdataUserRepository 
                 FriendshipStatus.ACCEPTED.name(),
                 new java.sql.Date(System.currentTimeMillis())
         );
+    }
+
+    @Override
+    public void remove(UserEntity user) {
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(url));
+        jdbcTemplate.update(
+                "DELETE FROM friendship WHERE requester_id = ? OR addressee_id = ?",
+                user.getId(),
+                user.getId()
+        );
+        udUserDao.delete(user);
     }
 }

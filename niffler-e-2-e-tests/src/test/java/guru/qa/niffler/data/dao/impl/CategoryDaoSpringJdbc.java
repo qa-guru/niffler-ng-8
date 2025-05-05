@@ -43,7 +43,17 @@ public class CategoryDaoSpringJdbc implements CategoryDao {
 
   @Override
   public CategoryEntity update(CategoryEntity category) {
-    return null;
+    JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(url));
+    jdbcTemplate.update(
+            "UPDATE \"category\" SET username = ?, name = ?, archived = ? WHERE id = ?",
+            ps -> {
+              ps.setString(1, category.getUsername());
+              ps.setString(2, category.getName());
+              ps.setBoolean(3, category.isArchived());
+              ps.setObject(4, category.getId());
+            }
+    );
+    return category;
   }
 
   @Override
@@ -60,20 +70,32 @@ public class CategoryDaoSpringJdbc implements CategoryDao {
 
   @Override
   public Optional<CategoryEntity> findCategoryByUsernameAndCategoryName(String username, String categoryName) {
-    return Optional.empty();
+    JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(url));
+    List<CategoryEntity> result = jdbcTemplate.query(
+            "SELECT * FROM \"category\" WHERE username = ? AND name = ?",
+            CategoryEntityRowMapper.instance,
+            username,
+            categoryName
+    );
+
+    return result.isEmpty() ? Optional.empty() : Optional.of(result.getFirst());
   }
 
   @Override
   public List<CategoryEntity> findAll() {
     JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(url));
     return jdbcTemplate.query(
-        "SELECT * FROM \"category\"",
-        CategoryEntityRowMapper.instance
+            "SELECT * FROM category",
+            CategoryEntityRowMapper.instance
     );
   }
 
   @Override
   public void deleteCategory(CategoryEntity category) {
-
+    JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(url));
+    jdbcTemplate.update(
+            "DELETE FROM \"category\" WHERE id = ?",
+            category.getId()
+    );
   }
 }

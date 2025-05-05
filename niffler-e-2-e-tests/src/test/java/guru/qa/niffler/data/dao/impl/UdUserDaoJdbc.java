@@ -43,7 +43,30 @@ public class UdUserDaoJdbc implements UdUserDao {
     }
   }
 
-  @Override
+    @Override
+    public UserEntity update(UserEntity user) {
+        try (PreparedStatement ps = holder(url).connection().prepareStatement(
+                "UPDATE \"user\" SET " +
+                        "username = ?, currency = ?, firstname = ?, " +
+                        "surname = ?, photo = ?, photo_small = ? " +
+                        "WHERE id = ?")) {
+
+            ps.setString(1, user.getUsername());
+            ps.setString(2, user.getCurrency().name());
+            ps.setString(3, user.getFirstname());
+            ps.setString(4, user.getSurname());
+            ps.setBytes(5, user.getPhoto());
+            ps.setBytes(6, user.getPhotoSmall());
+            ps.setObject(7, user.getId());
+
+            ps.executeUpdate();
+            return user;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
   public Optional<UserEntity> findById(UUID id) {
     try (PreparedStatement ps = holder(url).connection().prepareStatement("SELECT * FROM \"user\" WHERE id = ? ")) {
       ps.setObject(1, id);
@@ -126,7 +149,7 @@ public class UdUserDaoJdbc implements UdUserDao {
 
     @Override
     public void delete(UserEntity user) {
-        try (PreparedStatement ps = holder(CFG.authJdbcUrl()).connection().prepareStatement(
+        try (PreparedStatement ps = holder(url).connection().prepareStatement(
                 "DELETE FROM \"user\" WHERE id = ?"
         )) {
             ps.setObject(1, user.getId());

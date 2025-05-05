@@ -1,6 +1,8 @@
 package guru.qa.niffler.data.repository.impl;
 
 import guru.qa.niffler.config.Config;
+import guru.qa.niffler.data.dao.UdUserDao;
+import guru.qa.niffler.data.dao.impl.UdUserDaoJdbc;
 import guru.qa.niffler.data.entity.userdata.FriendShipId;
 import guru.qa.niffler.data.entity.userdata.FriendshipEntity;
 import guru.qa.niffler.data.entity.userdata.FriendshipStatus;
@@ -19,6 +21,8 @@ public class UserdataUserRepositoryJdbc implements UserdataUserRepository {
 
     private static final Config CFG = Config.getInstance();
     private final String url = CFG.userdataJdbcUrl();
+
+    private final UdUserDao udUserDao = new UdUserDaoJdbc();
 
     @Override
     public UserEntity create(UserEntity user) {
@@ -122,7 +126,12 @@ public class UserdataUserRepositoryJdbc implements UserdataUserRepository {
 
     @Override
     public Optional<UserEntity> findByUsername(String username) {
-        return Optional.empty();
+        return udUserDao.findByUsername(username);
+    }
+
+    @Override
+    public UserEntity update(UserEntity user) {
+        return udUserDao.update(user);
     }
 
     @Override
@@ -158,6 +167,22 @@ public class UserdataUserRepositoryJdbc implements UserdataUserRepository {
             ps.addBatch();
 
             ps.executeBatch();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void remove(UserEntity user) {
+        try (PreparedStatement ps = holder(url).connection().prepareStatement(
+                     "DELETE FROM public.friendship WHERE requester_id = ? OR addressee_id = ?")) {
+
+            ps.setObject(1, user.getId());
+            ps.setObject(2, user.getId());
+            ps.executeUpdate();
+
+            udUserDao.delete(user);
 
         } catch (SQLException e) {
             throw new RuntimeException(e);

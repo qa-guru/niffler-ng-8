@@ -1,7 +1,12 @@
 package guru.qa.niffler.data.repository.impl;
 
 import guru.qa.niffler.config.Config;
+import guru.qa.niffler.data.dao.AuthAuthorityDao;
+import guru.qa.niffler.data.dao.AuthUserDao;
+import guru.qa.niffler.data.dao.impl.AuthAuthorityDaoSpringJdbc;
+import guru.qa.niffler.data.dao.impl.AuthUserDaoSpringJdbc;
 import guru.qa.niffler.data.entity.auth.AuthUserEntity;
+import guru.qa.niffler.data.entity.auth.AuthorityEntity;
 import guru.qa.niffler.data.extractor.AuthUserEntityResultSetExtractor;
 import guru.qa.niffler.data.repository.AuthUserRepository;
 import guru.qa.niffler.data.tpl.DataSources;
@@ -14,6 +19,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -21,6 +27,9 @@ public class AuthUserRepositorySpringJdbc implements AuthUserRepository {
 
     private static final Config CFG = Config.getInstance();
     private final String url = CFG.authJdbcUrl();
+
+    private final AuthUserDao authUserDao = new AuthUserDaoSpringJdbc();
+    private final AuthAuthorityDao authAuthorityDao = new AuthAuthorityDaoSpringJdbc();
 
     @Override
     public AuthUserEntity create(AuthUserEntity user) {
@@ -64,6 +73,20 @@ public class AuthUserRepositorySpringJdbc implements AuthUserRepository {
     }
 
     @Override
+    public AuthUserEntity update(AuthUserEntity user) {
+        AuthUserEntity updatedUser = authUserDao.update(user);
+
+        List<AuthorityEntity> existingAuthorities = authAuthorityDao.findByUserId(user.getId());
+        existingAuthorities.forEach(authAuthorityDao::delete);
+
+        if (!user.getAuthorities().isEmpty()) {
+            user.getAuthorities().forEach(a -> a.setUser(updatedUser));
+            authAuthorityDao.create(user.getAuthorities().toArray(new AuthorityEntity[0]));
+        }
+        return updatedUser;
+    }
+
+    @Override
     public Optional<AuthUserEntity> findById(UUID id) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(url));
         try {
@@ -84,6 +107,17 @@ public class AuthUserRepositorySpringJdbc implements AuthUserRepository {
 
     @Override
     public Optional<AuthUserEntity> findByUsername(String username) {
-        return Optional.empty();
+        Optional<AuthUserEntity> user = authUserDao.findByUsername(username);
+        user.ifPresent(u ->
+                u.setAuthorities(authAuthorityDao.findByUserId(u.getId()))
+        );
+        return user;
+    }
+
+    @Override
+    public void remove(AuthUserEntity user) {
+        List<AuthorityEntity> existingAuthorities = authAuthorityDao.findByUserId(user.getId());
+        existingAuthorities.forEach(authAuthorityDao::delete);
+        authUserDao.delete(user);
     }
 }

@@ -46,6 +46,26 @@ public class UdUserDaoSpringJdbc implements UdUserDao {
   }
 
   @Override
+  public UserEntity update(UserEntity user) {
+    JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(url));
+    jdbcTemplate.update(
+            "UPDATE \"user\" SET " +
+                    "username = ?, currency = ?, firstname = ?, " +
+                    "surname = ?, photo = ?, photo_small = ?, full_name = ? " +
+                    "WHERE id = ?",
+            user.getUsername(),
+            user.getCurrency().name(),
+            user.getFirstname(),
+            user.getSurname(),
+            user.getPhoto(),
+            user.getPhotoSmall(),
+            user.getFullname(),
+            user.getId()
+    );
+    return user;
+  }
+
+  @Override
   public Optional<UserEntity> findById(UUID id) {
     JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(url));
     return Optional.ofNullable(
@@ -68,11 +88,22 @@ public class UdUserDaoSpringJdbc implements UdUserDao {
 
   @Override
   public Optional<UserEntity> findByUsername(String username) {
-    return Optional.empty();
+    JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(url));
+    return Optional.ofNullable(
+            jdbcTemplate.queryForObject(
+                    "SELECT * FROM \"user\" WHERE username = ?",
+                    UdUserEntityRowMapper.instance,
+                    username
+            )
+    );
   }
 
   @Override
   public void delete(UserEntity user) {
-
+    JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(url));
+    jdbcTemplate.update(
+            "DELETE FROM \"user\" WHERE id = ?",
+            user.getId()
+    );
   }
 }

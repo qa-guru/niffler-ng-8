@@ -10,6 +10,8 @@ public interface UdUserDao {
 
   UserEntity create(UserEntity user);
 
+  UserEntity update(UserEntity user);
+
   Optional<UserEntity> findById(UUID id);
 
   List<UserEntity> findAll();

@@ -53,10 +53,10 @@ public class SpendingExtension implements BeforeEachCallback, AfterEachCallback,
         SpendJson spend = context.getStore(NAMESPACE).get(context.getUniqueId(), SpendJson.class);
         SpendDbClient db = new SpendDbClient();
         if (spend != null) {
-            db.deleteSpend(spend);
+            db.deleteTxSpend(spend);
         }
         if (category != null) {
-            db.deleteCategory(category);
+            db.deleteTxCategory(category);
         }
     }
 

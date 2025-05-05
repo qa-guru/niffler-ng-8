@@ -1,29 +1,31 @@
 package guru.qa.niffler.data.dao.impl.jdbc;
 
+import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.dao.interfaces.AuthUserDao;
 import guru.qa.niffler.data.entity.user.AuthUserEntity;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.sql.*;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import static guru.qa.niffler.data.tpl.Connections.holder;
+
 public class AuthUserDaoJdbc implements AuthUserDao {
 
     private static final PasswordEncoder ENCODER = PasswordEncoderFactories.createDelegatingPasswordEncoder();
 
-    private final Connection connection;
-
-    public AuthUserDaoJdbc(Connection connection) {
-        this.connection = connection;
-    }
+    private static final Config CFG = Config.getInstance();
 
     @Override
     public AuthUserEntity create(AuthUserEntity authUserEntity) {
-        try (PreparedStatement ps = connection.prepareStatement(
+        try (PreparedStatement ps = holder(CFG.authJdbcUrl()).connection().prepareStatement(
                 "INSERT INTO \"user\" (username, password, enabled,account_non_expired," +
                         "account_non_locked,credentials_non_expired)" +
                         "VALUES (?, ?, ?, ?, ?, ?)",
@@ -59,7 +61,7 @@ public class AuthUserDaoJdbc implements AuthUserDao {
     @Override
     public List<AuthUserEntity> findAll() {
         List<AuthUserEntity> users = new ArrayList<>();
-        try (PreparedStatement ps = connection.prepareStatement("SELECT * FROM category")) {
+        try (PreparedStatement ps = holder(CFG.authJdbcUrl()).connection().prepareStatement("SELECT * FROM category")) {
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     AuthUserEntity au = new AuthUserEntity();

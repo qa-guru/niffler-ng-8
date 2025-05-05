@@ -62,17 +62,17 @@ public class TestExamples {
 //        System.out.println(user);
 //    }
 
-        @Test
+    @Test
     void springJdbcTest() {
         UserDbClient db = new UserDbClient();
 
-        UserJson user = db.createUserSpringJdbc(
+        UserJson user = db.createUserTxChainedJdbc(
                 new UserJson(
                         UUID.randomUUID(),
-                        "Михаил8",
-                        "Зубенко8",
-                        "Петрович8",
-                        "Михаил Зубенко Петрович8",
+                        "Михаил15",
+                        "Зубенко15",
+                        "Петрович15",
+                        "Михаил Зубенко Петрович15",
                         CurrencyValues.RUB,
                         null,
                         null,
@@ -86,19 +86,19 @@ public class TestExamples {
     void springJdbcSpendTest() {
         SpendDbClient db = new SpendDbClient();
 
-        SpendJson spend = db.createSpringJdbcSpend(
+        SpendJson spend = db.createTxSpend(
                 new SpendJson(
                         null,
                         new Date(),
                         new CategoryJson(
                                 null,
-                                "test-cat-tx4",
+                                "test-cat-tx9",
                                 CFG.mainUserLogin(),
                                 false
                         ),
                         CurrencyValues.RUB,
                         100.0,
-                        "test desc-tx4",
+                        "test desc-tx9",
                         CFG.mainUserLogin()
                 )
         );

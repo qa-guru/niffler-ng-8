@@ -1,13 +1,14 @@
 package guru.qa.niffler.data.dao.impl.springJdbc;
 
+import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.dao.interfaces.CategoryDao;
 import guru.qa.niffler.data.entity.category.CategoryEntity;
 import guru.qa.niffler.data.mapper.CategoryEntityRowMapper;
+import guru.qa.niffler.data.tpl.DataSources;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 
-import javax.sql.DataSource;
 import java.sql.PreparedStatement;
 import java.util.List;
 import java.util.Optional;
@@ -15,15 +16,11 @@ import java.util.UUID;
 
 public class CategoryDaoSpringJdbc implements CategoryDao {
 
-    private DataSource dataSource;
-
-    public CategoryDaoSpringJdbc(DataSource dataSource) {
-        this.dataSource = dataSource;
-    }
+    private static final Config CFG = Config.getInstance();
 
     @Override
     public CategoryEntity create(CategoryEntity category) {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.spendJdbcUrl()));
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(
@@ -44,7 +41,7 @@ public class CategoryDaoSpringJdbc implements CategoryDao {
 
     @Override
     public List<CategoryEntity> findAll() {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.spendJdbcUrl()));
         return jdbcTemplate.query(
                 "SELECT * FROM \"category\"",
                 CategoryEntityRowMapper.INSTANCE

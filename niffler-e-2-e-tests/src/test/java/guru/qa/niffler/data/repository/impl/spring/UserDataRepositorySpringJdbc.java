@@ -5,7 +5,6 @@ import guru.qa.niffler.data.dao.UdUserDao;
 import guru.qa.niffler.data.dao.impl.spring.UserDaoSpringJdbc;
 import guru.qa.niffler.data.entity.userdata.FriendshipStatus;
 import guru.qa.niffler.data.entity.userdata.UserEntity;
-import guru.qa.niffler.data.extractor.UdUserEntityExtractor;
 import guru.qa.niffler.data.extractor.UdUserEntityListExtractor;
 import guru.qa.niffler.data.repository.UserdataUserRepository;
 import guru.qa.niffler.data.tpl.DataSources;
@@ -39,35 +38,35 @@ public class UserDataRepositorySpringJdbc implements UserdataUserRepository {
     @Override
     public Optional<UserEntity> findById(UUID id) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.userdataJdbcUrl()));
-        return Optional.ofNullable(
-                jdbcTemplate.query(
+        return jdbcTemplate.query(
                         """
-                                select * from "user" u join friendship f 
+                                select * from "user" u left join friendship f 
                                 on u.id = f.requester_id 
                                 or u.id = f.addressee_id 
                                 where u.id = ?
                                 """,
-                        UdUserEntityExtractor.instance,
+                        UdUserEntityListExtractor.instance,
                         id
-                )
-        );
+        )
+                .stream()
+                .findFirst();
     }
 
     @Override
     public Optional<UserEntity> findByUsername(String username) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.userdataJdbcUrl()));
-        return Optional.ofNullable(
-                jdbcTemplate.query(
+        return jdbcTemplate.query(
                         """
-                                select * from "user" u join friendship f 
+                                select * from "user" u  left join friendship f 
                                 on u.id = f.requester_id 
                                 or u.id = f.addressee_id 
                                 where u.username = ?
                                 """,
-                        UdUserEntityExtractor.instance,
+                        UdUserEntityListExtractor.instance,
                         username
-                )
-        );
+        )
+                .stream()
+                .findFirst();
     }
 
     public List<UserEntity> findAll() {

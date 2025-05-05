@@ -16,14 +16,14 @@ public class CategoryEntityExtractor implements ResultSetExtractor<CategoryEntit
 
     @Override
     public CategoryEntity extractData(ResultSet rs) throws SQLException, DataAccessException {
-        CategoryEntity result = new CategoryEntity();
         while (rs.next()) {
             CategoryEntity category = new CategoryEntity();
             category.setId(rs.getObject("id", UUID.class));
             category.setUsername(rs.getString("username"));
             category.setName(rs.getString("name"));
             category.setArchived(rs.getBoolean("archived"));
+            return category;
         }
-        return result;
+        return null;
     }
 }

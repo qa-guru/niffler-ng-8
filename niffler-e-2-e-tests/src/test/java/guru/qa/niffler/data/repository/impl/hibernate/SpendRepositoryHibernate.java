@@ -34,7 +34,7 @@ public class SpendRepositoryHibernate implements SpendRepository {
     @Override
     public CategoryEntity createCategory(CategoryEntity category) {
         entityManager.joinTransaction();
-        entityManager.merge(category);
+        entityManager.persist(category);
         return category;
     }
 
@@ -96,7 +96,9 @@ public class SpendRepositoryHibernate implements SpendRepository {
 
     @Override
     public void removeCategory(CategoryEntity category) {
-        entityManager.joinTransaction();
-        entityManager.remove(category);
+        CategoryEntity categoryManaged = entityManager.contains(category)
+                ? category
+                : entityManager.merge(category);
+        entityManager.remove(categoryManaged);
     }
 }

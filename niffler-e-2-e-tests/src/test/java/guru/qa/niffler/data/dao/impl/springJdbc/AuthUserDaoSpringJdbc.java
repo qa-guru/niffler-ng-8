@@ -2,7 +2,7 @@ package guru.qa.niffler.data.dao.impl.springJdbc;
 
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.dao.interfaces.AuthUserDao;
-import guru.qa.niffler.data.entity.user.AuthUserEntity;
+import guru.qa.niffler.data.entity.auth.AuthUserEntity;
 import guru.qa.niffler.data.mapper.AuthUserEntityRowMapper;
 import guru.qa.niffler.data.tpl.DataSources;
 import org.springframework.dao.EmptyResultDataAccessException;

@@ -3,6 +3,8 @@ package guru.qa.niffler.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import guru.qa.niffler.data.entity.category.CategoryEntity;
 import guru.qa.niffler.data.entity.spend.SpendEntity;
+import guru.qa.niffler.data.enums.CurrencyValues;
+
 
 import java.util.Date;
 import java.util.Optional;

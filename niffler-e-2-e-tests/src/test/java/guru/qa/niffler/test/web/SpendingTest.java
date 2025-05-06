@@ -5,7 +5,7 @@ import guru.qa.niffler.config.Config;
 import guru.qa.niffler.jupiter.BrowserExtension;
 import guru.qa.niffler.jupiter.spending.Spend;
 import guru.qa.niffler.jupiter.users.User;
-import guru.qa.niffler.model.CurrencyValues;
+import guru.qa.niffler.data.enums.CurrencyValues;
 import guru.qa.niffler.model.SpendJson;
 import guru.qa.niffler.page.LoginPage;
 import guru.qa.niffler.page.MainPage;

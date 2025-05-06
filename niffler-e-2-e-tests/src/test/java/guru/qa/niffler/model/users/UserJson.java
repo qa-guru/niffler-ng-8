@@ -1,9 +1,11 @@
 package guru.qa.niffler.model.users;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import guru.qa.niffler.data.entity.user.AuthAuthorityEntity;
+import guru.qa.niffler.data.entity.auth.AuthAuthorityEntity;
+
 import guru.qa.niffler.data.entity.user.UserEntity;
-import guru.qa.niffler.model.CurrencyValues;
+import guru.qa.niffler.data.enums.CurrencyValues;
+
 
 import java.nio.charset.StandardCharsets;
 import java.util.UUID;

@@ -1,10 +1,10 @@
-package guru.qa.niffler.data.dao.impl.jdbc;
+package guru.qa.niffler.data.repository.impl;
 
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.dao.interfaces.UserDao;
-
 import guru.qa.niffler.data.entity.user.UserEntity;
 import guru.qa.niffler.data.enums.CurrencyValues;
+import guru.qa.niffler.data.repository.UserRepository;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -16,7 +16,7 @@ import java.util.UUID;
 
 import static guru.qa.niffler.data.tpl.Connections.holder;
 
-public class UdUserDAOJdbc implements UserDao {
+public class UdUserRepositoryJdbc implements UserRepository {
 
     private static final Config CFG = Config.getInstance();
 
@@ -81,6 +81,21 @@ public class UdUserDAOJdbc implements UserDao {
     @Override
     public List<UserEntity> findAll() {
         return List.of();
+    }
+
+    @Override
+    public void addIncomeInvitation(UserEntity requester, UserEntity addressee) {
+
+    }
+
+    @Override
+    public void addOutcomeInvitation(UserEntity requester, UserEntity addressee) {
+
+    }
+
+    @Override
+    public void addFriend(UserEntity requester, UserEntity addressee) {
+
     }
 
 //    @Override

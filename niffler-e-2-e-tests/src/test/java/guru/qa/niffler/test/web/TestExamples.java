@@ -1,8 +1,10 @@
 package guru.qa.niffler.test.web;
 
 import guru.qa.niffler.config.Config;
+
+import guru.qa.niffler.data.enums.CurrencyValues;
 import guru.qa.niffler.model.CategoryJson;
-import guru.qa.niffler.model.CurrencyValues;
+
 import guru.qa.niffler.model.SpendJson;
 import guru.qa.niffler.model.users.UserJson;
 import guru.qa.niffler.service.SpendDbClient;
@@ -69,10 +71,10 @@ public class TestExamples {
         UserJson user = db.createUserTxChainedJdbc(
                 new UserJson(
                         UUID.randomUUID(),
-                        "Михаил15",
-                        "Зубенко15",
-                        "Петрович15",
-                        "Михаил Зубенко Петрович15",
+                        "Михаил17",
+                        "Зубенко17",
+                        "Петрович17",
+                        "Михаил Зубенко Петрович17",
                         CurrencyValues.RUB,
                         null,
                         null,
@@ -92,13 +94,13 @@ public class TestExamples {
                         new Date(),
                         new CategoryJson(
                                 null,
-                                "test-cat-tx9",
+                                "test-cat-tx11",
                                 CFG.mainUserLogin(),
                                 false
                         ),
                         CurrencyValues.RUB,
                         100.0,
-                        "test desc-tx9",
+                        "test desc-tx11",
                         CFG.mainUserLogin()
                 )
         );

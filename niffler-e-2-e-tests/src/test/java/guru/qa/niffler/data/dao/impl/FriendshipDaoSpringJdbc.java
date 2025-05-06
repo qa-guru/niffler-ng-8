@@ -4,6 +4,7 @@ import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.dao.FriendshipDao;
 import guru.qa.niffler.data.entity.userdata.FriendshipEntity;
 import guru.qa.niffler.data.entity.userdata.FriendshipStatus;
+import guru.qa.niffler.data.entity.userdata.UserEntity;
 import guru.qa.niffler.data.tpl.DataSources;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -11,6 +12,7 @@ import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.UUID;
 
@@ -23,11 +25,12 @@ public class FriendshipDaoSpringJdbc implements FriendshipDao {
 
     private static final RowMapper<FriendshipEntity> friendshipRowMapper = (rs, rowNum) -> {
         FriendshipEntity f = new FriendshipEntity();
-        f.setId(rs.getObject("id", UUID.class));
-        f.setUserId(rs.getObject("user_id", UUID.class));
-        f.setFriendId(rs.getObject("friend_id", UUID.class));
+        f.setRequester(new UserEntity());
+        f.getRequester().setId(rs.getObject("user_id", UUID.class));
+        f.setAddressee(new UserEntity());
+        f.getAddressee().setId(rs.getObject("friend_id", UUID.class));
         f.setStatus(FriendshipStatus.valueOf(rs.getString("status")));
-        f.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
+        f.setCreatedDate(Timestamp.valueOf(rs.getTimestamp("created_at").toLocalDateTime()));
         return f;
     };
 
@@ -38,8 +41,8 @@ public class FriendshipDaoSpringJdbc implements FriendshipDao {
                 new BatchPreparedStatementSetter() {
                     @Override
                     public void setValues(PreparedStatement ps, int i) throws SQLException {
-                        ps.setObject(1, friendships[i].getUserId());
-                        ps.setObject(2, friendships[i].getFriendId());
+                        ps.setObject(1, friendships[i].getRequester().getId());
+                        ps.setObject(2, friendships[i].getAddressee().getId());
                         ps.setString(3, friendships[i].getStatus().name());
                     }
 

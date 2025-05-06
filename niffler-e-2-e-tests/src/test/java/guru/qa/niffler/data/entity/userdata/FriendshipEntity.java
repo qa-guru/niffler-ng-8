@@ -1,31 +1,32 @@
 package guru.qa.niffler.data.entity.userdata;
 
+import guru.qa.niffler.data.FriendShipId;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import java.util.UUID;
-import java.time.LocalDateTime;
+
+import java.util.Date;
 
 @Getter
 @Setter
 @Entity
 @Table(name = "friendship")
+@IdClass(FriendShipId.class)
 public class FriendshipEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private UUID id;
+    @ManyToOne
+    @JoinColumn(name = "requester_id", referencedColumnName = "id")
+    private UserEntity requester;
 
-    @Column(name = "user_id", nullable = false)
-    private UUID userId;
+    @Id
+    @ManyToOne
+    @JoinColumn(name = "addressee_id", referencedColumnName = "id")
+    private UserEntity addressee;
 
-    @Column(name = "friend_id", nullable = false)
-    private UUID friendId;
+    @Column(name = "created_date", columnDefinition = "DATE", nullable = false)
+    private Date createdDate;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
     private FriendshipStatus status;
-
-    @Column(name = "created_at")
-    private LocalDateTime createdAt = LocalDateTime.now();
 }

@@ -11,7 +11,7 @@ import guru.qa.niffler.data.tpl.JdbcTransactionTemplate;
 import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.model.SpendJson;
 
-public class SpendDbClient {
+public class SpendDbClient implements SpendClient {
 
     private static final Config CFG = Config.getInstance();
 

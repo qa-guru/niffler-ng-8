@@ -12,6 +12,8 @@ import guru.qa.niffler.service.SpendDbClient;
 import guru.qa.niffler.service.UsersDbClient;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.Date;
 import java.util.List;
@@ -22,85 +24,64 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 //@Disabled
 public class JdbcTest {
 
-  @Test
-  void txTest() {
-    SpendDbClient spendDbClient = new SpendDbClient();
+    static UsersDbClient usersDbClient = new UsersDbClient();
 
-    SpendJson spend = spendDbClient.createSpend(
-        new SpendJson(
-            null,
-            new Date(),
-            new CategoryJson(
-                null,
-                "cat-name-tx-2",
-                "duck",
-                false
-            ),
-            CurrencyValues.RUB,
-            1000.0,
-            "spend-name-tx",
-            "dima"
-        )
-    );
+    @Test
+    void txTest() {
+        SpendDbClient spendDbClient = new SpendDbClient();
 
-    System.out.println(spend);
-  }
+        SpendJson spend = spendDbClient.createSpend(
+                new SpendJson(
+                        null,
+                        new Date(),
+                        new CategoryJson(
+                                null,
+                                "cat-name-tx-2",
+                                "duck",
+                                false
+                        ),
+                        CurrencyValues.RUB,
+                        1000.0,
+                        "spend-name-tx",
+                        "dima"
+                )
+        );
 
-  @Test
-  void xaTxTest() {
-    UsersDbClient usersDbClient = new UsersDbClient();
-    UserJson user = usersDbClient.createUser(
-        new UserJson(
-            null,
-            "valentin-4",
-            null,
-            null,
-            null,
-            CurrencyValues.RUB,
-            null,
-            null,
-            null
-        )
-    );
-    System.out.println(user);
-  }
-
-  @Test
-  void springJdbcTest() {
-    UsersDbClient usersDbClient = new UsersDbClient();
-    UserJson user = usersDbClient.createUserSpringJdbc(
-        new UserJson(
-            null,
-            "valentin-6",
-            null,
-            null,
-            null,
-            CurrencyValues.RUB,
-            null,
-            null,
-            null
-        )
-    );
-    System.out.println(user);
-  }
-
-  @Test
-  void findAllWithAuthoritiesTest() {
-    AuthUserDao authUserDao = new AuthUserDaoSpringJdbc();
-    List<AuthUserEntity> usersWithAuthorities = authUserDao.findAllWithAuthorities();
-
-    assertNotNull(usersWithAuthorities);
-    assertFalse(usersWithAuthorities.isEmpty());
-
-    for (AuthUserEntity user : usersWithAuthorities) {
-      System.out.printf("User: %s (%s)%n", user.getUsername(), user.getId());
-      if (user.getAuthorities() != null) {
-        for (AuthorityEntity authority : user.getAuthorities()) {
-          System.out.printf("  Authority: %s%n", authority.getAuthority());
-        }
-      } else {
-        System.out.println("  No authorities");
-      }
+        System.out.println(spend);
     }
-  }
+
+    @ValueSource(strings = {
+            "valentin-12"
+    })
+    @ParameterizedTest
+    void springJdbcTest(String uname) {
+
+        UserJson user = usersDbClient.createUser(
+                uname,
+                "12345"
+        );
+
+        usersDbClient.createIncomeInvitations(user, 1);
+        usersDbClient.createOutcomeInvitations(user, 1);
+    }
+
+    @Test
+    void findAllWithAuthoritiesTest() {
+        AuthUserDao authUserDao = new AuthUserDaoSpringJdbc();
+        List<AuthUserEntity> usersWithAuthorities = authUserDao.findAllWithAuthorities();
+
+        assertNotNull(usersWithAuthorities);
+        assertFalse(usersWithAuthorities.isEmpty());
+
+        for (AuthUserEntity user : usersWithAuthorities) {
+            System.out.printf("User: %s (%s)%n", user.getUsername(), user.getId());
+            if (user.getAuthorities() != null) {
+                for (AuthorityEntity authority : user.getAuthorities()) {
+                    System.out.printf("  Authority: %s%n", authority.getAuthority());
+                }
+            } else {
+                System.out.println("  No authorities");
+            }
+        }
+    }
 }

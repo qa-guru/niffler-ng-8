@@ -6,6 +6,7 @@ import guru.qa.niffler.jupiter.annotation.User;
 import guru.qa.niffler.jupiter.annotation.meta.WebTest;
 import guru.qa.niffler.jupiter.annotation.Category;
 import guru.qa.niffler.model.CategoryJson;
+import guru.qa.niffler.model.UserJson;
 import guru.qa.niffler.page.LoginPage;
 import org.junit.jupiter.api.Test;
 
@@ -14,13 +15,12 @@ public class CategoriesTest {
     private static final Config CFG = Config.getInstance();
     private static final String PASSWORD = "123";
 
-    @User(username = "Timofey",
-    categories = @Category())
+    @User(categories = @Category())
     @Test
-    void testArchiveCategory(CategoryJson categoryJson){
-        String name = categoryJson.name();
+    void testArchiveCategory(UserJson userJson){
+        String name = userJson.testData().categories().getFirst().name();
         Selenide.open(CFG.frontUrl(), LoginPage.class)
-                .doLogin(categoryJson.username(), PASSWORD)
+                .doLogin(userJson)
                 .openProfilePage()
                 .showArchiveCategory()
                 .assertActiveCategory(name)
@@ -30,16 +30,15 @@ public class CategoriesTest {
     }
 
     @User(
-            username = "Timofey",
             categories = @Category(
                     archived = true
             )
     )
     @Test
-    void testUnarchiveCategory(CategoryJson categoryJson){
-        String name = categoryJson.name();
+    void testUnarchiveCategory(UserJson userJson){
+        String name = userJson.testData().categories().getFirst().name();
         Selenide.open(CFG.frontUrl(), LoginPage.class)
-                .doLogin(categoryJson.username(), PASSWORD)
+                .doLogin(userJson)
                 .openProfilePage()
                 .showArchiveCategory()
                 .assertArchiveCategory(name)

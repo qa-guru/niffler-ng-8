@@ -1,10 +1,14 @@
 package guru.qa.niffler.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import guru.qa.niffler.data.entity.userdata.UserEntity;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.UUID;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public record UserJson(
     @JsonProperty("id")
     UUID id,
@@ -23,7 +27,9 @@ public record UserJson(
     @JsonProperty("photoSmall")
     String photoSmall,
     @JsonProperty("friendshipStatus")
-    FriendshipStatus friendshipStatus){
+    FriendshipStatus friendshipStatus,
+    @JsonIgnore
+    TestData testData){
 
   public static UserJson fromEntity(UserEntity entity, FriendshipStatus friendshipStatus) {
     return new UserJson(
@@ -35,7 +41,12 @@ public record UserJson(
         entity.getCurrency(),
         entity.getPhoto() != null && entity.getPhoto().length > 0 ? new String(entity.getPhoto(), StandardCharsets.UTF_8) : null,
         entity.getPhotoSmall() != null && entity.getPhotoSmall().length > 0 ? new String(entity.getPhotoSmall(), StandardCharsets.UTF_8) : null,
-        friendshipStatus
+        friendshipStatus,
+        new TestData(
+                null,
+                new ArrayList<>(),
+                new ArrayList<>()
+        )
     );
   }
 
@@ -49,8 +60,38 @@ public record UserJson(
                 entity.getCurrency(),
                 entity.getPhoto() != null && entity.getPhoto().length > 0 ? new String(entity.getPhoto(), StandardCharsets.UTF_8) : null,
                 entity.getPhotoSmall() != null && entity.getPhotoSmall().length > 0 ? new String(entity.getPhotoSmall(), StandardCharsets.UTF_8) : null,
-                null
+                null,
+                new TestData(
+                        null,
+                        new ArrayList<>(),
+                        new ArrayList<>()
+                )
         );
     }
 
+    public UserJson withPassword(String password) {
+        return withTestData(
+                new TestData(
+                        password,
+                        testData.categories(),
+                        testData.spendings(),
+                        testData.friends(),
+                        testData.incomeInvitations(),
+                        testData.outcomeInvitations()
+                )
+        );
+    }
+
+    public UserJson withTestData(TestData testData) {
+        return new UserJson(id,
+                username,
+                firstname,
+                surname,
+                fullname,
+                currency,
+                photo,
+                photoSmall,
+                friendshipStatus,
+                testData);
+    }
 }

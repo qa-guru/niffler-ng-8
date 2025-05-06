@@ -2,6 +2,7 @@ package guru.qa.niffler.page;
 
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
+import guru.qa.niffler.model.UserJson;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -30,6 +31,18 @@ public class AllPeoplePage {
                 .get(1)
                 .$("span")
                 .shouldHave(text(status.getButtonText()));
+        return this;
+    }
+
+    public AllPeoplePage assertOutcomeInvitations(UserJson user){
+        for (String username : user
+                .testData()
+                .outcomeInvitations()
+                .stream()
+                .map(UserJson::username)
+                .toArray(String[]::new)){
+            assertUserStatus(username,Status.REQUEST_SEND);
+        }
         return this;
     }
 }

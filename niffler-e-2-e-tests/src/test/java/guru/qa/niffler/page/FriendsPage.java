@@ -4,6 +4,7 @@ package guru.qa.niffler.page;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import guru.qa.niffler.config.Config;
+import guru.qa.niffler.model.UserJson;
 
 import static com.codeborne.selenide.CollectionCondition.size;
 import static com.codeborne.selenide.Condition.*;
@@ -18,6 +19,7 @@ public class FriendsPage extends BasePage {
     private final ElementsCollection friendsTableRows = $$("#friends tr");
     private final SelenideElement noFriendsText = $(byText("There are no users yet"));
     private final SelenideElement lonelyNifflerImage = $("img[alt='Lonely niffler']");
+    private final SelenideElement searchInput = $("input");
 
     private static final String ACCEPT_FRIEND_BUTTON_XPATH = ".//button[text()='Accept']";
     private static final String DECLINE_FRIEND_BUTTON_XPATH = ".//button[text()='Decline']";
@@ -41,21 +43,37 @@ public class FriendsPage extends BasePage {
         return new AllPeoplePage();
     }
 
-    public FriendsPage assertFriendRequestExist(String username){
-        SelenideElement targetRow = requestsTableRows.find(text(username));
-        targetRow.$x(ACCEPT_FRIEND_BUTTON_XPATH)
-                .shouldBe(visible)
-                .shouldHave(BUTTON.assertType());
-        targetRow.$x(DECLINE_FRIEND_BUTTON_XPATH)
-                .shouldBe(visible)
-                .shouldHave(BUTTON.assertType());
+    public FriendsPage assertFriendRequestExist(UserJson userJson){
+        for(String username : userJson
+                .testData()
+                .incomeInvitations()
+                .stream()
+                .map(UserJson::username)
+                .toArray(String[]::new)) {
+            searchInput.setValue(username).pressEnter();
+            SelenideElement targetRow = requestsTableRows.find(text(username));
+            targetRow.$x(ACCEPT_FRIEND_BUTTON_XPATH)
+                    .shouldBe(visible)
+                    .shouldHave(BUTTON.assertType());
+            targetRow.$x(DECLINE_FRIEND_BUTTON_XPATH)
+                    .shouldBe(visible)
+                    .shouldHave(BUTTON.assertType());
+        }
         return this;
     }
-    public FriendsPage assertFriendExist(String username){
-        SelenideElement targetRow = friendsTableRows.find(text(username));
-        targetRow.$x(UNFRIEND_BUTTON_XPATH)
-                .shouldBe(visible)
-                .shouldHave(BUTTON.assertType());
+    public FriendsPage assertFriendExist(UserJson userJson){
+        for(String username : userJson
+                .testData()
+                .friends()
+                .stream()
+                .map(UserJson::username)
+                .toArray(String[]::new)
+        ) {
+            SelenideElement targetRow = friendsTableRows.find(text(username));
+            targetRow.$x(UNFRIEND_BUTTON_XPATH)
+                    .shouldBe(visible)
+                    .shouldHave(BUTTON.assertType());
+        }
         return this;
     }
 

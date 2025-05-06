@@ -3,6 +3,7 @@ package guru.qa.niffler.page;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import guru.qa.niffler.model.ElementType;
+import guru.qa.niffler.model.UserJson;
 
 import java.time.Duration;
 
@@ -22,6 +23,12 @@ public class LoginPage extends BasePage{
   public MainPage doLogin(String username, String password) {
     return this.setUserName(username)
             .setPassword(password)
+            .clickLogin();
+  }
+
+  public MainPage doLogin(UserJson user) {
+    return this.setUserName(user.username())
+            .setPassword(user.testData().password())
             .clickLogin();
   }
 

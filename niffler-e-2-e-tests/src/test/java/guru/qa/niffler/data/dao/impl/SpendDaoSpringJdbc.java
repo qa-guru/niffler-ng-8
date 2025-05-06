@@ -45,7 +45,22 @@ public class SpendDaoSpringJdbc implements SpendDao {
   }
 
   @Override
+  public SpendEntity update(SpendEntity spend) {
+    return null;
+  }
+
+  @Override
   public Optional<SpendEntity> findSpendById(UUID id) {
+    JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(url));
+    return Optional.ofNullable(jdbcTemplate.queryForObject(
+            "SELECT * FROM spend WHERE id = ?",
+            SpendEntityRowMapper.instance,
+            id
+    ));
+  }
+
+  @Override
+  public Optional<SpendEntity> findByUsernameAndDescription(String username, String description) {
     return Optional.empty();
   }
 
@@ -60,6 +75,10 @@ public class SpendDaoSpringJdbc implements SpendDao {
 
   @Override
   public void deleteSpend(SpendEntity spend) {
-
+    JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(url));
+    jdbcTemplate.update(
+            "DELETE FROM spend WHERE id = ?",
+            spend.getId()
+    );
   }
 }

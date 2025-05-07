@@ -22,6 +22,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import java.util.Arrays;
+import java.util.UUID;
 
 
 public class UserDbClient {
@@ -136,6 +137,40 @@ public class UserDbClient {
 
         return UserJson.fromEntity(
                 userRepository.create(UserEntity.fromJson(user)));
+    }
+
+    public void addIncomeInvitation(UUID requesterUUID, UUID addresseeUUID) {
+        UserEntity requester = new UserEntity();
+        requester.setId(requesterUUID);
+        UserEntity addressee = new UserEntity();
+        addressee.setId(addresseeUUID);
+
+        userRepository.addIncomeInvitation(requester, addressee);
+    }
+
+    public void addOutcomeInvitation(UUID requesterUUID, UUID addresseeUUID) {
+        UserEntity requester = new UserEntity();
+        requester.setId(requesterUUID);
+        UserEntity addressee = new UserEntity();
+        addressee.setId(addresseeUUID);
+
+        userRepository.addOutcomeInvitation(requester, addressee);
+    }
+
+    public void addFriend(UUID requesterUUID, UUID addresseeUUID) {
+        UserEntity requester = new UserEntity();
+        requester.setId(requesterUUID);
+        UserEntity addressee = new UserEntity();
+        addressee.setId(addresseeUUID);
+
+        userRepository.addFriend(requester, addressee);
+    }
+
+    public void deleteUser(UserJson user) {
+        authUserRepository.deleteAuthority(UserEntity.fromJson(user));
+        authUserRepository.deleteUser(UserEntity.fromJson(user));
+        userRepository.deleteFriendshipForUser(UserEntity.fromJson(user));
+        userRepository.deleteUser(UserEntity.fromJson(user));
     }
 
 

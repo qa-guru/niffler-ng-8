@@ -1,10 +1,8 @@
 package guru.qa.niffler.data.repository;
 
 import guru.qa.niffler.data.entity.auth.AuthUserEntity;
-import org.springframework.dao.DataAccessException;
+import guru.qa.niffler.data.entity.user.UserEntity;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -17,5 +15,7 @@ public interface AuthUserRepository {
 
     List<AuthUserEntity> findAll();
 
-    AuthUserEntity extractData(ResultSet resultSet) throws SQLException, DataAccessException;
+    void deleteAuthority(UserEntity uuid);
+
+    void deleteUser(UserEntity uuid);
 }

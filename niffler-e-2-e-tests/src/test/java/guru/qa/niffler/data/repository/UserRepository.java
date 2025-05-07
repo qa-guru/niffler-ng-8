@@ -2,7 +2,6 @@ package guru.qa.niffler.data.repository;
 
 import guru.qa.niffler.data.entity.user.UserEntity;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -12,9 +11,13 @@ public interface UserRepository {
 
     Optional<UserEntity> findById(UUID uuid);
 
-    List<UserEntity> findAll();
-
     void addIncomeInvitation(UserEntity requester, UserEntity addressee);
+
     void addOutcomeInvitation(UserEntity requester, UserEntity addressee);
+
     void addFriend(UserEntity requester, UserEntity addressee);
+
+    void deleteFriendshipForUser(UserEntity user);
+
+    void deleteUser(UserEntity user);
 }

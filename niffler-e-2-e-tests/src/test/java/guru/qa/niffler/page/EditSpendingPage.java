@@ -25,12 +25,4 @@ public class EditSpendingPage extends BasePage {
     submitBtn.click();
     return new MainPage();
   }
-
-  public MainPage editSum(UserJson user) {
-    for(SpendJson spend :user.testData().spendings()){
-      String newSum = String.valueOf((int)(spend.amount()+25));
-      editSum(newSum);
-    }
-    return new MainPage();
-  }
 }

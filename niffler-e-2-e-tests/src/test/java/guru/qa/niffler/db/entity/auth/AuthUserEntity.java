@@ -52,9 +52,10 @@ public class AuthUserEntity implements Serializable {
         addAuthorities(Arrays.asList(authorities));
     }
 
-    public void addAuthorities(List<AuthAuthorityEntity> authorities) {
+    public AuthUserEntity addAuthorities(List<AuthAuthorityEntity> authorities) {
         authorities.forEach(au -> au.setUser(this));
         this.authorities.addAll(authorities);
+        return this;
     }
 
     public void addAuthorities(AuthAuthorityEntity authority) {
@@ -72,7 +73,7 @@ public class AuthUserEntity implements Serializable {
                 .setAccountNonExpired(json.getAccountNonExpired())
                 .setAccountNonLocked(json.getAccountNonLocked())
                 .setCredentialsNonExpired(json.getCredentialsNonExpired())
-                .setAuthorities(AuthAuthorityEntity.fromJson(json.getAuthorities()));
+                .addAuthorities(AuthAuthorityEntity.fromJson(json.getAuthorities()));
     }
 
     @Override

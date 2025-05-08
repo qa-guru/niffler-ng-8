@@ -3,41 +3,90 @@ package guru.qa.niffler.db.service;
 import guru.qa.niffler.api.model.AuthUserJson;
 import guru.qa.niffler.api.model.UserParts;
 import guru.qa.niffler.api.model.UserdataUserJson;
-import guru.qa.niffler.db.dao.UserdataUserDao;
-import guru.qa.niffler.db.dao.impl.spring_jdbc.UserdataUserDaoSpringJdbc;
 import guru.qa.niffler.db.entity.auth.AuthUserEntity;
 import guru.qa.niffler.db.entity.userdata.UserdataUserEntity;
-import guru.qa.niffler.db.repository.impl.AuthUserRepositoryJdbc;
+import guru.qa.niffler.db.repository.AuthUserRepository;
+import guru.qa.niffler.db.repository.UserdataUserRepository;
+import guru.qa.niffler.db.repository.impl.hibernate.AuthUserRepositoryHibernate;
+import guru.qa.niffler.db.repository.impl.hibernate.UserdataUserRepositoryHibernate;
 import guru.qa.niffler.db.tpl.XaTransactionTemplate;
+
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class UserDbService extends AbstractDbClient {
 
-    private final String AUTH_DB_URL = CFG.authJdbcUrl();
-    private final AuthUserRepositoryJdbc authUserRepositoryJdbc = new AuthUserRepositoryJdbc(AUTH_DB_URL);
+    private final AuthUserRepository authUserRepository = new AuthUserRepositoryHibernate();
+    private final UserdataUserRepository userdataUserRepository = new UserdataUserRepositoryHibernate();
 
-    private final String USERDATA_DB_URL = CFG.userdataJdbcUrl();
-    private final UserdataUserDao userdataUserDao = new UserdataUserDaoSpringJdbc(USERDATA_DB_URL);
+    private final XaTransactionTemplate xaTxTemplate = new XaTransactionTemplate(CFG.authJdbcUrl(), CFG.userdataJdbcUrl());
 
-    private final XaTransactionTemplate xaTxTemplate = new XaTransactionTemplate(AUTH_DB_URL, USERDATA_DB_URL);
+    public Optional<UserParts> findByAuthId(String id) {
+        return findByAuthId(UUID.fromString(id));
+    }
+
+    public Optional<UserParts> findByAuthId(UUID id) {
+        Optional<AuthUserEntity> authUserOpt = authUserRepository.findById(id);
+        if (authUserOpt.isPresent()) {
+            AuthUserEntity authUser = authUserOpt.get();
+            Optional<UserdataUserEntity> userdataUserOpt = userdataUserRepository.findByUsername(authUser.getUsername());
+            if (userdataUserOpt.isPresent()) {
+                return Optional.of(UserParts.of(authUser, userdataUserOpt.get()));
+            } else {
+                throw new IllegalStateException("AuthUser найден, а UserdataUser нет");
+            }
+        }
+        return Optional.empty();
+    }
+
+    public Optional<UserParts> findByUsername(String username) {
+        Optional<AuthUserEntity> authUserOpt = authUserRepository.findByUsername(username);
+        if (authUserOpt.isPresent()) {
+            AuthUserEntity authUser = authUserOpt.get();
+            Optional<UserdataUserEntity> userdataUserOpt = userdataUserRepository.findByUsername(username);
+            if (userdataUserOpt.isPresent()) {
+                return Optional.of(UserParts.of(authUser, userdataUserOpt.get()));
+            } else {
+                throw new IllegalStateException("AuthUser найден, а UserdataUser нет");
+            }
+        }
+        return Optional.empty();
+    }
 
     public UserParts createUser(UserParts userJson) {
         return xaTxTemplate.execute(() -> {
-            UserdataUserEntity userdataUser = UserdataUserEntity.fromJson(userJson.userdataUserJson());
-            AuthUserEntity authUser = AuthUserEntity.fromJson(userJson.authUserJson());
+            AuthUserEntity authUser = authUserRepository.create(userJson.getAuthUserEntity());
+            UserdataUserEntity userdataUser = userdataUserRepository.create(userJson.getUserdataUserEntity());
+            return UserParts.of(authUser, userdataUser);
+        });
+    }
 
-            authUser = authUserRepositoryJdbc.create(authUser);
-            userdataUser = userdataUserDao.create(userdataUser);
+    public UserParts updateUser(UserParts userJson) {
+        return xaTxTemplate.execute(() -> {
+            AuthUserEntity authUser = authUserRepository.update(userJson.getAuthUserEntity());
+            UserdataUserEntity userdataUser = userdataUserRepository.update(userJson.getUserdataUserEntity());
+            return UserParts.of(authUser, userdataUser);
+        });
+    }
 
-            UserdataUserJson userdataUserJson = UserdataUserJson.fromEntity(userdataUser);
-            AuthUserJson authUserJson = AuthUserJson.fromEntity(authUser);
-            return new UserParts(authUserJson, userdataUserJson);
+    public List<UserParts> findAll() {
+        return xaTxTemplate.execute(() -> {
+            List<UserParts> result = new ArrayList<>();
+            Map<String, UserdataUserEntity> userdataUserByName = userdataUserRepository.findAll().stream()
+                    .collect(Collectors.toMap(UserdataUserEntity::getUsername, Function.identity()));
+            for (AuthUserEntity authUser : authUserRepository.findAll()) {
+                UserdataUserEntity userdataUser = userdataUserByName.get(authUser.getUsername());
+                result.add(UserParts.of(authUser, userdataUser));
+            }
+            return result;
         });
     }
 
     public void deleteUser(UserParts userJson) {
         xaTxTemplate.execute(() -> {
-            deleteAuthUserAndAuthority(userJson.authUserJson());
-            deleteUserdataUser(userJson.userdataUserJson());
+            deleteAuthUserAndAuthority(userJson.getAuthUserJson());
+            deleteUserdataUser(userJson.getUserdataUserJson());
         });
     }
 
@@ -46,14 +95,16 @@ public class UserDbService extends AbstractDbClient {
         if (userJson.getId() != null) {
             userdataUser = UserdataUserEntity.fromJson(userJson);
         } else if (userJson.getUsername() != null) {
-            userdataUser = userdataUserDao.findByUsername(userJson.getUsername())
+            String username = userJson.getUsername();
+            userdataUser = userdataUserRepository.findByUsername(username)
                     .orElseThrow(() -> new IllegalArgumentException(
-                            "У пользователя невозможно удалить, т.к. отсутствует id и не получается найти по username"
+                            "У пользователя невозможно удалить, т.к. отсутствует id и не получается найти по username: " +
+                                    username
                     ));
         } else {
             throw new IllegalArgumentException("id и username == null");
         }
-        userdataUserDao.delete(userdataUser);
+        userdataUserRepository.delete(userdataUser);
     }
 
     private void deleteAuthUserAndAuthority(AuthUserJson userJson) {
@@ -61,14 +112,16 @@ public class UserDbService extends AbstractDbClient {
         if (userJson.getId() != null) {
             authUser = AuthUserEntity.fromJson(userJson);
         } else if (userJson.getUsername() != null) {
-            authUser = authUserRepositoryJdbc.findByUsername(userJson.getUsername())
+            String username = userJson.getUsername();
+            authUser = authUserRepository.findByUsername(username)
                     .orElseThrow(() -> new IllegalArgumentException(
-                            "У пользователя невозможно удалить, т.к. отсутствует id и не получается найти по username"
+                            "У пользователя невозможно удалить, т.к. отсутствует id и не получается найти по username: " +
+                                    username
                     ));
         } else {
             throw new IllegalArgumentException("id и username == null");
         }
-        authUserRepositoryJdbc.delete(authUser);
+        authUserRepository.delete(authUser);
     }
 
 }

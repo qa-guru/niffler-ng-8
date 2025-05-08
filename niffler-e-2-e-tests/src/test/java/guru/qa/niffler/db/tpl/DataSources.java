@@ -3,6 +3,8 @@ package guru.qa.niffler.db.tpl;
 import com.atomikos.jdbc.AtomikosDataSourceBean;
 import org.apache.commons.lang3.StringUtils;
 
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.sql.DataSource;
 import java.util.Map;
 import java.util.Properties;
@@ -30,6 +32,12 @@ public class DataSources {
                     atomikosDs.setXaProperties(props);
                     atomikosDs.setMaxPoolSize(12);
                     atomikosDs.setPoolSize(3);
+                    try {
+                        InitialContext context = new InitialContext();
+                        context.bind("java:comp/env/jdbc/" + uniqId, atomikosDs);
+                    } catch (NamingException e) {
+                        throw new RuntimeException(e);
+                    }
                     return atomikosDs;
                 }
         );

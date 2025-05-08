@@ -1,4 +1,4 @@
-package guru.qa.niffler.db.repository.impl;
+package guru.qa.niffler.db.repository.impl.jdbc;
 
 import guru.qa.niffler.db.dao.impl.spring_jdbc.mapper.UserdataFriendshipEntityRowMapper;
 import guru.qa.niffler.db.dao.impl.spring_jdbc.mapper.UserdataUserEntityRowMapper;

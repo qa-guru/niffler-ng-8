@@ -22,6 +22,10 @@ public interface UserdataUserRepository {
 
     Optional<UserdataUserEntity> findByUsername(String username);
 
+    default UserdataUserEntity update(UserdataUserEntity entity) {
+        throw new UnsupportedOperationException();
+    }
+
     boolean delete(UserdataUserEntity entity);
 
     List<UserdataUserEntity> findAll();

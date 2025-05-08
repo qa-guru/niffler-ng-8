@@ -93,8 +93,8 @@ public class UserDbExperimentalService extends AbstractDbClient {
         }
 
         public UserParts createUser(UserParts userJson) {
-            UserdataUserEntity userdataUser = UserdataUserEntity.fromJson(userJson.userdataUserJson());
-            AuthUserEntity authUser = AuthUserEntity.fromJson(userJson.authUserJson());
+            UserdataUserEntity userdataUser = userJson.getUserdataUserEntity();
+            AuthUserEntity authUser = userJson.getAuthUserEntity();
             authUser = authUserDao.create(authUser);
             for (AuthAuthorityEntity authority : authUser.getAuthorities()) {
                 authority.setUser(authUser);
@@ -108,8 +108,8 @@ public class UserDbExperimentalService extends AbstractDbClient {
         }
 
         public void deleteUser(UserParts userJson) {
-            deleteAuthUserAndAuthority(userJson.authUserJson());
-            deleteUserdataUser(userJson.userdataUserJson());
+            deleteAuthUserAndAuthority(userJson.getAuthUserJson());
+            deleteUserdataUser(userJson.getUserdataUserJson());
         }
 
         private void deleteUserdataUser(UserdataUserJson userJson) {

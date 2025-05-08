@@ -48,7 +48,7 @@ public class ChainedTransactionManagerTest {
     void springJdbcClientWithAtomikosDsAndTxIfUsernameInUserdataIsMissing() {
         UserParts userJson = genDefaultUser();
         System.out.println(userJson);
-        UserdataUserJson user = userJson.userdataUserJson();
+        UserdataUserJson user = userJson.getUserdataUserJson();
         String username = user.getUsername();
         user.setUsername(null);
 
@@ -67,7 +67,7 @@ public class ChainedTransactionManagerTest {
     void springJdbcClientWithAtomikosDsAndTxIfAccountNonExpiredInAuthUserIsMissing() {
         UserParts userJson = genDefaultUser();
         System.out.println(userJson);
-        AuthUserJson user = userJson.authUserJson();
+        AuthUserJson user = userJson.getAuthUserJson();
         user.setAccountNonExpired(null);
 
         Exception exception = assertThrows(RuntimeException.class,
@@ -85,7 +85,7 @@ public class ChainedTransactionManagerTest {
     void jbcClientWithWithAtomikosDsAndTxIfUsernameInUserdataIsMissing() {
         UserParts userJson = genDefaultUser();
         System.out.println(userJson);
-        UserdataUserJson user = userJson.userdataUserJson();
+        UserdataUserJson user = userJson.getUserdataUserJson();
         String username = user.getUsername();
         user.setUsername(null);
 
@@ -104,7 +104,7 @@ public class ChainedTransactionManagerTest {
     void jbcClientWithWithAtomikosDsAndTxIfAccountNonExpiredInAuthUserIsMissing() {
         UserParts userJson = genDefaultUser();
         System.out.println(userJson);
-        AuthUserJson user = userJson.authUserJson();
+        AuthUserJson user = userJson.getAuthUserJson();
         user.setAccountNonExpired(null);
 
         Exception exception = assertThrows(RuntimeException.class,
@@ -122,7 +122,7 @@ public class ChainedTransactionManagerTest {
     void springJdbcClientWithSimpleDsAndChainedTxIfUsernameInUserdataIsMissing() {
         UserParts userJson = genDefaultUser();
         System.out.println(userJson);
-        UserdataUserJson user = userJson.userdataUserJson();
+        UserdataUserJson user = userJson.getUserdataUserJson();
         String username = user.getUsername();
         user.setUsername(null);
 
@@ -144,7 +144,7 @@ public class ChainedTransactionManagerTest {
     void springJdbcClientWithSimpleDsAndChainedTxIfAccountNonExpiredInAuthUserIsMissing() {
         UserParts userJson = genDefaultUser();
         System.out.println(userJson);
-        AuthUserJson user = userJson.authUserJson();
+        AuthUserJson user = userJson.getAuthUserJson();
         user.setAccountNonExpired(null);
 
         Exception exception = assertThrows(RuntimeException.class,

@@ -18,7 +18,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import static guru.qa.niffler.utils.RandomDataUtils.randomUsername;
 
@@ -131,6 +133,11 @@ public class UsersDbClient implements UsersClient {
         }
     }
 
+    @Override
+    public List<UserJson> incomeInvitations(String username) {
+        return List.of();
+    }
+
 
     @Override
     public void createOutcomeInvitations(UserJson targetUser, int count) {
@@ -166,6 +173,16 @@ public class UsersDbClient implements UsersClient {
 
             return Optional.empty();
         });
+    }
+
+    @Override
+    public List<UserJson> outcomeInvitations(String username) {
+        return List.of();
+    }
+
+    @Override
+    public void removeFriend(UUID userId, UUID friendId) {
+
     }
 
     private UserEntity userEntity(String username) {

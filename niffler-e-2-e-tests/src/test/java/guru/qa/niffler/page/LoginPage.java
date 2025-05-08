@@ -21,13 +21,13 @@ public class LoginPage extends BasePage{
   private final SelenideElement errorComponent = $(byText("Неверные учетные данные пользователя"));
 
   public MainPage doLogin(String username, String password) {
-    return this.setUserName(username)
+    return setUserName(username)
             .setPassword(password)
             .clickLogin();
   }
 
   public MainPage doLogin(UserJson user) {
-    return this.setUserName(user.username())
+    return setUserName(user.username())
             .setPassword(user.testData().password())
             .clickLogin();
   }

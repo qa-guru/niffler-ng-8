@@ -43,6 +43,18 @@ public class FriendsPage extends BasePage {
         return new AllPeoplePage();
     }
 
+    public FriendsPage assertFriendRequestExist(String username){
+        searchInput.setValue(username).pressEnter();
+        SelenideElement targetRow = requestsTableRows.find(text(username));
+        targetRow.$x(ACCEPT_FRIEND_BUTTON_XPATH)
+                .shouldBe(visible)
+                .shouldHave(BUTTON.assertType());
+        targetRow.$x(DECLINE_FRIEND_BUTTON_XPATH)
+                .shouldBe(visible)
+                .shouldHave(BUTTON.assertType());
+        return this;
+    }
+
     public FriendsPage assertFriendRequestExist(UserJson userJson){
         for(String username : userJson
                 .testData()
@@ -50,15 +62,16 @@ public class FriendsPage extends BasePage {
                 .stream()
                 .map(UserJson::username)
                 .toArray(String[]::new)) {
-            searchInput.setValue(username).pressEnter();
-            SelenideElement targetRow = requestsTableRows.find(text(username));
-            targetRow.$x(ACCEPT_FRIEND_BUTTON_XPATH)
-                    .shouldBe(visible)
-                    .shouldHave(BUTTON.assertType());
-            targetRow.$x(DECLINE_FRIEND_BUTTON_XPATH)
-                    .shouldBe(visible)
-                    .shouldHave(BUTTON.assertType());
+            assertFriendRequestExist(username);
         }
+        return this;
+    }
+
+    public FriendsPage assertFriendExist(String username){
+        SelenideElement targetRow = friendsTableRows.find(text(username));
+        targetRow.$x(UNFRIEND_BUTTON_XPATH)
+                .shouldBe(visible)
+                .shouldHave(BUTTON.assertType());
         return this;
     }
     public FriendsPage assertFriendExist(UserJson userJson){
@@ -69,10 +82,7 @@ public class FriendsPage extends BasePage {
                 .map(UserJson::username)
                 .toArray(String[]::new)
         ) {
-            SelenideElement targetRow = friendsTableRows.find(text(username));
-            targetRow.$x(UNFRIEND_BUTTON_XPATH)
-                    .shouldBe(visible)
-                    .shouldHave(BUTTON.assertType());
+            assertFriendExist(username);
         }
         return this;
     }

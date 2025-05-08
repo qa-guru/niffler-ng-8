@@ -56,8 +56,8 @@ public class UsersApiClient implements UsersClient {
 
     @Override
     public void createIncomeInvitations(UserJson targetUser, int count) {
-        if(count>0){
-            for(int i = 0; i<count;i++){
+        if(count >0 ){
+            for(int i = 0; i < count; i++){
                 final String username = RandomDataUtils.randomUsername();
                 UserJson friend = createUser(username,defaultPassword);
                 sre.executeRequest(

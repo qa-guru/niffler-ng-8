@@ -37,7 +37,7 @@ spring:
 
 logging:
   file:
-    path: ./logs/niffler_currency
+    path: ./logs/niffler-currency
   level:
     root: INFO
     org.springframework.web: INFO

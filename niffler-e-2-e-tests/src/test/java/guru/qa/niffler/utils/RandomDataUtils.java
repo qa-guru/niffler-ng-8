@@ -2,8 +2,11 @@ package guru.qa.niffler.utils;
 
 import com.github.javafaker.Faker;
 
+import java.util.Random;
+
 public class RandomDataUtils {
     private static final Faker faker = new Faker();
+    private static final Random random = new Random();
 
     public static String randomUsername(){
         return faker.name().username();
@@ -30,6 +33,15 @@ public class RandomDataUtils {
     public static String randomCategoryName(){
         return faker.commerce().department();
     }
+
+    public static String randomSpendingDescription(){
+        return randomSentence(2);
+    }
+
+    public static double randomSpendingAmount(){
+        return 50 + random.nextInt(50000 - 50 + 1);
+    }
+
     public static String randomSentence(int wordsCount){
         StringBuilder sentence = new StringBuilder();
 
@@ -37,6 +49,6 @@ public class RandomDataUtils {
             sentence.append(faker.lorem().word()).append(" ");
         }
 
-        return sentence.toString().trim() + ".";
+        return sentence.toString().trim();
     }
 }

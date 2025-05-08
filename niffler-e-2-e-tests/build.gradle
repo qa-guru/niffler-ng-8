@@ -2,7 +2,7 @@ buildscript {
     ext {
         junitVersion = '5.11.4'
         allureVersion = '2.29.1'
-        selenideVersion = '7.7.1'
+        selenideVersion = '7.9.1'
         okhttp3Version = '3.14.9'
         retrofitVersion = '2.11.0'
         apollographqlVersion = '0.0.2'

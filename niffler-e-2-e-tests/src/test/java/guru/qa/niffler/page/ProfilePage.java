@@ -4,8 +4,13 @@ import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
+import guru.qa.niffler.utils.ScreenDiffResult;
+import io.qameta.allure.Step;
+import lombok.SneakyThrows;
 
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.time.Duration;
 
 import static com.codeborne.selenide.Condition.cssValue;
@@ -19,6 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class ProfilePage extends BasePage {
     private final SelenideElement avatarImage = $("main img");
     private final SelenideElement uploadAvatarButton = $("label[for='image__input']");
+    private final SelenideElement pictureInput = $("input[type='file']");
     private final SelenideElement nameInput = $("input[id='name']");
     private final SelenideElement usernameInput = $("input[id='username']");
     private final SelenideElement saveNameButton = $("button[id=':r7:']");
@@ -117,6 +123,22 @@ public class ProfilePage extends BasePage {
                 .shouldBe(Condition.exist,Duration.ofSeconds(5))
                 .scrollTo()
                 .click();
+        return this;
+    }
+
+    @SneakyThrows
+    @Step("Check profile avatar")
+    public ProfilePage checkAvatar(BufferedImage expected) {
+        Selenide.sleep(3000);
+        BufferedImage actual = ImageIO.read(avatarImage.screenshot());
+        assertFalse(new ScreenDiffResult(expected, actual));
+        return this;
+    }
+
+    @SneakyThrows
+    @Step("Upload avatar")
+    public ProfilePage uploadAvatar(String path) {
+        pictureInput.uploadFromClasspath(path);
         return this;
     }
 }

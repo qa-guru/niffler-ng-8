@@ -2,17 +2,7 @@ package guru.qa.niffler.data.entity.spend;
 
 import guru.qa.niffler.model.CurrencyValues;
 import guru.qa.niffler.model.SpendJson;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.proxy.HibernateProxy;
@@ -22,7 +12,6 @@ import java.util.Date;
 import java.util.Objects;
 import java.util.UUID;
 
-import static jakarta.persistence.CascadeType.PERSIST;
 
 @Getter
 @Setter
@@ -50,8 +39,8 @@ public class SpendEntity implements Serializable {
     @Column(nullable = false)
     private String description;
 
-    @OneToOne(fetch = FetchType.EAGER, cascade = PERSIST)
-    @JoinColumn(name = "category_id", referencedColumnName = "id")
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "category_id", referencedColumnName = "id", nullable = false)
     private CategoryEntity category;
 
     public static SpendEntity fromJson(SpendJson json) {

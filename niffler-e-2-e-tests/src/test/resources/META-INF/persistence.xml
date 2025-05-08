@@ -27,7 +27,7 @@
     </persistence-unit>
 
     <persistence-unit name="jdbc:postgresql://127.0.0.1:5432/niffler-spend" transaction-type="JTA">
-        <jta-data-source>java:comp/env/jdbc/niffler-userdata</jta-data-source>
+        <jta-data-source>java:comp/env/jdbc/niffler-spend</jta-data-source>
         <class>guru.qa.niffler.data.entity.spend.CategoryEntity</class>
         <class>guru.qa.niffler.data.entity.spend.SpendEntity</class>
 

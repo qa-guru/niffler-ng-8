@@ -20,6 +20,8 @@ public class SpendRepositoryHibernate implements SpendRepository {
     @Override
     public SpendEntity create(SpendEntity spend) {
         entityManager.joinTransaction();
+        CategoryEntity mergedCategory = entityManager.merge(spend.getCategory());
+        spend.setCategory(mergedCategory);
         entityManager.persist(spend);
         return spend;
     }

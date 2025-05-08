@@ -33,7 +33,7 @@ spring:
 
 logging:
   file:
-    path: ./logs/niffler_userdata
+    path: ./logs/niffler-userdata
   level:
     root: INFO
     org.springframework.kafka: INFO

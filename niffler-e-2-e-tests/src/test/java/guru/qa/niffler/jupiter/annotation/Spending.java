@@ -13,11 +13,11 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 @ExtendWith(SpendingExtension.class)
 public @interface Spending {
-  String category();
+  String category() default "";
 
-  String description();
+  String description() default "";
 
-  double amount();
+  double amount() default -1.0;
 
   CurrencyValues currency() default CurrencyValues.RUB;
 }

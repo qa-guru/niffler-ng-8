@@ -25,4 +25,13 @@ public record CategoryJson(
                 entity.isArchived()
         );
     }
+
+    public static CategoryJson createArchived(){
+        return new CategoryJson(
+                null,
+                "Archived",
+                null,
+                true
+        );
+    }
 }

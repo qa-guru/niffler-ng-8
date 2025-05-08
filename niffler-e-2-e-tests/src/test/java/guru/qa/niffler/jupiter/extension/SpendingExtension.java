@@ -9,6 +9,7 @@ import guru.qa.niffler.model.SpendJson;
 import guru.qa.niffler.model.UserJson;
 import guru.qa.niffler.service.SpendClient;
 import guru.qa.niffler.service.db.SpendDbClient;
+import guru.qa.niffler.utils.RandomDataUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.junit.jupiter.api.extension.*;
 
@@ -17,6 +18,7 @@ import org.junit.platform.commons.support.AnnotationSupport;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 public class SpendingExtension implements BeforeEachCallback, ParameterResolver {
 
@@ -37,24 +39,57 @@ public class SpendingExtension implements BeforeEachCallback, ParameterResolver 
                         final List<SpendJson> createdSpendings = new ArrayList<>();
 
                         for (Spending spendAnno : userAnno.spendings()) {
+                            String categoryName = spendAnno.category().equals("")
+                                    ? RandomDataUtils.randomCategoryName()
+                                    : spendAnno.category();
+
+                            double amount = spendAnno.amount()==-1.0
+                                    ? RandomDataUtils.randomSpendingAmount()
+                                    : spendAnno.amount();
+
+                            String description = spendAnno.description().equals("")
+                                    ? RandomDataUtils.randomSpendingDescription()
+                                    :spendAnno.description();
+
+                            UUID categoryId = createdUser.testData().categories()
+                                    .stream()
+                                    .filter(c->c.name().equals(categoryName)
+                                    && c.username().equals(username))
+                                    .findFirst()
+                                    .map(CategoryJson::id)
+                                    .orElse(null);
+
+                            boolean archived = createdUser.testData().categories()
+                                    .stream()
+                                    .filter(c->c.name().equals(categoryName)
+                                            && c.username().equals(username))
+                                    .findFirst()
+                                    .map(CategoryJson::archived)
+                                    .orElse(false);
+
                             SpendJson spend = new SpendJson(
                                     null,
                                     new Date(),
                                     new CategoryJson(
-                                            null,
-                                            spendAnno.category(),
+                                            categoryId,
+                                            categoryName,
                                             username,
-                                            false
+                                            archived
                                     ),
                                     spendAnno.currency(),
-                                    spendAnno.amount(),
-                                    spendAnno.description(),
+                                    amount,
+                                    description,
                                     username
                             );
-
-                            createdSpendings.add(
-                                    spendClient.createSpend(spend)
-                            );
+                            spend = spendClient.createSpend(spend);
+                            createdSpendings.add(spend);
+                            if(createdUser
+                                    .testData()
+                                    .categories()
+                                    .stream()
+                                    .noneMatch(c->c.name().equals(categoryName))){
+                                createdUser.testData().categories().add(spend.category());
+                            }
                         }
                         if (createdUser != null) {
                             createdUser.testData().spendings().addAll(

@@ -7,29 +7,45 @@ import lombok.SneakyThrows;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.UUID;
 
 public class AllureBackendLogsExtension implements SuiteExtension {
 
-    public static final String caneName = "Niffler backend logs";
+    public static final String caseName = "Niffler backend logs";
+    private static final List<String> serviceNames = List.of(
+            "auth",
+            "userdata",
+            "spend",
+            "gateway",
+            "currency"
+    );
     @Override
     @SneakyThrows
     public void afterSuite() {
         final AllureLifecycle allureLifecycle = Allure.getLifecycle();
         final String caseId = UUID.randomUUID().toString();
-        allureLifecycle.scheduleTestCase(new TestResult().setUuid(caseId).setName(caneName));
+        allureLifecycle.scheduleTestCase(new TestResult().setUuid(caseId).setName(caseName));
         allureLifecycle.startTestCase(caseId);
 
-        allureLifecycle.addAttachment(
-                "Niffler-auth log",
-                "text/html",
-                ".log",
-                Files.newInputStream(
-                        Path.of("./logs/niffler_auth/app.log")
-                )
-        );
+        serviceNames.forEach(s -> logAttachment(s,allureLifecycle));
 
         allureLifecycle.stopTestCase(caseId);
         allureLifecycle.writeTestCase(caseId);
+    }
+
+    @SneakyThrows
+    private void logAttachment(String serviceName, AllureLifecycle allureLifecycle){
+        String name = String.format("Niffler-%s log",serviceName);
+        String path = String.format("./logs/niffler_%s/app.log",serviceName);
+
+        allureLifecycle.addAttachment(
+                name,
+                "text/html",
+                ".log",
+                Files.newInputStream(
+                        Path.of(path)
+                )
+        );
     }
 }

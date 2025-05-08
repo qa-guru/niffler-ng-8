@@ -47,7 +47,8 @@ public class UsersDbClient implements UsersClient {
             authUserRepository.create(authUserEntity);
             return UserJson.fromEntity(
                     userdataUserRepository.create(userEntity(username))
-            );
+            )
+                    .withPassword(password);
         });
     }
 
@@ -86,17 +87,17 @@ public class UsersDbClient implements UsersClient {
                     targetUser.id()
             ).orElseThrow();
 
+            xaTransactionTemplate.execute(() -> {
             for (int i = 0; i < count; i++) {
-                xaTransactionTemplate.execute(() -> {
                             String username = randomUsername();
                             AuthUserEntity authUser = authUserEntity(username, "12345");
                             authUserRepository.create(authUser);
                             UserEntity adressee = userdataUserRepository.create(userEntity(username));
                             userdataUserRepository.addInvitation(targetEntity, adressee, FriendshipStatus.ACCEPTED);
-                            return null;
                         }
-                );
-            }
+                return null;
+            });
+
         }
     }
 
@@ -106,18 +107,19 @@ public class UsersDbClient implements UsersClient {
             UserEntity targetEntity = userdataUserRepository.findById(
                     targetUser.id()
             ).orElseThrow();
+            xaTransactionTemplate.execute(() -> {
+                for (int i = 0; i < count; i++) {
 
-            for (int i = 0; i < count; i++) {
-                xaTransactionTemplate.execute(() -> {
-                            String username = randomUsername();
-                            AuthUserEntity authUser = authUserEntity(username, "12345");
-                            authUserRepository.create(authUser);
-                            UserEntity adressee = userdataUserRepository.create(userEntity(username));
-                            userdataUserRepository.addInvitation(targetEntity, adressee, FriendshipStatus.PENDING);
-                            return null;
-                        }
-                );
-            }
+                    String username = randomUsername();
+                    AuthUserEntity authUser = authUserEntity(username, "12345");
+                    authUserRepository.create(authUser);
+                    UserEntity adressee = userdataUserRepository.create(userEntity(username));
+                    userdataUserRepository.addInvitation(targetEntity, adressee, FriendshipStatus.PENDING);
+
+                }
+                return null;
+            });
+
         }
     }
 
@@ -127,18 +129,16 @@ public class UsersDbClient implements UsersClient {
             UserEntity targetEntity = userdataUserRepository.findById(
                     targetUser.id()
             ).orElseThrow();
-
-            for (int i = 0; i < count; i++) {
-                xaTransactionTemplate.execute(() -> {
-                            String username = randomUsername();
-                            AuthUserEntity authUser = authUserEntity(username, "12345");
-                            authUserRepository.create(authUser);
-                            UserEntity adressee = userdataUserRepository.create(userEntity(username));
-                            userdataUserRepository.addInvitation(adressee, targetEntity, FriendshipStatus.PENDING);
-                            return null;
-                        }
-                );
-            }
+            xaTransactionTemplate.execute(() -> {
+                for (int i = 0; i < count; i++) {
+                    String username = randomUsername();
+                    AuthUserEntity authUser = authUserEntity(username, "12345");
+                    authUserRepository.create(authUser);
+                    UserEntity adressee = userdataUserRepository.create(userEntity(username));
+                    userdataUserRepository.addInvitation(adressee, targetEntity, FriendshipStatus.PENDING);
+                }
+                return null;
+            });
         }
     }
 

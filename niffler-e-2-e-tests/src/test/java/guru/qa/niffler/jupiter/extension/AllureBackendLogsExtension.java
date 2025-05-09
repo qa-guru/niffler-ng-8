@@ -5,15 +5,16 @@ import io.qameta.allure.AllureLifecycle;
 import io.qameta.allure.model.TestResult;
 import lombok.SneakyThrows;
 
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 public class AllureBackendLogsExtension implements SuiteExtension {
 
     public static final String caseName = "Niffler backend logs";
-    private static final List<String> serviceNames = List.of(
+    private static final Set<String> serviceNames = Set.of(
             "auth",
             "userdata",
             "spend",
@@ -28,14 +29,16 @@ public class AllureBackendLogsExtension implements SuiteExtension {
         allureLifecycle.scheduleTestCase(new TestResult().setUuid(caseId).setName(caseName));
         allureLifecycle.startTestCase(caseId);
 
-        serviceNames.forEach(s -> logAttachment(s,allureLifecycle));
+        for(String serviceName : serviceNames){
+            logAttachment(serviceName,allureLifecycle);
+        }
 
         allureLifecycle.stopTestCase(caseId);
         allureLifecycle.writeTestCase(caseId);
     }
 
-    @SneakyThrows
-    private void logAttachment(String serviceName, AllureLifecycle allureLifecycle){
+
+    private static void logAttachment(String serviceName, AllureLifecycle allureLifecycle) throws IOException {
         String name = String.format("Niffler-%s log",serviceName);
         String path = String.format("./logs/niffler_%s/app.log",serviceName);
 

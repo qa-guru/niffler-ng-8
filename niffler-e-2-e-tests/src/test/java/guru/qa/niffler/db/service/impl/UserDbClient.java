@@ -16,6 +16,7 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static guru.qa.niffler.util.RandomDataUtils.USERNAME_PREFIX;
 import static guru.qa.niffler.util.RandomDataUtils.genDefaultUser;
 
 public class UserDbClient extends AbstractDbClient implements UserClient {
@@ -143,6 +144,13 @@ public class UserDbClient extends AbstractDbClient implements UserClient {
                 );
             }
         });
+    }
+
+    @Override
+    public void deleteAllGenUser() {
+        findAll().stream()
+            .filter(u -> u.getUsername().startsWith(USERNAME_PREFIX))
+            .forEach(this::deleteUser);
     }
 
     private void deleteUserdataUser(UserdataUserJson userJson) {

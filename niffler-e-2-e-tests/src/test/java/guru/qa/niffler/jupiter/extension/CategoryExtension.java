@@ -1,56 +1,83 @@
 package guru.qa.niffler.jupiter.extension;
 
 import guru.qa.niffler.api.model.CategoryJson;
+import guru.qa.niffler.api.model.UserParts;
+import guru.qa.niffler.db.service.SpendClient;
 import guru.qa.niffler.db.service.impl.SpendDbClient;
 import guru.qa.niffler.jupiter.annotation.Category;
 import guru.qa.niffler.jupiter.annotation.User;
-import guru.qa.niffler.web.model.WebUser;
 import org.junit.jupiter.api.extension.*;
 import org.junit.platform.commons.support.AnnotationSupport;
 
-import java.util.Optional;
+import java.lang.reflect.Parameter;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import static guru.qa.niffler.util.RandomDataUtils.genCategoryName;
 
 public class CategoryExtension implements ParameterResolver, AfterEachCallback {
 
     public static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(CategoryExtension.class);
-    private final SpendDbClient spendDbClient = new SpendDbClient();
+    private final SpendClient spendDbClient = new SpendDbClient();
 
     @Override
     public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
-        return getCategory(extensionContext).isPresent() && parameterContext.getParameter().getType() == CategoryJson.class;
+        Parameter parameter = parameterContext.getParameter();
+        Class<?> type = parameter.getType();
+        Type parameterizedType = parameter.getParameterizedType();
+        boolean isListOfCategory =
+            type == List.class
+                && parameterizedType instanceof ParameterizedType
+                && ((ParameterizedType) parameterizedType).getActualTypeArguments()[0] == CategoryJson.class;
+        return !getCategories(extensionContext).isEmpty() && (type == CategoryJson.class || isListOfCategory);
     }
 
     @Override
-    public CategoryJson resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
-        WebUser user = extensionContext.getStore(UserResolver.NAMESPACE).get(extensionContext.getUniqueId(), WebUser.class);
-        Category categoryAnno = getCategory(extensionContext).get();
+    public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
+        UserParts user = UserExtension.createdUser();
+        List<Category> categories = getCategories(extensionContext);
+        List<CategoryJson> createdCategories = new ArrayList<>();
 
-        CategoryJson categoryJson = new CategoryJson(
+        for (Category category : categories) {
+            CategoryJson categoryJson = new CategoryJson(
                 null,
-                genCategoryName(),
-                user.username(),
-                categoryAnno.archived()
-        );
+                category.name().isEmpty() ? genCategoryName() : category.name(),
+                user.getUsername(),
+                category.archived()
+            );
+            CategoryJson createdCategory = spendDbClient.createCategory(categoryJson);
+            createdCategories.add(createdCategory);
+            user.getTestData().getCategories().add(createdCategory);
+        }
+        extensionContext.getStore(NAMESPACE).put(extensionContext.getUniqueId(), createdCategories);
 
-        CategoryJson createdCategory = spendDbClient.createCategory(categoryJson);
-        extensionContext.getStore(NAMESPACE).put(extensionContext.getUniqueId(), createdCategory);
-        return createdCategory;
+        Class<?> paramType = parameterContext.getParameter().getType();
+        if (paramType == CategoryJson.class) {
+            return createdCategories.get(0);
+        } else if (paramType == List.class) {
+            return createdCategories;
+        } else {
+            throw new IllegalArgumentException();
+        }
     }
 
     @Override
     public void afterEach(ExtensionContext context) {
-        CategoryJson createdCategory = context.getStore(NAMESPACE).get(context.getUniqueId(), CategoryJson.class);
-        if (createdCategory != null) {
-            spendDbClient.deleteCategory(createdCategory);
+        List<CategoryJson> createdCategories = context.getStore(NAMESPACE).get(context.getUniqueId(), List.class);
+        if (createdCategories != null) {
+            createdCategories.forEach(spendDbClient::deleteCategory);
         }
     }
 
-    private Optional<Category> getCategory(ExtensionContext extensionContext) {
+    private List<Category> getCategories(ExtensionContext extensionContext) {
         return AnnotationSupport.findAnnotation(extensionContext.getRequiredTestMethod(), User.class)
-                .filter(user -> user.categories().length > 0)
-                .map(user -> user.categories()[0]);
+            .filter(user -> user.categories().length > 0)
+            .map(user -> Arrays.asList(user.categories()))
+            .orElse(Collections.emptyList());
     }
 
 }

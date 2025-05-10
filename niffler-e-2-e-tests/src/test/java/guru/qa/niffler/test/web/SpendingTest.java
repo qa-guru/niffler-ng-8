@@ -2,13 +2,14 @@ package guru.qa.niffler.test.web;
 
 import guru.qa.niffler.api.model.CurrencyValues;
 import guru.qa.niffler.api.model.SpendJson;
+import guru.qa.niffler.api.model.UserParts;
 import guru.qa.niffler.jupiter.annotation.Spending;
 import guru.qa.niffler.jupiter.annotation.User;
-import guru.qa.niffler.web.model.WebUser;
 import org.junit.jupiter.api.Test;
 
 public class SpendingTest extends BaseWebTest {
 
+    @Test
     @User(
             spendings = @Spending(
                     category = "Обучение",
@@ -17,11 +18,10 @@ public class SpendingTest extends BaseWebTest {
                     currency = CurrencyValues.RUB
             )
     )
-    @Test
-    void spendingDescriptionShouldBeUpdatedByTableAction(WebUser user, SpendJson spend) {
+    void spendingDescriptionShouldBeUpdatedByTableAction(UserParts user, SpendJson spend) {
         final String newDescription = "Обучение Niffler NG";
         openLoginPage()
-                .doLoginSuccess(user.username(), user.password())
+            .doLoginSuccess(user.getUsername(), user.getPassword())
                 .editSpending(spend.description())
                 .editDescription(newDescription)
                 .checkThatTableContains(newDescription);

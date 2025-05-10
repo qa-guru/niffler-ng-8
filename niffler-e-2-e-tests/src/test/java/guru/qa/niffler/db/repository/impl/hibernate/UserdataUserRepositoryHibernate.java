@@ -66,6 +66,7 @@ public class UserdataUserRepositoryHibernate extends AbstractRepositoryHibernate
     public void addFriend(UserdataUserEntity user, UserdataUserEntity otherUser) {
         entityManager.joinTransaction();
         user.addFriends(FriendshipStatus.ACCEPTED, otherUser);
+        otherUser.addFriends(FriendshipStatus.ACCEPTED, user);
     }
 
     @Override

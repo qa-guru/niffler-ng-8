@@ -30,4 +30,6 @@ public interface UserClient {
 
     void createFriends(UserParts targetUser, int count);
 
+    void deleteAllGenUser();
+
 }

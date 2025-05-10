@@ -9,12 +9,12 @@ public class TestMethodContextExtension implements BeforeEachCallback, AfterEach
     public static final ThreadLocal<ExtensionContext> STORE = new ThreadLocal<>();
 
     @Override
-    public void afterEach(ExtensionContext context) throws Exception {
+    public void beforeEach(ExtensionContext context) throws Exception {
         STORE.set(context);
     }
 
     @Override
-    public void beforeEach(ExtensionContext context) throws Exception {
+    public void afterEach(ExtensionContext context) throws Exception {
         STORE.remove();
     }
 

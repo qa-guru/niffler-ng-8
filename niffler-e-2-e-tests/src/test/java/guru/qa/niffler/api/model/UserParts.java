@@ -2,6 +2,7 @@ package guru.qa.niffler.api.model;
 
 import guru.qa.niffler.db.entity.auth.AuthUserEntity;
 import guru.qa.niffler.db.entity.userdata.UserdataUserEntity;
+import guru.qa.niffler.util.TestData;
 import lombok.Data;
 
 import java.util.UUID;
@@ -11,10 +12,12 @@ public class UserParts {
 
     private final AuthUserJson authUserJson;
     private final UserdataUserJson userdataUserJson;
+    private TestData testData;
 
     public UserParts(AuthUserJson authUserJson, UserdataUserJson userdataUserJson) {
         this.authUserJson = authUserJson;
         this.userdataUserJson = userdataUserJson;
+        this.testData = new TestData();
     }
 
     public static UserParts of(String username) {
@@ -39,6 +42,14 @@ public class UserParts {
 
     public String getUsername() {
         return authUserJson.getUsername();
+    }
+
+    public String getPassword() {
+        return authUserJson.getPassword();
+    }
+
+    public void setPassword(String password) {
+        authUserJson.setPassword(password);
     }
 
     public void setUsername(String name) {

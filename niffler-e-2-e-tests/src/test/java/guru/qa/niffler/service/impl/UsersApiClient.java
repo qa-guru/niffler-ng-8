@@ -1,0 +1,97 @@
+package guru.qa.niffler.service.impl;
+
+import guru.qa.niffler.api.UserApi;
+import guru.qa.niffler.config.Config;
+import guru.qa.niffler.model.UserJson;
+import guru.qa.niffler.service.UsersClient;
+import guru.qa.niffler.utils.RandomDataUtils;
+import okhttp3.OkHttpClient;
+import retrofit2.Call;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.jackson.JacksonConverterFactory;
+
+import javax.annotation.Nullable;
+import java.io.IOException;
+
+import static org.apache.hc.core5.http.HttpStatus.SC_OK;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+public class UsersApiClient implements UsersClient {
+
+    private static final Config CFG = Config.getInstance();
+
+    private final OkHttpClient client = new OkHttpClient.Builder().build();
+    private final Retrofit retrofitUser = new Retrofit.Builder()
+            .baseUrl(CFG.userdataUrl())
+            .client(client)
+            .addConverterFactory(JacksonConverterFactory.create())
+            .build();
+
+    private final Retrofit retrofitAuth = new Retrofit.Builder()
+            .baseUrl(CFG.authUrl())
+            .client(client)
+            .addConverterFactory(JacksonConverterFactory.create())
+            .build();
+
+
+    private final UserApi userApi = retrofitUser.create(UserApi.class);
+    private static final String defaultPassword = "12345";
+
+
+    @Override
+    public UserJson createUser(String username, String password) {
+        return new UsersDbClient().createUser(username, password);
+    }
+
+    @Override
+    public void addIncomeInvitation(UserJson targetUser, int count) {
+        if (count > 0) {
+            for (int i = 0; i < count; i++) {
+                UserJson addressee = createRandomUser();
+                execute(userApi.sendInvitation(addressee.username(), targetUser.username()), SC_OK);
+                targetUser.testData().incomeInvitations().add(addressee);
+
+            }
+        }
+    }
+
+    @Override
+    public void addOutcomeInvitation(UserJson targetUser, int count) {
+        if (count > 0) {
+            for (int i = 0; i < count; i++) {
+                UserJson addressee = createRandomUser();
+                execute(userApi.sendInvitation(targetUser.username(), addressee.username()), SC_OK);
+                targetUser.testData().outcomeInvitations().add(addressee);
+            }
+        }
+    }
+
+    @Override
+    public void createFriends(UserJson targetUser, int count) {
+        if (count > 0) {
+            for (int i = 0; i < count; i++) {
+                UserJson addressee = createRandomUser();
+                execute(userApi.sendInvitation(targetUser.username(), addressee.username()), SC_OK);
+                execute(userApi.acceptInvitation(addressee.username(),targetUser.username()), SC_OK);
+                targetUser.testData().friends().add(addressee);
+            }
+        }
+    }
+
+    public UserJson createRandomUser(){
+        return createUser(RandomDataUtils.randomUsername(), defaultPassword);
+    }
+
+    @Nullable
+    private <T> T execute(Call<T> call, int statusCode) {
+        final Response<T> response;
+        try {
+            response = call.execute();
+        } catch (IOException e) {
+            throw new AssertionError(e);
+        }
+        assertEquals(statusCode, response.code());
+        return response.body();
+    }
+}

@@ -1,4 +1,4 @@
-package guru.qa.niffler.db.service;
+package guru.qa.niffler.db.service.impl;
 
 import guru.qa.niffler.api.model.AuthUserJson;
 import guru.qa.niffler.api.model.UserParts;
@@ -9,18 +9,32 @@ import guru.qa.niffler.db.repository.AuthUserRepository;
 import guru.qa.niffler.db.repository.UserdataUserRepository;
 import guru.qa.niffler.db.repository.impl.hibernate.AuthUserRepositoryHibernate;
 import guru.qa.niffler.db.repository.impl.hibernate.UserdataUserRepositoryHibernate;
+import guru.qa.niffler.db.service.UserClient;
 import guru.qa.niffler.db.tpl.XaTransactionTemplate;
 
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class UserDbService extends AbstractDbClient {
+import static guru.qa.niffler.util.RandomDataUtils.genDefaultUser;
 
-    private final AuthUserRepository authUserRepository = new AuthUserRepositoryHibernate();
-    private final UserdataUserRepository userdataUserRepository = new UserdataUserRepositoryHibernate();
+public class UserDbClient extends AbstractDbClient implements UserClient {
+
+    private final AuthUserRepository authUserRepository;
+    private final UserdataUserRepository userdataUserRepository;
 
     private final XaTransactionTemplate xaTxTemplate = new XaTransactionTemplate(CFG.authJdbcUrl(), CFG.userdataJdbcUrl());
+
+
+    public UserDbClient() {
+        this.authUserRepository = new AuthUserRepositoryHibernate();
+        this.userdataUserRepository = new UserdataUserRepositoryHibernate();
+    }
+
+    public UserDbClient(AuthUserRepository authUserRepository, UserdataUserRepository userdataUserRepository) {
+        this.authUserRepository = authUserRepository;
+        this.userdataUserRepository = userdataUserRepository;
+    }
 
     public Optional<UserParts> findByAuthId(String id) {
         return findByAuthId(UUID.fromString(id));
@@ -55,11 +69,13 @@ public class UserDbService extends AbstractDbClient {
     }
 
     public UserParts createUser(UserParts userJson) {
-        return xaTxTemplate.execute(() -> {
-            AuthUserEntity authUser = authUserRepository.create(userJson.getAuthUserEntity());
-            UserdataUserEntity userdataUser = userdataUserRepository.create(userJson.getUserdataUserEntity());
-            return UserParts.of(authUser, userdataUser);
-        });
+        return xaTxTemplate.execute(() -> createUseWithoutTx(userJson));
+    }
+
+    private UserParts createUseWithoutTx(UserParts userJson) {
+        AuthUserEntity authUser = authUserRepository.create(userJson.getAuthUserEntity());
+        UserdataUserEntity userdataUser = userdataUserRepository.create(userJson.getUserdataUserEntity());
+        return UserParts.of(authUser, userdataUser);
     }
 
     public UserParts updateUser(UserParts userJson) {
@@ -87,6 +103,45 @@ public class UserDbService extends AbstractDbClient {
         xaTxTemplate.execute(() -> {
             deleteAuthUserAndAuthority(userJson.getAuthUserJson());
             deleteUserdataUser(userJson.getUserdataUserJson());
+        });
+    }
+
+    @Override
+    public void createIncomeInvitation(UserParts targetUser, int count) {
+        xaTxTemplate.execute(() -> {
+            for (int i = 0; i < count; i++) {
+                UserParts userJson = genDefaultUser();
+                UserParts createdUser = createUseWithoutTx(userJson);
+                userdataUserRepository.addOutcomeInvitation(
+                    targetUser.getUserdataUserEntity(), createdUser.getUserdataUserEntity()
+                );
+            }
+        });
+    }
+
+    @Override
+    public void createOutcomeInvitation(UserParts targetUser, int count) {
+        xaTxTemplate.execute(() -> {
+            for (int i = 0; i < count; i++) {
+                UserParts userJson = genDefaultUser();
+                UserParts createdUser = createUseWithoutTx(userJson);
+                userdataUserRepository.addIncomeInvitation(
+                    targetUser.getUserdataUserEntity(), createdUser.getUserdataUserEntity()
+                );
+            }
+        });
+    }
+
+    @Override
+    public void createFriends(UserParts targetUser, int count) {
+        xaTxTemplate.execute(() -> {
+            for (int i = 0; i < count; i++) {
+                UserParts userJson = genDefaultUser();
+                UserParts createdUser = createUseWithoutTx(userJson);
+                userdataUserRepository.addFriend(
+                    targetUser.getUserdataUserEntity(), createdUser.getUserdataUserEntity()
+                );
+            }
         });
     }
 

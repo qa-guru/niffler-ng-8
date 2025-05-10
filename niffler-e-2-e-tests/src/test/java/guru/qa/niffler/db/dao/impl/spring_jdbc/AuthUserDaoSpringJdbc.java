@@ -36,7 +36,7 @@ public class AuthUserDaoSpringJdbc extends AbstractSpringDao<AuthUserEntity> imp
 
     @Override
     public AuthUserEntity update(AuthUserEntity entity) {
-        String sql = "UPDATE category SET username = ?, password = ?, enabled = ?, " +
+        String sql = "UPDATE \"user\" SET username = ?, password = ?, enabled = ?, " +
                 "account_non_expired = ?, account_non_locked = ?, credentials_non_expired = ? WHERE id = ? RETURNING *";
         String password = passwordEncoder.encode(entity.getPassword());
         return jdbcTemplate.queryForObject(sql, rowMapper,
@@ -48,8 +48,8 @@ public class AuthUserDaoSpringJdbc extends AbstractSpringDao<AuthUserEntity> imp
     @Override
     public Optional<AuthUserEntity> findById(UUID id) {
         String sql = "SELECT * FROM \"user\" WHERE id = ?";
-        AuthUserEntity entity = jdbcTemplate.queryForObject(sql, rowMapper, id);
-        return Optional.ofNullable(entity);
+        List<AuthUserEntity> entitys = jdbcTemplate.query(sql, rowMapper, id);
+        return entitys.isEmpty() ? Optional.empty() : Optional.of(entitys.get(0));
     }
 
     @Override

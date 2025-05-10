@@ -10,7 +10,11 @@ public interface SpendDao {
 
     SpendEntity create(SpendEntity entity);
 
+    SpendEntity update(SpendEntity entity);
+
     Optional<SpendEntity> findById(UUID id);
+
+    Optional<SpendEntity> findByUsernameAndDescription(String username, String description);
 
     List<SpendEntity> findAllByUsername(String username);
 

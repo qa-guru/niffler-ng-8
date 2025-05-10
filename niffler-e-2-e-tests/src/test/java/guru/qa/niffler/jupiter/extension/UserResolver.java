@@ -1,7 +1,7 @@
 package guru.qa.niffler.jupiter.extension;
 
 import guru.qa.niffler.api.model.UserParts;
-import guru.qa.niffler.db.service.UserDbService;
+import guru.qa.niffler.db.service.impl.UserDbClient;
 import guru.qa.niffler.jupiter.annotation.User;
 import guru.qa.niffler.web.model.WebUser;
 import org.junit.jupiter.api.extension.*;
@@ -13,7 +13,7 @@ import static guru.qa.niffler.util.RandomDataUtils.*;
 public class UserResolver implements BeforeEachCallback, AfterEachCallback, ParameterResolver {
 
     public static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(UserResolver.class);
-    private static final UserDbService userDbService = new UserDbService();
+    private static final UserDbClient USER_DB_CLIENT = new UserDbClient();
 
     @Override
     public void beforeEach(ExtensionContext extensionContext) {
@@ -42,7 +42,7 @@ public class UserResolver implements BeforeEachCallback, AfterEachCallback, Para
                     if (userAnno.value() == GEN) {
                         WebUser user = extensionContext.getStore(NAMESPACE).get(extensionContext.getUniqueId(), WebUser.class);
                         if (user != null) {
-                            userDbService.deleteUser(UserParts.of(user.username()));
+                            USER_DB_CLIENT.deleteUser(UserParts.of(user.username()));
                         }
                     }
                 });
@@ -61,7 +61,7 @@ public class UserResolver implements BeforeEachCallback, AfterEachCallback, Para
 
     private static void createUser(WebUser webUser) {
         UserParts user = genDefaultUser(webUser.username(), webUser.password());
-        userDbService.createUser(user);
+        USER_DB_CLIENT.createUser(user);
     }
 
 }

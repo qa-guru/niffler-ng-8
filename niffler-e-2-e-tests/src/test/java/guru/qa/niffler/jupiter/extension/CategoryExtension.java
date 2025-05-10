@@ -1,7 +1,7 @@
 package guru.qa.niffler.jupiter.extension;
 
 import guru.qa.niffler.api.model.CategoryJson;
-import guru.qa.niffler.db.service.SpendDbClient;
+import guru.qa.niffler.db.service.impl.SpendDbClient;
 import guru.qa.niffler.jupiter.annotation.Category;
 import guru.qa.niffler.jupiter.annotation.User;
 import guru.qa.niffler.web.model.WebUser;

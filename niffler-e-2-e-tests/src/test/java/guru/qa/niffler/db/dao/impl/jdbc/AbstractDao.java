@@ -7,6 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -76,7 +77,12 @@ public abstract class AbstractDao<E> {
 
     private void fillPrepareStatement(Object[] params, PreparedStatement ps) throws SQLException {
         for (int i = 0; i < params.length; i++) {
-            ps.setObject(i + 1, params[i]);
+            Object param = params[i];
+            if (param instanceof Date date) {
+                ps.setDate(i + 1, new java.sql.Date(date.getTime()));
+            } else {
+                ps.setObject(i + 1, param);
+            }
         }
     }
 

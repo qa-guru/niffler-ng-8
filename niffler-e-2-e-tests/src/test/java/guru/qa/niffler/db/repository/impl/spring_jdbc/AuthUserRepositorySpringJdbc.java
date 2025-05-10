@@ -1,10 +1,10 @@
-package guru.qa.niffler.db.repository.impl.jdbc;
+package guru.qa.niffler.db.repository.impl.spring_jdbc;
 
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.db.dao.AuthAuthorityDao;
 import guru.qa.niffler.db.dao.AuthUserDao;
-import guru.qa.niffler.db.dao.impl.jdbc.AuthAuthorityDaoJdbc;
-import guru.qa.niffler.db.dao.impl.jdbc.AuthUserDaoJdbc;
+import guru.qa.niffler.db.dao.impl.spring_jdbc.AuthAuthorityDaoSpringJdbc;
+import guru.qa.niffler.db.dao.impl.spring_jdbc.AuthUserDaoSpringJdbc;
 import guru.qa.niffler.db.entity.auth.AuthAuthorityEntity;
 import guru.qa.niffler.db.entity.auth.AuthUserEntity;
 import guru.qa.niffler.db.repository.AuthUserRepository;
@@ -13,19 +13,19 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public class AuthUserRepositoryJdbc implements AuthUserRepository {
+public class AuthUserRepositorySpringJdbc implements AuthUserRepository {
 
     private static final String JDBC_URL = Config.getInstance().authJdbcUrl();
-    private final AuthUserDao userDao = new AuthUserDaoJdbc(JDBC_URL);
-    private final AuthAuthorityDao authorityDao = new AuthAuthorityDaoJdbc(JDBC_URL);
+    private final AuthUserDao authUserDao = new AuthUserDaoSpringJdbc(JDBC_URL);
+    private final AuthAuthorityDao authAuthorityDao = new AuthAuthorityDaoSpringJdbc(JDBC_URL);
 
     @Override
     public AuthUserEntity create(AuthUserEntity entity) {
-        AuthUserEntity createdUser = userDao.create(entity);
+        AuthUserEntity createdUser = authUserDao.create(entity);
 
         for (AuthAuthorityEntity authority : entity.getAuthorities()) {
             authority.setUser(createdUser);
-            AuthAuthorityEntity createdAuthority = authorityDao.create(authority);
+            AuthAuthorityEntity createdAuthority = authAuthorityDao.create(authority);
             createdUser.addAuthorities(createdAuthority);
         }
         return createdUser;
@@ -33,10 +33,10 @@ public class AuthUserRepositoryJdbc implements AuthUserRepository {
 
     @Override
     public AuthUserEntity update(AuthUserEntity entity) {
-        AuthUserEntity updatedUser = userDao.update(entity);
+        AuthUserEntity updatedUser = authUserDao.update(entity);
 
         for (AuthAuthorityEntity authority : entity.getAuthorities()) {
-            AuthAuthorityEntity updatedAuthority = authorityDao.update(authority);
+            AuthAuthorityEntity updatedAuthority = authAuthorityDao.update(authority);
             updatedUser.addAuthorities(updatedAuthority);
         }
         return updatedUser;
@@ -44,13 +44,13 @@ public class AuthUserRepositoryJdbc implements AuthUserRepository {
 
     @Override
     public Optional<AuthUserEntity> findById(UUID id) {
-        return userDao.findById(id)
+        return authUserDao.findById(id)
             .map(this::setAuthorities);
     }
 
     @Override
     public Optional<AuthUserEntity> findByUsername(String username) {
-        return userDao.findByUsername(username)
+        return authUserDao.findByUsername(username)
             .map(this::setAuthorities);
     }
 
@@ -58,16 +58,16 @@ public class AuthUserRepositoryJdbc implements AuthUserRepository {
     public boolean delete(AuthUserEntity entity) {
         return findById(entity.getId())
             .map(u -> {
-                authorityDao.findByUserId(u.getId())
-                    .forEach(authorityDao::delete);
-                return userDao.delete(u);
+                authAuthorityDao.findByUserId(u.getId())
+                    .forEach(authAuthorityDao::delete);
+                return authUserDao.delete(u);
             })
             .orElse(false);
     }
 
     @Override
     public List<AuthUserEntity> findAll() {
-        List<AuthUserEntity> users = userDao.findAll();
+        List<AuthUserEntity> users = authUserDao.findAll();
         for (AuthUserEntity user : users) {
             setAuthorities(user);
         }
@@ -75,7 +75,7 @@ public class AuthUserRepositoryJdbc implements AuthUserRepository {
     }
 
     private AuthUserEntity setAuthorities(AuthUserEntity entity) {
-        List<AuthAuthorityEntity> authorities = authorityDao.findByUserId(entity.getId());
+        List<AuthAuthorityEntity> authorities = authAuthorityDao.findByUserId(entity.getId());
         entity.addAuthorities(authorities);
         return entity;
     }

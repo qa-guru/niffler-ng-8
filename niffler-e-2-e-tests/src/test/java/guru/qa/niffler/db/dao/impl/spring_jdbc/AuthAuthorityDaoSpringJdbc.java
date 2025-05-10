@@ -21,15 +21,15 @@ public class AuthAuthorityDaoSpringJdbc extends AbstractSpringDao<AuthAuthorityE
 
     @Override
     public AuthAuthorityEntity create(AuthAuthorityEntity entity) {
-        String sql = "INSERT INTO category (user_id, authority) " +
+        String sql = "INSERT INTO authority (user_id, authority) " +
                 "VALUES(?, ?) RETURNING *";
-        return jdbcTemplate.queryForObject(sql, rowMapper, entity.getUser().getId(), entity.getAuthority());
+        return jdbcTemplate.queryForObject(sql, rowMapper, entity.getUser().getId(), entity.getAuthority().name());
     }
 
     @Override
     public AuthAuthorityEntity update(AuthAuthorityEntity entity) {
         String sql = "UPDATE authority SET user_id = ?, authority = ? WHERE id = ? RETURNING *";
-        return jdbcTemplate.queryForObject(sql, rowMapper, entity.getUser(), entity.getAuthority(), entity.getId());
+        return jdbcTemplate.queryForObject(sql, rowMapper, entity.getUser().getId(), entity.getAuthority().name(), entity.getId());
     }
 
     @Override

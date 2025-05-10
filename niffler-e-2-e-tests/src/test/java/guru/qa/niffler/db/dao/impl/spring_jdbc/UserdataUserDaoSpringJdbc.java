@@ -22,10 +22,20 @@ public class UserdataUserDaoSpringJdbc extends AbstractSpringDao<UserdataUserEnt
     @Override
     public UserdataUserEntity create(UserdataUserEntity entity) {
         String sql = "INSERT INTO \"user\" (username, currency, firstname, surname, full_name, photo, photo_small) " +
-                "VALUES(?, ?, ?, ?, ?, ?, ?) RETURNING *";
+            "VALUES(?, ?, ?, ?, ?, ?, ?) RETURNING *";
         return jdbcTemplate.queryForObject(sql, rowMapper,
-                entity.getUsername(), entity.getCurrency().name(), entity.getFirstname(),
-                entity.getSurname(), entity.getFullname(), entity.getPhoto(), entity.getPhotoSmall()
+            entity.getUsername(), entity.getCurrency().name(), entity.getFirstname(),
+            entity.getSurname(), entity.getFullname(), entity.getPhoto(), entity.getPhotoSmall()
+        );
+    }
+
+    @Override
+    public UserdataUserEntity update(UserdataUserEntity entity) {
+        String sql = "UPDATE \"user\" SET username = ?, currency = ?, firstname = ?, surname = ?, full_name = ?, photo = ?, photo_small = ? " +
+            "WHERE id = ? RETURNING *";
+        return jdbcTemplate.queryForObject(sql, rowMapper,
+            entity.getUsername(), entity.getCurrency().name(), entity.getFirstname(), entity.getSurname(),
+            entity.getFullname(), entity.getPhoto(), entity.getPhotoSmall(), entity.getId()
         );
     }
 
@@ -55,4 +65,5 @@ public class UserdataUserDaoSpringJdbc extends AbstractSpringDao<UserdataUserEnt
         String sql = "SELECT * FROM \"user\"";
         return jdbcTemplate.query(sql, rowMapper);
     }
+
 }

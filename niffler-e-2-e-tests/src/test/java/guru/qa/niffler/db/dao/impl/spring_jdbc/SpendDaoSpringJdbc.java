@@ -30,9 +30,26 @@ public class SpendDaoSpringJdbc extends AbstractSpringDao<SpendEntity> implement
     }
 
     @Override
+    public SpendEntity update(SpendEntity entity) {
+        String sql = "UPDATE spend SET username = ?, spend_date = ?, currency = ?, amount = ?, description = ?, category_id = ? " +
+            "WHERE id = ? RETURNING *";
+        return jdbcTemplate.queryForObject(sql, rowMapper,
+            entity.getUsername(), entity.getSpendDate(), entity.getCurrency().name(),
+            entity.getAmount(), entity.getDescription(), entity.getCategory().getId(), entity.getId()
+        );
+    }
+
+    @Override
     public Optional<SpendEntity> findById(UUID id) {
         String sql = "SELECT * FROM spend WHERE id = ?";
         SpendEntity entity = jdbcTemplate.queryForObject(sql, rowMapper, id);
+        return Optional.ofNullable(entity);
+    }
+
+    @Override
+    public Optional<SpendEntity> findByUsernameAndDescription(String username, String description) {
+        String sql = "SELECT * FROM spend WHERE username = ? AND description = ?";
+        SpendEntity entity = jdbcTemplate.queryForObject(sql, rowMapper, username, description);
         return Optional.ofNullable(entity);
     }
 

@@ -30,7 +30,7 @@ public class AuthUserDaoJdbc extends AbstractDao<AuthUserEntity> implements Auth
 
     @Override
     public AuthUserEntity update(AuthUserEntity entity) {
-        String sql = "UPDATE category SET username = ?, password = ?, enabled = ?, " +
+        String sql = "UPDATE \"user\" SET username = ?, password = ?, enabled = ?, " +
                 "account_non_expired = ?, account_non_locked = ?, credentials_non_expired = ? WHERE id = ? RETURNING *";
         String password = passwordEncoder.encode(entity.getPassword());
         return executeQuery(sql, entity.getUsername(), password, entity.getEnabled(),

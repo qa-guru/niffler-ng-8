@@ -1,4 +1,4 @@
-package guru.qa.niffler.db.service;
+package guru.qa.niffler.db.service.impl;
 
 import guru.qa.niffler.api.model.AuthUserJson;
 import guru.qa.niffler.api.model.UserParts;

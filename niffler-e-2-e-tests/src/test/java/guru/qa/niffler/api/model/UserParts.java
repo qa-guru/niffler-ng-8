@@ -20,6 +20,12 @@ public class UserParts {
         this.testData = new TestData();
     }
 
+    public static UserParts of(String username, String password) {
+        UserParts userParts = UserParts.of(username);
+        userParts.setPassword(password);
+        return userParts;
+    }
+
     public static UserParts of(String username) {
         AuthUserJson authUserJson = new AuthUserJson().setUsername(username);
         UserdataUserJson userdataUserJson = new UserdataUserJson().setUsername(username);

@@ -7,6 +7,8 @@ import guru.qa.niffler.jupiter.annotation.User;
 import org.junit.jupiter.api.extension.*;
 import org.junit.platform.commons.support.AnnotationSupport;
 
+import java.util.Map;
+
 import static guru.qa.niffler.util.RandomDataUtils.genDefaultUser;
 
 public class UserExtension implements BeforeEachCallback, ParameterResolver {
@@ -14,6 +16,7 @@ public class UserExtension implements BeforeEachCallback, ParameterResolver {
     public static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(UserExtension.class);
     private final UserClient userClient = new UserDbClient();
     public static final String DEFAULT_PASSWORD = "123";
+    public static final Map<String, String> USERS = Map.of("user", "user");
 
     @Override
     public void beforeEach(ExtensionContext extensionContext) {
@@ -26,7 +29,12 @@ public class UserExtension implements BeforeEachCallback, ParameterResolver {
                         user = userClient.createUser(user);
                         user.setPassword(DEFAULT_PASSWORD);
                     } else {
-                        user = userClient.findByUsername(username).orElseThrow();
+                        String password = USERS.get(username);
+                        if (password != null) {
+                            user = UserParts.of(username, password);
+                        } else {
+                            throw new IllegalStateException();
+                        }
                     }
                     extensionContext.getStore(NAMESPACE).put(extensionContext.getUniqueId(), user);
                 });

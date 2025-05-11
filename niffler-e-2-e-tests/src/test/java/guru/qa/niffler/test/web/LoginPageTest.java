@@ -9,7 +9,7 @@ import static guru.qa.niffler.util.RandomDataUtils.genPassword;
 public class LoginPageTest extends BaseWebTest {
 
     @Test
-    @User
+    @User(username = "user")
     void mainPageShouldBeDisplayedAfterSuccessLogin(UserParts user) {
         openLoginPage()
             .doLoginSuccess(user.getUsername(), user.getPassword())

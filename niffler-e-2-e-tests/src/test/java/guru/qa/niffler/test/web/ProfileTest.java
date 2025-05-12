@@ -2,12 +2,15 @@ package guru.qa.niffler.test.web;
 
 import com.codeborne.selenide.Selenide;
 import guru.qa.niffler.jupiter.annotation.Category;
+import guru.qa.niffler.jupiter.annotation.ScreenShotTest;
 import guru.qa.niffler.jupiter.annotation.meta.User;
 import guru.qa.niffler.jupiter.annotation.meta.WebTest;
 import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.model.UserJson;
 import guru.qa.niffler.page.LoginPage;
 import org.junit.jupiter.api.Test;
+
+import java.awt.image.BufferedImage;
 
 @WebTest
 public class ProfileTest extends BaseTest {
@@ -42,5 +45,15 @@ public class ProfileTest extends BaseTest {
                 .goToProfilePage()
                 .checkProfilePageShouldBeLoaded()
                 .verifyCategoryExists(category[0].name());
+    }
+
+    @User
+    @ScreenShotTest(value = "img/expected_avatar.png", rewriteExpected = true)
+    void checkAvatarComponentTest(UserJson user, BufferedImage expected) {
+        Selenide.open(CFG.frontUrl(), LoginPage.class)
+                .doLogin(user.username(), user.testData().password())
+                .goToProfilePage()
+                .uploadAvatar("img/uploaded_avatar.png")
+                .verifyAvatar(expected);
     }
 }

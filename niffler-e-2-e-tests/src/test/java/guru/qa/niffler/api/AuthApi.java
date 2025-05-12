@@ -8,7 +8,7 @@ import retrofit2.http.Query;
 public interface AuthApi {
 
     @POST("/register")
-    Call<Void> register(@Query("_csrf") String _csrf,
+    Call<Void> register(@Query("_csrf") String csrf,
                         @Query("username") String username,
                         @Query("password") String password,
                         @Query("passwordSubmit") String passwordSubmit);

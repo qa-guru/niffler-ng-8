@@ -14,8 +14,7 @@ import retrofit2.converter.jackson.JacksonConverterFactory;
 import javax.annotation.Nullable;
 import java.io.IOException;
 
-import static org.apache.hc.core5.http.HttpStatus.SC_OK;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class UsersApiClient implements UsersClient {
 
@@ -49,7 +48,7 @@ public class UsersApiClient implements UsersClient {
         if (count > 0) {
             for (int i = 0; i < count; i++) {
                 UserJson addressee = createRandomUser();
-                execute(userApi.sendInvitation(addressee.username(), targetUser.username()), SC_OK);
+                execute(userApi.sendInvitation(addressee.username(), targetUser.username()));
                 targetUser.testData().incomeInvitations().add(addressee);
 
             }
@@ -61,7 +60,7 @@ public class UsersApiClient implements UsersClient {
         if (count > 0) {
             for (int i = 0; i < count; i++) {
                 UserJson addressee = createRandomUser();
-                execute(userApi.sendInvitation(targetUser.username(), addressee.username()), SC_OK);
+                execute(userApi.sendInvitation(targetUser.username(), addressee.username()));
                 targetUser.testData().outcomeInvitations().add(addressee);
             }
         }
@@ -72,8 +71,8 @@ public class UsersApiClient implements UsersClient {
         if (count > 0) {
             for (int i = 0; i < count; i++) {
                 UserJson addressee = createRandomUser();
-                execute(userApi.sendInvitation(targetUser.username(), addressee.username()), SC_OK);
-                execute(userApi.acceptInvitation(addressee.username(),targetUser.username()), SC_OK);
+                execute(userApi.sendInvitation(targetUser.username(), addressee.username()));
+                execute(userApi.acceptInvitation(addressee.username(),targetUser.username()));
                 targetUser.testData().friends().add(addressee);
             }
         }
@@ -84,14 +83,14 @@ public class UsersApiClient implements UsersClient {
     }
 
     @Nullable
-    private <T> T execute(Call<T> call, int statusCode) {
+    private <T> T execute(Call<T> call) {
         final Response<T> response;
         try {
             response = call.execute();
         } catch (IOException e) {
             throw new AssertionError(e);
         }
-        assertEquals(statusCode, response.code());
+        assertTrue(response.isSuccessful());
         return response.body();
     }
 }

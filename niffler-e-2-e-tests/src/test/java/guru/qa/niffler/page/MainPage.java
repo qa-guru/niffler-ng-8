@@ -15,8 +15,11 @@ public class MainPage {
     private final SelenideElement profileBtn = $("[data-testid='PersonIcon']");
     private final SelenideElement profileLink = $(By.linkText("Profile"));
     private final ElementsCollection menuItems = $$("ul[role='menu'] li");
+    private final SelenideElement searchField = $("input[placeholder='Search']");
+
 
     public EditSpendingPage editSpending(String spendingDescription) {
+        findSpending(spendingDescription);
         tableRows.find(text(spendingDescription))
                 .$$("td")
                 .get(5)
@@ -72,5 +75,10 @@ public class MainPage {
         return new AllPeoplePage();
     }
 
+    public void findSpending(String spendingDescription) {
+        searchField
+                .setValue(spendingDescription)
+                .pressEnter();
+    }
 
 }

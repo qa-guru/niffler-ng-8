@@ -1,51 +1,48 @@
 package guru.qa.niffler.test.web;
 
 import com.codeborne.selenide.Selenide;
-import guru.qa.niffler.jupiter.extension.BrowserExtension;
-import guru.qa.niffler.jupiter.extension.UsersQueueExtension;
+import guru.qa.niffler.jupiter.annotation.meta.User;
+import guru.qa.niffler.jupiter.annotation.meta.WebTest;
+import guru.qa.niffler.model.UserJson;
 import guru.qa.niffler.page.LoginPage;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 
-import static guru.qa.niffler.jupiter.extension.UsersQueueExtension.*;
-import static guru.qa.niffler.jupiter.extension.UsersQueueExtension.UserType.Type.*;
-
-@ExtendWith(BrowserExtension.class)
+@WebTest
 public class FriendsTest extends BaseTest {
 
     @Test
-    @ExtendWith(UsersQueueExtension.class)
-    void friendShouldBePresentInFriendsTable(@UserType(WITH_FRIEND) StaticUser user) {
+    @User(friends = 1)
+    void friendShouldBePresentInFriendsTable(UserJson user) {
         Selenide.open(CFG.frontUrl(), LoginPage.class)
-                .doLogin(user.username(), user.password())
+                .doLogin(user.username(), user.testData().password())
                 .goToFriendsTab()
-                .verifyUserVisibleInFriends(user.friend());
+                .verifyUserVisibleInFriends(String.valueOf(user.testData().friends().getFirst().username()));
     }
 
     @Test
-    @ExtendWith(UsersQueueExtension.class)
-    void friendTableShouldBeEmptyForNewUser(@UserType(EMPTY) StaticUser user) {
+    @User
+    void friendTableShouldBeEmptyForNewUser(UserJson user) {
         Selenide.open(CFG.frontUrl(), LoginPage.class)
-                .doLogin(user.username(), user.password())
+                .doLogin(user.username(), user.testData().password())
                 .goToFriendsTab()
                 .verifyFriendsListIsEmpty();
     }
 
     @Test
-    @ExtendWith(UsersQueueExtension.class)
-    void incomeInvitationBePresentInFriendsTable(@UserType(WITH_INCOME_REQUEST) UsersQueueExtension.StaticUser user) {
+    @User(incomeInvitations = 1)
+    void incomeInvitationBePresentInFriendsTable(UserJson user) {
         Selenide.open(CFG.frontUrl(), LoginPage.class)
-                .doLogin(user.username(), user.password())
+                .doLogin(user.username(), user.testData().password())
                 .goToFriendsTab()
-                .verifyUserVisibleInRequests(user.income());
+                .verifyUserVisibleInRequests(String.valueOf(user.testData().incomeInvitations().getFirst().username()));
     }
 
     @Test
-    @ExtendWith(UsersQueueExtension.class)
-    void outcomeInvitationBePresentInAllPeoplesTable(@UserType(WITH_OUTCOME_REQUEST) UsersQueueExtension.StaticUser user) {
+    @User(outcomeInvitations = 1)
+    void outcomeInvitationBePresentInAllPeoplesTable(UserJson user) {
         Selenide.open(CFG.frontUrl(), LoginPage.class)
-                .doLogin(user.username(), user.password())
+                .doLogin(user.username(), user.testData().password())
                 .goToAllPeopleTab()
-                .verifyUserOutcomeVisibleInList(user.outcome());
+                .verifyUserOutcomeVisibleInList(String.valueOf(user.testData().outcomeInvitations().getFirst().username()));
     }
 }

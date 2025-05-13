@@ -2,7 +2,7 @@ package guru.qa.niffler.data.mapper;
 
 import guru.qa.niffler.data.entity.category.CategoryEntity;
 import guru.qa.niffler.data.entity.spend.SpendEntity;
-import guru.qa.niffler.model.CurrencyValues;
+import guru.qa.niffler.data.enums.CurrencyValues;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;

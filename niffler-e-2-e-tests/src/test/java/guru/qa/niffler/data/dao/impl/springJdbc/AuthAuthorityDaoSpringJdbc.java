@@ -2,7 +2,7 @@ package guru.qa.niffler.data.dao.impl.springJdbc;
 
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.dao.interfaces.AuthAuthorityDao;
-import guru.qa.niffler.data.entity.user.AuthAuthorityEntity;
+import guru.qa.niffler.data.entity.auth.AuthAuthorityEntity;
 import guru.qa.niffler.data.mapper.AuthAuthorityEntityRowMapper;
 import guru.qa.niffler.data.tpl.DataSources;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
@@ -24,8 +24,8 @@ public class AuthAuthorityDaoSpringJdbc implements AuthAuthorityDao {
                 new BatchPreparedStatementSetter() {
                     @Override
                     public void setValues(PreparedStatement ps, int i) throws SQLException {
-                        ps.setObject(1, authority[i].getUserId());
-                        ps.setString(2, authority[i].getRole().toString());
+                        ps.setObject(1, authority[i].getUser().getId());
+                        ps.setString(2, authority[i].getAuthority().toString());
                     }
 
                     @Override

@@ -1,6 +1,6 @@
 package guru.qa.niffler.data.dao.interfaces;
 
-import guru.qa.niffler.data.entity.user.AuthUserEntity;
+import guru.qa.niffler.data.entity.auth.AuthUserEntity;
 
 import java.util.List;
 import java.util.Optional;

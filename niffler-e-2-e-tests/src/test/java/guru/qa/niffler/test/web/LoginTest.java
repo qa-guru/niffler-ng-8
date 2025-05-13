@@ -9,7 +9,7 @@ import guru.qa.niffler.jupiter.category.Category;
 import guru.qa.niffler.jupiter.spending.Spend;
 import guru.qa.niffler.jupiter.users.User;
 import guru.qa.niffler.model.CategoryJson;
-import guru.qa.niffler.model.CurrencyValues;
+import guru.qa.niffler.data.enums.CurrencyValues;
 import guru.qa.niffler.model.SpendJson;
 import guru.qa.niffler.page.*;
 import org.junit.jupiter.api.Assertions;

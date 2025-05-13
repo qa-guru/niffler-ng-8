@@ -13,9 +13,11 @@ public interface AuthUserRepository {
 
     Optional<AuthUserEntity> findById(UUID uuid);
 
+    Optional<AuthUserEntity> findByName(String name);
+
     List<AuthUserEntity> findAll();
 
-    void deleteAuthority(UserEntity uuid);
+    void deleteAuthority(AuthUserEntity entity);
 
-    void deleteUser(UserEntity uuid);
+    void deleteUser(AuthUserEntity entity);
 }

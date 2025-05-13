@@ -22,6 +22,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import java.util.Arrays;
+import java.util.Optional;
 import java.util.UUID;
 
 
@@ -167,10 +168,11 @@ public class UserDbClient {
     }
 
     public void deleteUser(UserJson user) {
-        authUserRepository.deleteAuthority(UserEntity.fromJson(user));
-        authUserRepository.deleteUser(UserEntity.fromJson(user));
         userRepository.deleteFriendshipForUser(UserEntity.fromJson(user));
         userRepository.deleteUser(UserEntity.fromJson(user));
+        Optional<AuthUserEntity> authUser = authUserRepository.findByName(user.username());
+        authUserRepository.deleteAuthority(authUser.orElseThrow());
+        authUserRepository.deleteUser(authUser.orElseThrow());
     }
 
 

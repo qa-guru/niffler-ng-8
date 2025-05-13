@@ -3,7 +3,6 @@ package guru.qa.niffler.data.repository.impl;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.entity.auth.AuthAuthorityEntity;
 import guru.qa.niffler.data.entity.auth.AuthUserEntity;
-import guru.qa.niffler.data.entity.user.UserEntity;
 import guru.qa.niffler.data.enums.AuthorityRoles;
 import guru.qa.niffler.data.repository.AuthUserRepository;
 import guru.qa.niffler.data.tpl.DataSources;
@@ -93,7 +92,7 @@ public class AuthUserRepositoryJdbc implements AuthUserRepository {
     }
 
     @Override
-    public void deleteAuthority(UserEntity user) {
+    public void deleteAuthority(AuthUserEntity user) {
         try (PreparedStatement ps = holder(CFG.authJdbcUrl()).connection().prepareStatement(
                 "DELETE FROM authority where user_id = ?")) {
             ps.setObject(1, user.getId());
@@ -103,8 +102,10 @@ public class AuthUserRepositoryJdbc implements AuthUserRepository {
         }
     }
 
+
+
     @Override
-    public void deleteUser(UserEntity user) {
+    public void deleteUser(AuthUserEntity user) {
         try (PreparedStatement ps = holder(CFG.authJdbcUrl()).connection().prepareStatement(
                 "DELETE FROM \"user\" where id = ?")) {
             ps.setObject(1, user.getId());
@@ -158,5 +159,31 @@ public class AuthUserRepositoryJdbc implements AuthUserRepository {
                 )
         );
 
+    }
+
+    @Override
+    public Optional<AuthUserEntity> findByName(String name) {
+        try (PreparedStatement ps = holder(CFG.authJdbcUrl()).connection().prepareStatement(
+                "SELECT * FROM \"user\" WHERE username=?")) {
+            ps.setString(1, name);
+            ps.executeQuery();
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    AuthUserEntity aue = new AuthUserEntity();
+                    aue.setId(rs.getObject("id", UUID.class));
+                    aue.setUsername(rs.getString("username"));
+                    aue.setPassword(rs.getString("password"));
+                    aue.setEnabled(rs.getBoolean("enabled"));
+                    aue.setAccountNonExpired(rs.getBoolean("account_non_expired"));
+                    aue.setAccountNonLocked(rs.getBoolean("account_non_locked"));
+                    aue.setCredentialsNonExpired(rs.getBoolean("credentials_non_expired"));
+                    return Optional.of(aue);
+                } else {
+                    return Optional.empty();
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

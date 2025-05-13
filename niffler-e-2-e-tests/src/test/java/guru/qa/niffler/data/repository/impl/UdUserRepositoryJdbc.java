@@ -113,13 +113,14 @@ public class UdUserRepositoryJdbc implements UserRepository {
         }
     }
 
+
     @Override
     public void addFriend(UserEntity requester, UserEntity addressee) {
+        String friendshipSql = "INSERT INTO friendship (requester_id, addressee_id, status, created_date) VALUES (?,?,?,?)";
         try (PreparedStatement sentByRequester = holder(CFG.userdataJdbcUrl()).connection().prepareStatement(
-                "INSERT INTO friendship (requester_id, addressee_id, status, created_date) VALUES (?,?,?,?)");
+                friendshipSql);
              PreparedStatement acceptedByAddressee = holder(CFG.userdataJdbcUrl()).connection().prepareStatement(
-                     "INSERT INTO friendship (requester_id, addressee_id, status, created_date) VALUES (?,?,?,?)"
-             )
+                     friendshipSql)
         ) {
             sentByRequester.setObject(1, requester.getId());
             sentByRequester.setObject(2, addressee.getId());
@@ -144,10 +145,10 @@ public class UdUserRepositoryJdbc implements UserRepository {
                         "WHERE requester_id = ? \n" +
                         "OR addressee_id = ?;"
 
-        )){
+        )) {
             ps.setObject(1, user.getId());
             ps.setObject(2, user.getId());
-           ps.executeUpdate();
+            ps.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -158,7 +159,7 @@ public class UdUserRepositoryJdbc implements UserRepository {
         try (PreparedStatement ps = holder(CFG.userdataJdbcUrl()).connection().prepareStatement(
                 "delete from \"user\" where id = ?"
 
-        )){
+        )) {
             ps.setObject(1, user.getId());
             ps.executeUpdate();
         } catch (SQLException e) {

@@ -23,7 +23,7 @@ public class ScreenShotTestExtension implements
 
     public static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(ScreenShotTestExtension.class);
     public static final ObjectMapper objectMapper = new ObjectMapper();
-
+    public static final String ASSERT_SCREEN_MESSAGE = "Screen comparison failure";
     @Override
     public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
         return AnnotationSupport.isAnnotated(extensionContext.getRequiredTestMethod(), ScreenShotTest.class) &&
@@ -49,17 +49,18 @@ public class ScreenShotTestExtension implements
                 ImageIO.write(actual, "png", new File("src/test/resources/" + screenShotTest.value()));
             }
         }
+        if (throwable.getMessage().contains(ASSERT_SCREEN_MESSAGE)) {
+            ScreenDiff screenDiff = new ScreenDiff(
+                    "data:image/png;base64," + Base64.getEncoder().encodeToString(imageToBytes(getExpected())),
+                    "data:image/png;base64," + Base64.getEncoder().encodeToString(imageToBytes(getActual())),
+                    "data:image/png;base64," + Base64.getEncoder().encodeToString(imageToBytes(getDiff()))
+            );
 
-        ScreenDiff screenDiff = new ScreenDiff(
-                "data:image/png;base64," + Base64.getEncoder().encodeToString(imageToBytes(getExpected())),
-                "data:image/png;base64," + Base64.getEncoder().encodeToString(imageToBytes(getActual())),
-                "data:image/png;base64," + Base64.getEncoder().encodeToString(imageToBytes(getDiff()))
-        );
 
-
-        Allure.addAttachment("Screenshot diff",
-                "application/vnd.allure.image.diff",
-                objectMapper.writeValueAsString(screenDiff));
+            Allure.addAttachment("Screenshot diff",
+                    "application/vnd.allure.image.diff",
+                    objectMapper.writeValueAsString(screenDiff));
+        }
         throw  throwable;
     }
 

@@ -1,6 +1,7 @@
 package guru.qa.niffler.test.web;
 
 import com.codeborne.selenide.Selenide;
+import guru.qa.niffler.condition.Color;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.jupiter.annotation.Category;
 import guru.qa.niffler.jupiter.annotation.ScreenShotTest;
@@ -14,6 +15,7 @@ import org.junit.jupiter.api.Test;
 
 
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.Map;
 
 @WebTest
@@ -46,11 +48,14 @@ public class SpendingTest {
           )
   )
   @ScreenShotTest(value = "img/expected-stat.png")
-  void checkStatComponentTest(UserJson userJson, BufferedImage expected) {
+  void checkStatComponentTest(UserJson userJson, BufferedImage expected) throws IOException {
     Selenide.open(CFG.frontUrl(), LoginPage.class)
             .doLogin(userJson)
-            .checkStatisticDiagram(expected)
-            .checkStatisticDiagramInfoUnEditable(userJson);
+            .getStatComponent()
+            .checkStatisticDiagramInfoUnEditable(userJson)
+            .checkStatisticImage(expected)
+            .checkBubbles(Color.yellow);
+
   }
 
   @User(
@@ -60,7 +65,7 @@ public class SpendingTest {
                   )
           })
   @ScreenShotTest(value = "img/expected-stat-edit.png")
-  void checkStatComponentAfterEditingTest(UserJson user, BufferedImage expected) {
+  void checkStatComponentAfterEditingTest(UserJson user, BufferedImage expected) throws IOException {
     SpendJson spend = user.testData().spendings().getFirst();
     double newSum = spend.amount()+50;
 
@@ -68,19 +73,21 @@ public class SpendingTest {
             .doLogin(user.username(), user.testData().password())
             .editSpending(spend.description())
             .editSum(String.valueOf(newSum))
+            .getStatComponent()
             .checkStatisticDiagramInfo(Map.of(spend.category(),newSum))
-            .checkStatisticDiagram(expected);
+            .checkStatisticImage(expected);
 
   }
 
   @User(
           spendings = @Spending())
   @ScreenShotTest(value = "img/expected-stat-delete.png")
-  void checkStatComponentAfterDeletingSpendTest(UserJson user, BufferedImage expected) {
+  void checkStatComponentAfterDeletingSpendTest(UserJson user, BufferedImage expected) throws IOException {
     Selenide.open(CFG.frontUrl(), LoginPage.class)
             .doLogin(user.username(), user.testData().password())
             .deleteSpending(user.testData().spendings().getFirst().description())
-            .checkStatisticDiagram(expected);
+            .getStatComponent()
+            .checkStatisticImage(expected);
   }
 
   @User(
@@ -104,11 +111,12 @@ public class SpendingTest {
                   )
           })
   @ScreenShotTest(value = "img/expected-stat-archived.png")
-  void checkStatComponentWithArchiveSpendTest(UserJson user, BufferedImage expected) {
+  void checkStatComponentWithArchiveSpendTest(UserJson user, BufferedImage expected) throws IOException {
 
     Selenide.open(CFG.frontUrl(), LoginPage.class)
             .doLogin(user.username(), user.testData().password())
-            .checkStatisticDiagram(expected)
+            .getStatComponent()
+            .checkStatisticImage(expected)
             .checkStatisticDiagramInfoUnEditable(user);
   }
 }

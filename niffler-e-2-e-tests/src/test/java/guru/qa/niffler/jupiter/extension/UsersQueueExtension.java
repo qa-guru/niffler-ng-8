@@ -1,7 +1,6 @@
 package guru.qa.niffler.jupiter.extension;
 
 import io.qameta.allure.Allure;
-import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.time.StopWatch;
 import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
 import org.junit.jupiter.api.extension.BeforeTestExecutionCallback;
@@ -19,6 +18,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.TimeUnit;
 
+@Deprecated
 public class UsersQueueExtension implements
     BeforeTestExecutionCallback,
     AfterTestExecutionCallback,

@@ -3,6 +3,7 @@ package guru.qa.niffler.page;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import guru.qa.niffler.model.UserJson;
+import guru.qa.niffler.page.component.spend.SpendsTable;
 import guru.qa.niffler.page.component.StatComponent;
 import io.qameta.allure.Step;
 import org.openqa.selenium.Keys;
@@ -25,37 +26,6 @@ public class MainPage extends BasePage {
     private final SelenideElement dialogWindow = $("div[role='dialog']");
     private final SelenideElement contextMenuInAvatarBtn = $("button[aria-label='Menu']");
     private final ElementsCollection contextMenuElements = $$(".MuiList-padding li");
-
-    @Step("Изменить spending с description {0}")
-    public EditSpendingPage editSpending(String spendingDescription) {
-        searchInput.setValue(spendingDescription).pressEnter();
-        tableRows.find(text(spendingDescription))
-                .$$("td")
-                .get(5)
-                .click();
-        return new EditSpendingPage();
-    }
-
-    public EditSpendingPage editSpending(UserJson user, int i) {
-        return editSpending(user.testData().spendings().get(i).description());
-    }
-
-    @Step("Удалить spending с description {0}")
-    public MainPage deleteSpending(String spendingDescription) {
-        tableRows.find(text(spendingDescription))
-                .$$("td")
-                .get(0)
-                .click();
-        deleteBtn.click();
-        dialogWindow.$(byText("Delete")).click();
-        return new MainPage();
-    }
-
-    @Step("Check that table contains description {0}")
-    public void checkThatTableContains(String spendingDescription) {
-        tableRows.find(text(spendingDescription))
-                .should(visible);
-    }
 
     @Step("Assert main components")
     public MainPage assertMainComponents(){
@@ -95,4 +65,8 @@ public class MainPage extends BasePage {
         return new StatComponent();
     }
 
+
+    public SpendsTable getSpendTable(){
+        return new SpendsTable();
+    }
 }

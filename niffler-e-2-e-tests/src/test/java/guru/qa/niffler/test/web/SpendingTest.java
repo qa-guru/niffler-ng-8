@@ -8,6 +8,7 @@ import guru.qa.niffler.jupiter.annotation.ScreenShotTest;
 import guru.qa.niffler.jupiter.annotation.User;
 import guru.qa.niffler.jupiter.annotation.meta.WebTest;
 import guru.qa.niffler.jupiter.annotation.Spending;
+import guru.qa.niffler.model.Bubble;
 import guru.qa.niffler.model.SpendJson;
 import guru.qa.niffler.model.UserJson;
 import guru.qa.niffler.page.LoginPage;
@@ -37,9 +38,11 @@ public class SpendingTest {
 
     Selenide.open(CFG.frontUrl(), LoginPage.class)
         .doLogin(userJson)
+        .getSpendTable()
         .editSpending(spend.description())
         .editDescription(newDescription)
-        .checkThatTableContains(newDescription);
+        .getSpendTable()
+        .checkSpends(userJson);
   }
 
   @User(
@@ -54,7 +57,16 @@ public class SpendingTest {
             .getStatComponent()
             .checkStatisticDiagramInfoUnEditable(userJson)
             .checkStatisticImage(expected)
-            .checkBubbles(Color.yellow);
+            .checkBubbles(
+                    Bubble.bubble(
+                            Color.yellow,
+                            userJson
+                                    .spends()
+                                    .getFirst()
+                    )
+            )
+            .getSpendsTable()
+            .checkSpendsInAnyOrder(userJson);
 
   }
 
@@ -68,14 +80,26 @@ public class SpendingTest {
   void checkStatComponentAfterEditingTest(UserJson user, BufferedImage expected) throws IOException {
     SpendJson spend = user.testData().spendings().getFirst();
     double newSum = spend.amount()+50;
+    SpendJson spendEdited = new SpendJson(
+            spend.id(),
+            spend.spendDate(),
+            spend.category(),
+            spend.currency(),
+            newSum,
+            spend.description(),
+            spend.username()
+    );
 
     Selenide.open(CFG.frontUrl(), LoginPage.class)
             .doLogin(user.username(), user.testData().password())
+            .getSpendTable()
             .editSpending(spend.description())
             .editSum(String.valueOf(newSum))
             .getStatComponent()
             .checkStatisticDiagramInfo(Map.of(spend.category(),newSum))
-            .checkStatisticImage(expected);
+            .checkStatisticImage(expected)
+            .getSpendsTable()
+            .checkSpend(spendEdited);
 
   }
 
@@ -85,7 +109,8 @@ public class SpendingTest {
   void checkStatComponentAfterDeletingSpendTest(UserJson user, BufferedImage expected) throws IOException {
     Selenide.open(CFG.frontUrl(), LoginPage.class)
             .doLogin(user.username(), user.testData().password())
-            .deleteSpending(user.testData().spendings().getFirst().description())
+            .getSpendTable()
+            .deleteSpending(user.spends().getFirst().description())
             .getStatComponent()
             .checkStatisticImage(expected);
   }
@@ -117,6 +142,8 @@ public class SpendingTest {
             .doLogin(user.username(), user.testData().password())
             .getStatComponent()
             .checkStatisticImage(expected)
-            .checkStatisticDiagramInfoUnEditable(user);
+            .checkStatisticDiagramInfoUnEditable(user)
+            .getSpendsTable()
+            .checkContainsSpends(user);
   }
 }

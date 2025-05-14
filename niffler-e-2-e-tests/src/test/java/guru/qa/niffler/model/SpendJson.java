@@ -60,4 +60,21 @@ public record SpendJson(
                 RandomDataUtils.randomUsername()
         );
     }
+
+    public SpendJson toUI(){
+        return new SpendJson(
+                null,
+                this.spendDate,
+                new CategoryJson(
+                        null,
+                        this.category.name(),
+                        null,
+                        false
+                ),
+                this.currency,
+                this.amount,
+                this.description,
+                null
+        );
+    }
 }

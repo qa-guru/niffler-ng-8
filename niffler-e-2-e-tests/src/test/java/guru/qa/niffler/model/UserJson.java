@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import guru.qa.niffler.data.entity.userdata.UserEntity;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -93,5 +94,9 @@ public record UserJson(
                 photoSmall,
                 friendshipStatus,
                 testData);
+    }
+
+    public List<SpendJson> spends(){
+      return testData.spendings();
     }
 }

@@ -3,11 +3,12 @@ package guru.qa.niffler.page.component;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
-import guru.qa.niffler.condition.Color;
 import guru.qa.niffler.jupiter.extension.ScreenShotTestExtension;
+import guru.qa.niffler.model.Bubble;
 import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.model.SpendJson;
 import guru.qa.niffler.model.UserJson;
+import guru.qa.niffler.page.component.spend.SpendsTable;
 import guru.qa.niffler.utils.ScreenDiffResult;
 import io.qameta.allure.Step;
 
@@ -22,7 +23,7 @@ import java.util.stream.Collectors;
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.$;
-import static guru.qa.niffler.condition.StatConditions.color;
+import static guru.qa.niffler.condition.StatConditions.*;
 import static java.util.Objects.requireNonNull;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
@@ -55,10 +56,24 @@ public class StatComponent extends BaseComponent<StatComponent> {
         return ImageIO.read(requireNonNull(chart.screenshot()));
     }
 
-    @Step("Check that stat bubbles contains colors {expectedColors}")
+    @Step("Check that stat bubbles equals expected bubbles {expectedBubbles}")
     @Nonnull
-    public StatComponent checkBubbles(Color... expectedColors) {
-        bubbles.should(color(expectedColors));
+    public StatComponent checkBubbles(Bubble... expectedBubbles) {
+        bubbles.should(statBubbles(expectedBubbles));
+        return this;
+    }
+
+    @Step("Check that stat bubbles equals expected bubbles in any order {expectedBubbles}")
+    @Nonnull
+    public StatComponent checkBubblesInAnyOrder(Bubble... expectedBubbles) {
+        bubbles.should(statBubblesInAnyOrder(expectedBubbles));
+        return this;
+    }
+
+    @Step("Check that stat bubbles contains expected bubbles {expectedBubbles}")
+    @Nonnull
+    public StatComponent checkContainsBubbles(Bubble... expectedBubbles) {
+        bubbles.should(statBubblesContains(expectedBubbles));
         return this;
     }
 
@@ -106,5 +121,9 @@ public class StatComponent extends BaseComponent<StatComponent> {
 
 
         return checkStatisticDiagramInfo(result);
+    }
+
+    public SpendsTable getSpendsTable(){
+        return new SpendsTable();
     }
 }

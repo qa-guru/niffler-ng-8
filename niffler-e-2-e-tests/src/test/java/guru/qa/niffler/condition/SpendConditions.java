@@ -78,7 +78,8 @@ public class SpendConditions {
             @NotNull
             @Override
             public CheckResult check(Driver driver, List<WebElement> elements) {
-                if (expectedElements.size() != elements.size()) {
+                final BiPredicate<T, T> equalsPredicate = Object::equals;
+                if (predicate == equalsPredicate && expectedElements.size() != elements.size()) {
                     final String message = String.format("List size mismatch (expected: %s, actual: %s)", expectedElements.size(), elements.size());
                     return rejected(message, elements);
                 }

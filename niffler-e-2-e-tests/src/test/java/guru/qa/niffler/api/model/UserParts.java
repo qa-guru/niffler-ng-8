@@ -2,11 +2,12 @@ package guru.qa.niffler.api.model;
 
 import guru.qa.niffler.db.entity.auth.AuthUserEntity;
 import guru.qa.niffler.db.entity.userdata.UserdataUserEntity;
+import lombok.Data;
 
 import java.util.UUID;
 
+@Data
 public class UserParts {
-
 
     private final AuthUserJson authUserJson;
     private final UserdataUserJson userdataUserJson;

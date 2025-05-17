@@ -20,13 +20,13 @@ public class AuthAuthorityDaoJdbc extends AbstractDao<AuthAuthorityEntity> imple
     public AuthAuthorityEntity create(AuthAuthorityEntity entity) {
         String sql = "INSERT INTO authority (user_id, authority) " +
                 "VALUES(?, ?) RETURNING *";
-        return executeQuery(sql, entity.getUser().getId(), entity.getAuthority());
+        return executeQuery(sql, entity.getUser().getId(), entity.getAuthority().name());
     }
 
     @Override
     public AuthAuthorityEntity update(AuthAuthorityEntity entity) {
         String sql = "UPDATE authority SET user_id = ?, authority = ? WHERE id = ? RETURNING *";
-        return executeQuery(sql, entity.getUser(), entity.getAuthority(), entity.getId());
+        return executeQuery(sql, entity.getUser().getId(), entity.getAuthority().name(), entity.getId());
     }
 
     @Override

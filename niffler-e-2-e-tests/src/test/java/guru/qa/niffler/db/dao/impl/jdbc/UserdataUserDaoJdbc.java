@@ -25,6 +25,14 @@ public class UserdataUserDaoJdbc extends AbstractDao<UserdataUserEntity> impleme
     }
 
     @Override
+    public UserdataUserEntity update(UserdataUserEntity entity) {
+        String sql = "UPDATE \"user\" SET username = ?, currency = ?, firstname = ?, surname = ?, full_name = ?, " +
+            "photo = ?, photo_small = ? WHERE id = ? RETURNING *";
+        return executeQuery(sql, entity.getUsername(), entity.getCurrency().name(), entity.getFirstname(),
+            entity.getSurname(), entity.getFullname(), entity.getPhoto(), entity.getPhotoSmall(), entity.getId());
+    }
+
+    @Override
     public Optional<UserdataUserEntity> findById(UUID id) {
         String sql = "SELECT * FROM \"user\" WHERE id = ?";
         return executeQueryToOptional(sql, id);

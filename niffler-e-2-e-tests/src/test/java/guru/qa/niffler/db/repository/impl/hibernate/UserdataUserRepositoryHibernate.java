@@ -64,21 +64,23 @@ public class UserdataUserRepositoryHibernate extends AbstractRepositoryHibernate
 
     @Override
     public void addFriend(UserdataUserEntity user, UserdataUserEntity otherUser) {
-        entityManager.joinTransaction();
         user.addFriends(FriendshipStatus.ACCEPTED, otherUser);
         otherUser.addFriends(FriendshipStatus.ACCEPTED, user);
+        update(user);
+        update(otherUser);
     }
 
     @Override
     public void addIncomeInvitation(UserdataUserEntity targetUser, UserdataUserEntity requester) {
         entityManager.joinTransaction();
         targetUser.addInvitations(requester);
+        update(targetUser);
     }
 
     @Override
     public void addOutcomeInvitation(UserdataUserEntity targetUser, UserdataUserEntity addressee) {
-        entityManager.joinTransaction();
         targetUser.addFriends(FriendshipStatus.PENDING, addressee);
+        update(targetUser);
     }
 
 }

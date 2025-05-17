@@ -3,9 +3,9 @@ package guru.qa.niffler.test.web;
 import guru.qa.niffler.api.model.AuthUserJson;
 import guru.qa.niffler.api.model.UserParts;
 import guru.qa.niffler.api.model.UserdataUserJson;
-import guru.qa.niffler.db.service.impl.UserDbExperimentalService;
-import guru.qa.niffler.db.service.impl.UserDbExperimentalService.Client;
 import guru.qa.niffler.db.tpl.XaTransactionTemplate;
+import guru.qa.niffler.service.impl.db.UserDbExperimentalService;
+import guru.qa.niffler.service.impl.db.UserDbExperimentalService.Client;
 import org.junit.jupiter.api.Test;
 import org.springframework.transaction.support.TransactionTemplate;
 

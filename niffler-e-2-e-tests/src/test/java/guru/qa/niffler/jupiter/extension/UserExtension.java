@@ -1,9 +1,9 @@
 package guru.qa.niffler.jupiter.extension;
 
 import guru.qa.niffler.api.model.UserParts;
-import guru.qa.niffler.db.service.UserClient;
-import guru.qa.niffler.db.service.impl.UserDbClient;
 import guru.qa.niffler.jupiter.annotation.User;
+import guru.qa.niffler.service.UserClient;
+import guru.qa.niffler.service.impl.db.UserDbClient;
 import org.junit.jupiter.api.extension.*;
 import org.junit.platform.commons.support.AnnotationSupport;
 
@@ -21,23 +21,12 @@ public class UserExtension implements BeforeEachCallback, ParameterResolver {
     @Override
     public void beforeEach(ExtensionContext extensionContext) {
         AnnotationSupport.findAnnotation(extensionContext.getRequiredTestMethod(), User.class)
-                .ifPresent(userAnno -> {
-                    String username = userAnno.username();
-                    UserParts user;
-                    if ("".equals(username)) {
-                        user = genDefaultUser(DEFAULT_PASSWORD);
-                        user = userClient.createUser(user);
-                        user.setPassword(DEFAULT_PASSWORD);
-                    } else {
-                        String password = USERS.get(username);
-                        if (password != null) {
-                            user = UserParts.of(username, password);
-                        } else {
-                            throw new IllegalStateException();
-                        }
-                    }
-                    extensionContext.getStore(NAMESPACE).put(extensionContext.getUniqueId(), user);
-                });
+            .ifPresent(userAnno -> {
+                String username = userAnno.username();
+                UserParts user = getUser(username);
+                addFriends(userAnno, user);
+                extensionContext.getStore(NAMESPACE).put(extensionContext.getUniqueId(), user);
+            });
     }
 
     @Override
@@ -54,6 +43,29 @@ public class UserExtension implements BeforeEachCallback, ParameterResolver {
     public static UserParts createdUser() {
         ExtensionContext context = TestMethodContextExtension.context();
         return context.getStore(NAMESPACE).get(context.getUniqueId(), UserParts.class);
+    }
+
+    private void addFriends(User userAnno, UserParts user) {
+        userClient.createFriends(user, userAnno.withFriend());
+        userClient.createIncomeInvitation(user, userAnno.withInInvite());
+        userClient.createOutcomeInvitation(user, userAnno.withOutInvite());
+    }
+
+    private UserParts getUser(String username) {
+        UserParts user;
+        if ("".equals(username)) {
+            user = genDefaultUser(DEFAULT_PASSWORD);
+            user = userClient.createUser(user);
+            user.setPassword(DEFAULT_PASSWORD);
+        } else {
+            String password = USERS.get(username);
+            if (password != null) {
+                user = UserParts.of(username, password);
+            } else {
+                throw new IllegalStateException();
+            }
+        }
+        return user;
     }
 
 }

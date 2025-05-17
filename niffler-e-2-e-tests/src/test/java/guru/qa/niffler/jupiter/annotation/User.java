@@ -21,4 +21,10 @@ public @interface User {
 
     Spending[] spendings() default {};
 
+    int withFriend() default 0;
+
+    int withInInvite() default 0;
+
+    int withOutInvite() default 0;
+
 }

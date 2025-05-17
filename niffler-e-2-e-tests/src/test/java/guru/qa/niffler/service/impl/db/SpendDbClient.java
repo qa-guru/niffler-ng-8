@@ -1,4 +1,4 @@
-package guru.qa.niffler.db.service.impl;
+package guru.qa.niffler.service.impl.db;
 
 import guru.qa.niffler.api.model.CategoryJson;
 import guru.qa.niffler.api.model.SpendJson;
@@ -6,8 +6,8 @@ import guru.qa.niffler.db.entity.spend.CategoryEntity;
 import guru.qa.niffler.db.entity.spend.SpendEntity;
 import guru.qa.niffler.db.repository.SpendRepository;
 import guru.qa.niffler.db.repository.impl.jdbc.SpendRepositoryJdbc;
-import guru.qa.niffler.db.service.SpendClient;
 import guru.qa.niffler.db.tpl.JdbcTransactionTemplate;
+import guru.qa.niffler.service.SpendClient;
 
 import java.util.Optional;
 import java.util.UUID;

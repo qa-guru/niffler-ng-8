@@ -12,5 +12,8 @@ public class TestData {
 
     private final List<CategoryJson> categories = new ArrayList<>();
     private final List<SpendJson> spends = new ArrayList<>();
+    private final List<String> friendsNames = new ArrayList<>();
+    private final List<String> InInviteNames = new ArrayList<>();
+    private final List<String> OutInviteNames = new ArrayList<>();
 
 }

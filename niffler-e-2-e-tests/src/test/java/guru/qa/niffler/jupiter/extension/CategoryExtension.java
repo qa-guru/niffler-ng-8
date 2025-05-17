@@ -2,10 +2,10 @@ package guru.qa.niffler.jupiter.extension;
 
 import guru.qa.niffler.api.model.CategoryJson;
 import guru.qa.niffler.api.model.UserParts;
-import guru.qa.niffler.db.service.SpendClient;
-import guru.qa.niffler.db.service.impl.SpendDbClient;
 import guru.qa.niffler.jupiter.annotation.Category;
 import guru.qa.niffler.jupiter.annotation.User;
+import guru.qa.niffler.service.SpendClient;
+import guru.qa.niffler.service.impl.db.SpendDbClient;
 import org.junit.jupiter.api.extension.*;
 import org.junit.platform.commons.support.AnnotationSupport;
 

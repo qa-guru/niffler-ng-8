@@ -1,4 +1,4 @@
-package guru.qa.niffler.db.service;
+package guru.qa.niffler.service;
 
 import guru.qa.niffler.api.model.UserParts;
 
@@ -16,13 +16,13 @@ public interface UserClient {
 
     Optional<UserParts> findByUsername(String username);
 
-    UserParts createUser(UserParts userJson);
+    UserParts createUser(UserParts userPart);
 
-    UserParts updateUser(UserParts userJson);
+    UserParts updateUser(UserParts userPart);
 
     List<UserParts> findAll();
 
-    void deleteUser(UserParts userJson);
+    void deleteUser(UserParts userPart);
 
     void createIncomeInvitation(UserParts targetUser, int count);
 

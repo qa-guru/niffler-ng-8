@@ -3,6 +3,7 @@ package guru.qa.niffler.web.page;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
+import org.openqa.selenium.Keys;
 
 import static com.codeborne.selenide.CollectionCondition.size;
 import static com.codeborne.selenide.CollectionCondition.texts;
@@ -19,11 +20,18 @@ public class FriendsPage extends BasePage {
     private final ElementsCollection tableHeaders = friendsTableContainer.$$("h2.MuiTypography-h5");
     private final SelenideElement friendRequestTable = friendsTableContainer.$("#requests");
     private final SelenideElement allPeopleTable = $("a[href='/people/all']");
+    private final SelenideElement searchInput = $("input[placeholder='Search");
     private final SelenideElement allTable = $("#all");
 
 
     public FriendsPage clickAllPeopleTab() {
         allPeopleTable.click();
+        return this;
+    }
+
+    public FriendsPage findUsername(String friendName) {
+        searchInput.setValue(friendName);
+        searchInput.sendKeys(Keys.ENTER);
         return this;
     }
 

@@ -15,8 +15,8 @@ public class RegisterPageTest extends BaseWebTest {
         String username = genUsername();
         String password = genPassword();
         openRegisterPage()
-                .registerUserSuccess(username, password, password)
-                .checkSuccessfulRegistrationPage();
+            .registerUserSuccess(username, password, password)
+            .checkSuccessfulRegistrationPage();
     }
 
     @Test
@@ -25,8 +25,8 @@ public class RegisterPageTest extends BaseWebTest {
         String username = user.getPassword();
         String password2 = genPassword();
         openRegisterPage()
-                .registerUserError(username, password2, password2)
-                .checkUsernameError("Username `%s` already exists".formatted(username));
+            .registerUserError(username, password2, password2)
+            .checkUsernameError("Username `%s` already exists".formatted(username));
     }
 
     @Test
@@ -36,8 +36,8 @@ public class RegisterPageTest extends BaseWebTest {
         String password1 = genPassword();
         String password2 = genPassword();
         openRegisterPage()
-                .registerUserError(username, password1, password2)
-                .checkPasswordError("Passwords should be equal");
+            .registerUserError(username, password1, password2)
+            .checkPasswordError("Passwords should be equal");
     }
 
 }

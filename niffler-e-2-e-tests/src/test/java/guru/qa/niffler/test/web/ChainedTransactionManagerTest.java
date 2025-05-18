@@ -53,10 +53,10 @@ public class ChainedTransactionManagerTest {
         user.setUsername(null);
 
         Exception exception = assertThrows(RuntimeException.class,
-                () -> xaTxTemplateWithAtomikosDs.execute(() -> springJdbcClientWithAtomikosDs.createUser(userJson))
+            () -> xaTxTemplateWithAtomikosDs.execute(() -> springJdbcClientWithAtomikosDs.createUser(userJson))
         );
         assertTrue(exception.getMessage().contains("ERROR: null value in column " +
-                "\"username\" of relation \"user\" violates not-null constraint"));
+            "\"username\" of relation \"user\" violates not-null constraint"));
 
         user.setUsername(username);
         assertDoesNotThrow(() -> xaTxTemplateWithAtomikosDs.execute(() -> springJdbcClientWithAtomikosDs.createUser(userJson)));
@@ -71,10 +71,10 @@ public class ChainedTransactionManagerTest {
         user.setAccountNonExpired(null);
 
         Exception exception = assertThrows(RuntimeException.class,
-                () -> xaTxTemplateWithAtomikosDs.execute(() -> springJdbcClientWithAtomikosDs.createUser(userJson))
+            () -> xaTxTemplateWithAtomikosDs.execute(() -> springJdbcClientWithAtomikosDs.createUser(userJson))
         );
         assertTrue(exception.getMessage().contains("ERROR: null value in column " +
-                "\"account_non_expired\" of relation \"user\" violates not-null constraint"));
+            "\"account_non_expired\" of relation \"user\" violates not-null constraint"));
 
         user.setAccountNonExpired(true);
         assertDoesNotThrow(() -> xaTxTemplateWithAtomikosDs.execute(() -> springJdbcClientWithAtomikosDs.createUser(userJson)));
@@ -90,10 +90,10 @@ public class ChainedTransactionManagerTest {
         user.setUsername(null);
 
         Exception exception = assertThrows(RuntimeException.class,
-                () -> xaTxTemplateWithAtomikosDs.execute(() -> jbcClientWithWithAtomikosDs.createUser(userJson))
+            () -> xaTxTemplateWithAtomikosDs.execute(() -> jbcClientWithWithAtomikosDs.createUser(userJson))
         );
         assertTrue(exception.getMessage().contains("ERROR: null value in column " +
-                "\"username\" of relation \"user\" violates not-null constraint"));
+            "\"username\" of relation \"user\" violates not-null constraint"));
 
         user.setUsername(username);
         assertDoesNotThrow(() -> xaTxTemplateWithAtomikosDs.execute(() -> jbcClientWithWithAtomikosDs.createUser(userJson)));
@@ -108,10 +108,10 @@ public class ChainedTransactionManagerTest {
         user.setAccountNonExpired(null);
 
         Exception exception = assertThrows(RuntimeException.class,
-                () -> xaTxTemplateWithAtomikosDs.execute(() -> jbcClientWithWithAtomikosDs.createUser(userJson))
+            () -> xaTxTemplateWithAtomikosDs.execute(() -> jbcClientWithWithAtomikosDs.createUser(userJson))
         );
         assertTrue(exception.getMessage().contains("ERROR: null value in column " +
-                "\"account_non_expired\" of relation \"user\" violates not-null constraint"));
+            "\"account_non_expired\" of relation \"user\" violates not-null constraint"));
 
         user.setAccountNonExpired(true);
         assertDoesNotThrow(() -> xaTxTemplateWithAtomikosDs.execute(() -> jbcClientWithWithAtomikosDs.createUser(userJson)));
@@ -127,10 +127,10 @@ public class ChainedTransactionManagerTest {
         user.setUsername(null);
 
         Exception exception = assertThrows(RuntimeException.class,
-                () -> chainedTxTemplateWithSimpleDs.execute(status -> springJdbcClientWithSimpleDs.createUser(userJson))
+            () -> chainedTxTemplateWithSimpleDs.execute(status -> springJdbcClientWithSimpleDs.createUser(userJson))
         );
         assertTrue(exception.getMessage().contains("ERROR: null value in column " +
-                "\"username\" of relation \"user\" violates not-null constraint"));
+            "\"username\" of relation \"user\" violates not-null constraint"));
 
         user.setUsername(username);
         assertDoesNotThrow(() -> chainedTxTemplateWithSimpleDs.execute(status -> springJdbcClientWithSimpleDs.createUser(userJson)));
@@ -148,10 +148,10 @@ public class ChainedTransactionManagerTest {
         user.setAccountNonExpired(null);
 
         Exception exception = assertThrows(RuntimeException.class,
-                () -> chainedTxTemplateWithSimpleDs.execute(status -> springJdbcClientWithSimpleDs.createUser(userJson))
+            () -> chainedTxTemplateWithSimpleDs.execute(status -> springJdbcClientWithSimpleDs.createUser(userJson))
         );
         assertTrue(exception.getMessage().contains("ERROR: null value in column " +
-                "\"account_non_expired\" of relation \"user\" violates not-null constraint"));
+            "\"account_non_expired\" of relation \"user\" violates not-null constraint"));
 
         user.setAccountNonExpired(true);
         assertDoesNotThrow(() -> chainedTxTemplateWithSimpleDs.execute(status -> springJdbcClientWithSimpleDs.createUser(userJson)));

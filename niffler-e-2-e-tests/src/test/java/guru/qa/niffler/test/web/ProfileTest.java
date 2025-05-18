@@ -10,27 +10,27 @@ public class ProfileTest extends BaseWebTest {
 
     @Test
     @User(
-            categories = @Category(archived = true)
+        categories = @Category(archived = true)
     )
     void archivedCategoryShouldPresentInCategoriesList(UserParts user, CategoryJson category) {
         openLoginPage()
             .doLoginSuccess(user.getUsername(), user.getPassword())
-                .getHeader()
-                .goToProfilePage()
-                .clickShowArchivedToggle()
-                .checkCategoryExist(category.name(), true);
+            .getHeader()
+            .goToProfilePage()
+            .clickShowArchivedToggle()
+            .checkCategoryExist(category.name(), true);
     }
 
     @Test
     @User(
-            categories = @Category(archived = false)
+        categories = @Category(archived = false)
     )
     void activeCategoryShouldPresentInCategoriesList(UserParts user, CategoryJson category) {
         openLoginPage()
             .doLoginSuccess(user.getUsername(), user.getPassword())
-                .getHeader()
-                .goToProfilePage()
-                .checkCategoryExist(category.name(), false);
+            .getHeader()
+            .goToProfilePage()
+            .checkCategoryExist(category.name(), false);
     }
 
 }

@@ -21,13 +21,13 @@ public class BaseWebTest {
 
     protected RegisterPage openRegisterPage() {
         return openLoginPage()
-                .clickCreateNewUserBtn();
+            .clickCreateNewUserBtn();
     }
 
     protected FriendsPage openFriendsPage(StaticUser user) {
         return openLoginPage()
-                .doLoginSuccess(user.username(), user.password())
-                .getHeader().goToFriendsPage();
+            .doLoginSuccess(user.username(), user.password())
+            .getHeader().goToFriendsPage();
     }
 
     protected FriendsPage openFriendsPage(UserParts user) {

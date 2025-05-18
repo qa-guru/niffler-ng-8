@@ -13,7 +13,7 @@ public class LoginPageTest extends BaseWebTest {
     void mainPageShouldBeDisplayedAfterSuccessLogin(UserParts user) {
         openLoginPage()
             .doLoginSuccess(user.getUsername(), user.getPassword())
-                .checkMainPage();
+            .checkMainPage();
     }
 
     @Test
@@ -22,7 +22,7 @@ public class LoginPageTest extends BaseWebTest {
         String errPassword = genPassword();
         openLoginPage()
             .doLoginError(user.getUsername(), errPassword)
-                .checkBadCredentialsError();
+            .checkBadCredentialsError();
     }
 
 }

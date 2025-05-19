@@ -25,8 +25,8 @@ public class SpendDbClient {
             CFG.spendJdbcUrl()
     );
 
-    private CategoryDao categoryDao = new CategoryDaoSpringJdbc();
-    private SpendDao spendDao = new SpendDaoSpringJdbc();
+    private CategoryDao categoryDao = new CategoryDaoJdbc();
+    private SpendDao spendDao = new SpendDaoJdbc();
 
     public SpendJson createSpend(SpendJson spend) {
         SpendEntity spendEntity = SpendEntity.fromJson(spend);

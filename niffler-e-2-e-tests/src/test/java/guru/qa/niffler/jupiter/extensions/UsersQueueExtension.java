@@ -1,7 +1,6 @@
-package guru.qa.niffler.jupiter.users;
+package guru.qa.niffler.jupiter.extensions;
 
 import guru.qa.niffler.config.Config;
-import guru.qa.niffler.page.FriendsPage;
 import org.apache.commons.lang3.time.StopWatch;
 import org.junit.jupiter.api.extension.*;
 import org.junit.platform.commons.support.AnnotationSupport;

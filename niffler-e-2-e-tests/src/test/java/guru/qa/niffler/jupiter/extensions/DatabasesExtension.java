@@ -1,7 +1,6 @@
-package guru.qa.niffler.jupiter.databases;
+package guru.qa.niffler.jupiter.extensions;
 
 import guru.qa.niffler.data.tpl.Connections;
-import guru.qa.niffler.jupiter.SuiteExtension;
 
 public class DatabasesExtension implements SuiteExtension {
 

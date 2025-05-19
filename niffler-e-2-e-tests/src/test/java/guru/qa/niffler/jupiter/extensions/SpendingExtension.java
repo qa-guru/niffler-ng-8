@@ -1,9 +1,8 @@
-package guru.qa.niffler.jupiter.spending;
+package guru.qa.niffler.jupiter.extensions;
 
 import com.github.javafaker.Faker;
-import guru.qa.niffler.RandomDataUtils;
-import guru.qa.niffler.api.SpendApiClient;
-import guru.qa.niffler.jupiter.users.User;
+import guru.qa.niffler.utils.RandomDataUtils;
+import guru.qa.niffler.jupiter.annotations.User;
 import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.model.SpendJson;
 import guru.qa.niffler.service.SpendDbClient;
@@ -49,14 +48,14 @@ public class SpendingExtension implements BeforeEachCallback, AfterEachCallback,
 
     @Override
     public void afterEach(ExtensionContext context) throws Exception {
-        CategoryJson category = context.getStore(NAMESPACE).get(context.getUniqueId(), CategoryJson.class);
         SpendJson spend = context.getStore(NAMESPACE).get(context.getUniqueId(), SpendJson.class);
         SpendDbClient db = new SpendDbClient();
         if (spend != null) {
             db.deleteTxSpend(spend);
         }
-        if (category != null) {
-            db.deleteTxCategory(category);
+        assert spend != null;
+        if (spend.category() != null) {
+            db.deleteTxCategory(spend.category());
         }
     }
 

@@ -113,7 +113,7 @@ public class ScreenTest {
         Assertions.assertFalse(new ScreenDiffResult(ImageIO.read(
                 new File("C:\\niffler-ng-81\\niffler-e-2-e-tests\\src\\test\\resources" +
                         "\\img\\expected\\expected_monkey.png")), actualMonkey));
-        //Меняем обезьянку на Киви
+        //Меняем обезьянку на Киви   (Киви это мой кот :) )
         new ProfilePage().uploadProfileImage(new File(CFG.kiwiPngPath()))
                 .clickSaveChanges();
         //Скриншотим Киви

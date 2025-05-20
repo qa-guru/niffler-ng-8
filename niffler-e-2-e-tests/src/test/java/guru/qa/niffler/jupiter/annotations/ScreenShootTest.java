@@ -9,10 +9,11 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+@Test
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
-@Test
 @ExtendWith(ScreenShootTestExtension.class)
 public @interface ScreenShootTest {
     String value();
+    boolean rewriteExpected() default false;
 }

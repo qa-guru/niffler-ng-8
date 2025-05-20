@@ -6,6 +6,9 @@ public interface Config {
         return LocalConfig.instance;
     }
 
+    String kiwiPngPath();
+    String monkeyPngPath();
+
     String frontUrl();
 
     String spendUrl();

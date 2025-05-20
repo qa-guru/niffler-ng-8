@@ -12,6 +12,9 @@ enum LocalConfig implements Config {
         return "12345";
     }
 
+    public String kiwiPngPath(){return "C:\\niffler-ng-81\\niffler-e-2-e-tests\\src\\test\\resources\\img\\Kiwi.jpg";}
+    public String monkeyPngPath(){return "C:\\niffler-ng-81\\niffler-e-2-e-tests\\src\\test\\resources\\img\\bibizyan.jpg";}
+
     @Override
     public String frontUrl() {
         return "http://127.0.0.1:3000/";

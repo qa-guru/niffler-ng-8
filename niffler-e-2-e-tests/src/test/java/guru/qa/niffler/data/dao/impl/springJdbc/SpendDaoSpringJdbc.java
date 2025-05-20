@@ -66,4 +66,9 @@ public class SpendDaoSpringJdbc implements SpendDao {
     public void deleteSpend(SpendEntity spend) {
 
     }
+
+    @Override
+    public void deleteAllSpendsByUsername(String username) {
+
+    }
 }

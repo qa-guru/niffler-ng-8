@@ -12,6 +12,7 @@ import org.springframework.core.io.ClassPathResource;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.util.Base64;
 
@@ -29,13 +30,21 @@ public class ScreenShootTestExtension implements ParameterResolver, TestExecutio
     @SneakyThrows
     @Override
     public BufferedImage resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
-        return ImageIO.read(new ClassPathResource("img/stat_main.png").getInputStream());
+        ScreenShootTest screenShotTest = extensionContext.getRequiredTestMethod().getAnnotation(ScreenShootTest.class);
+        return ImageIO.read(new ClassPathResource(screenShotTest.value()).getInputStream());
     }
 
     @Override
     public void handleTestExecutionException(ExtensionContext context, Throwable throwable) throws Throwable {
+        ScreenShootTest screenShotTest = context.getRequiredTestMethod().getAnnotation(ScreenShootTest.class);
+        if (screenShotTest.rewriteExpected()) {
+            BufferedImage actual = getActual();
+            if (actual != null) {
+                ImageIO.write(actual, "png", new File("src/test/resources/" + screenShotTest.value()));
+            }
+        }
         ScreenDif screenDif = new ScreenDif(
-                "data:image/png;base64," + Base64.getEncoder().encodeToString(imageToBytes(getExpected()) ),
+                "data:image/png;base64," + Base64.getEncoder().encodeToString(imageToBytes(getExpected())),
                 "data:image/png;base64," + Base64.getEncoder().encodeToString(imageToBytes(getActual())),
                 "data:image/png;base64," + Base64.getEncoder().encodeToString(imageToBytes(getActual())));
 
@@ -72,7 +81,7 @@ public class ScreenShootTestExtension implements ParameterResolver, TestExecutio
     }
 
     private static byte[] imageToBytes(BufferedImage image) {
-        try(ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+        try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
             ImageIO.write(image, "png", outputStream);
             return outputStream.toByteArray();
         } catch (IOException e) {

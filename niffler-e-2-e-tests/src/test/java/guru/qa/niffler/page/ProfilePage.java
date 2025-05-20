@@ -1,12 +1,10 @@
 package guru.qa.niffler.page;
 
-import com.codeborne.selenide.Condition;
-import com.codeborne.selenide.ElementsCollection;
-import com.codeborne.selenide.Selenide;
-import com.codeborne.selenide.SelenideElement;
+import com.codeborne.selenide.*;
 import guru.qa.niffler.utils.ScreenDiffResult;
 import io.qameta.allure.Step;
 import lombok.SneakyThrows;
+import org.openqa.selenium.By;
 
 
 import javax.imageio.ImageIO;
@@ -16,26 +14,41 @@ import java.time.Duration;
 import static com.codeborne.selenide.Condition.cssValue;
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Selectors.byText;
-import static com.codeborne.selenide.Selenide.$;
-import static com.codeborne.selenide.Selenide.$$;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ProfilePage extends BasePage {
-    private final SelenideElement avatarImage = $("main img");
-    private final SelenideElement uploadAvatarButton = $("label[for='image__input']");
-    private final SelenideElement pictureInput = $("input[type='file']");
-    private final SelenideElement nameInput = $("input[id='name']");
-    private final SelenideElement usernameInput = $("input[id='username']");
-    private final SelenideElement saveNameButton = $("button[id=':r7:']");
-    private final SelenideElement categoryStatusSwitcher = $("input[type='checkbox']");
-    private final SelenideElement newCategoryInput = $("input[placeholder='Add new category']");
-    private final ElementsCollection categoryLabels = $$(".MuiChip-label");
-    private final SelenideElement unarchiveButton = $$("button.MuiButton-containedPrimary")
-            .findBy(text("Unarchive"));
-    private final SelenideElement archiveButton = $$("button.MuiButton-containedPrimary")
-            .findBy(text("Archive"));
 
+    private final SelenideElement avatarImage;
+    private final SelenideElement uploadAvatarButton;
+    private final SelenideElement pictureInput;
+    private final SelenideElement nameInput;
+    private final SelenideElement usernameInput;
+    private final SelenideElement saveNameButton;
+    private final SelenideElement categoryStatusSwitcher;
+    private final SelenideElement newCategoryInput;
+    private final ElementsCollection categoryLabels;
+    private final SelenideElement unarchiveButton;
+    private final SelenideElement archiveButton;
+
+    public ProfilePage(SelenideDriver driver) {
+        super(driver);
+        this.avatarImage = $("main img");
+        this.uploadAvatarButton = $("label[for='image__input']");
+        this.pictureInput = $("input[type='file']");
+        this.nameInput = $("input[id='name']");
+        this.usernameInput = $("input[id='username']");
+        this.saveNameButton = $("button[id=':r7:']");
+        this.categoryStatusSwitcher = $("input[type='checkbox']");
+        this.newCategoryInput = $("input[placeholder='Add new category']");
+        this.categoryLabels = $$(".MuiChip-label");
+        this.unarchiveButton = $$("button.MuiButton-containedPrimary").findBy(text("Unarchive"));
+        this.archiveButton = $$("button.MuiButton-containedPrimary").findBy(text("Archive"));
+    }
+
+    public ProfilePage() {
+        this(null);
+    }
 
 
     private SelenideElement getCategoryButton(String name) {
@@ -61,7 +74,10 @@ public class ProfilePage extends BasePage {
     }
 
     private SelenideElement getCategoryEditInput(String name) {
-        return $(String.format("input[placeholder='Edit category' and value='%s']", name));
+        String selector = String.format("input[placeholder='Edit category' and value='%s']", name);
+        return driver == null
+                ? $(selector)
+                : driver.$(selector);
     }
 
     private SelenideElement getCloseCategoryEditInputButton(String name) {
@@ -69,7 +85,11 @@ public class ProfilePage extends BasePage {
     }
 
     public ProfilePage archiveCategory(String name){
-        Selenide.executeJavaScript("arguments[0].click();",getCategoryArchiveIcon(name));
+        if(driver == null) {
+            Selenide.executeJavaScript("arguments[0].click();", getCategoryArchiveIcon(name));
+        } else {
+            driver.executeJavaScript("arguments[0].click();", getCategoryArchiveIcon(name));
+        }
         archiveButton.shouldBe(Condition.visible, Duration.ofSeconds(5))
                 .click();
         archiveButton.shouldNot(Condition.visible, Duration.ofSeconds(5));
@@ -77,7 +97,11 @@ public class ProfilePage extends BasePage {
     }
 
     public ProfilePage unarchiveCategory(String name){
-        Selenide.executeJavaScript("arguments[0].click();",getCategoryUnarchiveIcon(name));
+        if(driver == null) {
+            Selenide.executeJavaScript("arguments[0].click();", getCategoryArchiveIcon(name));
+        } else {
+            driver.executeJavaScript("arguments[0].click();", getCategoryArchiveIcon(name));
+        }
         unarchiveButton.shouldBe(Condition.visible, Duration.ofSeconds(5))
                 .click();
         unarchiveButton.shouldNot(Condition.visible, Duration.ofSeconds(5));
@@ -96,8 +120,11 @@ public class ProfilePage extends BasePage {
     }
 
     public ProfilePage assertArchiveToast(String name){
-        String toastText = String.format("Category %s is archived", name);
-        $(byText(toastText)).shouldBe(Condition.visible,Duration.ofSeconds(5));
+        By toastBy = byText(String.format("Category %s is archived", name));
+        final SelenideElement toast = driver == null
+                ? $(toastBy)
+                : driver.$(toastBy);
+        toast.shouldBe(Condition.visible,Duration.ofSeconds(5));
         return this;
     }
 
@@ -113,8 +140,11 @@ public class ProfilePage extends BasePage {
     }
 
     public ProfilePage assertUnArchiveToast(String name){
-        String toastText = String.format("Category %s is unarchived", name);
-        $(byText(toastText)).shouldBe(Condition.visible,Duration.ofSeconds(5));
+        By toastBy = byText(String.format("Category %s is unarchived", name));
+        final SelenideElement toast = driver == null
+                ? $(toastBy)
+                : driver.$(toastBy);
+        toast.shouldBe(Condition.visible,Duration.ofSeconds(5));
         return this;
     }
 

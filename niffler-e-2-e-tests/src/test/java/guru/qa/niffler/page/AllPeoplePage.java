@@ -1,16 +1,16 @@
 package guru.qa.niffler.page;
 
 import com.codeborne.selenide.ElementsCollection;
+import com.codeborne.selenide.SelenideDriver;
 import com.codeborne.selenide.SelenideElement;
 import guru.qa.niffler.model.UserJson;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import static com.codeborne.selenide.Condition.text;
-import static com.codeborne.selenide.Selenide.$$;
 
-public class AllPeoplePage {
-    private final ElementsCollection tableRows = $$("#all tr");
+public class AllPeoplePage extends BasePage {
+    private final ElementsCollection tableRows;
 
     @Getter
     @AllArgsConstructor
@@ -18,6 +18,15 @@ public class AllPeoplePage {
         REQUEST_SEND("Waiting..."),
         REQUEST_NOT_SEND("Add friend");
         private String buttonText;
+    }
+
+    public AllPeoplePage(SelenideDriver driver){
+        super(driver);
+        this.tableRows = $$("#all tr");
+    }
+
+    public AllPeoplePage(){
+        this(null);
     }
 
 

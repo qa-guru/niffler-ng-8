@@ -29,7 +29,7 @@ public class SpendConditions {
             @NotNull
             @Override
             public CheckResult check(Driver driver, WebElement element) {
-                final SpendJson actualSpend = SpendRow.toJson(element);
+                final SpendJson actualSpend = SpendRow.toJson(element, driver);
                 return new CheckResult(
                         expectedSpend.toUI().equals(actualSpend),
                         actualSpend.toString()
@@ -54,20 +54,20 @@ public class SpendConditions {
 
     @Nonnull
     public static WebElementsCondition spendRows(List<SpendJson> expectedSpends) {
-        return SpendsTemplate(expectedSpends,toList(),Object::equals);
+        return spendsTemplate(expectedSpends,toList(),Object::equals);
     }
 
     @Nonnull
     public static WebElementsCondition spendRowsInAnyOrder(List<SpendJson> expectedSpends) {
-        return SpendsTemplate(expectedSpends,toSet(),Object::equals);
+        return spendsTemplate(expectedSpends,toSet(),Object::equals);
     }
     @Nonnull
     public static WebElementsCondition spendRowsContains(List<SpendJson> expectedSpends) {
-        return SpendsTemplate(expectedSpends,toSet(),Collection::containsAll);
+        return spendsTemplate(expectedSpends,toSet(),Collection::containsAll);
     }
 
     @Nonnull
-    private static <T extends Collection<SpendJson>> WebElementsCondition SpendsTemplate(
+    private static <T extends Collection<SpendJson>> WebElementsCondition spendsTemplate(
             List<SpendJson> expectedSpends,
             Collector<SpendJson, ?, T> collector,
             BiPredicate<T, T> predicate) {
@@ -84,7 +84,7 @@ public class SpendConditions {
                     return rejected(message, elements);
                 }
 
-                final T actualElements = mapActualElements(collector, elements);
+                final T actualElements = mapActualElements(collector, elements,driver);
 
                 if (!predicate.test(actualElements,expectedElements)) {
                     final String message = String.format(
@@ -116,9 +116,12 @@ public class SpendConditions {
     }
 
     @Nonnull
-    private static <T extends Collection<SpendJson>> T mapActualElements(Collector<SpendJson, ?, T> collector, List<WebElement> elements) {
+    private static <T extends Collection<SpendJson>> T mapActualElements(
+            Collector<SpendJson, ?, T> collector,
+            List<WebElement> elements,
+            Driver driver) {
         return elements.stream()
-                .map(SpendRow::toJson)
+                .map(we -> SpendRow.toJson(we,driver))
                 .collect(collector);
     }
 }

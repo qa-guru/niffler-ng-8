@@ -1,6 +1,7 @@
 package guru.qa.niffler.page;
 
 import com.codeborne.selenide.Condition;
+import com.codeborne.selenide.SelenideDriver;
 import com.codeborne.selenide.SelenideElement;
 import guru.qa.niffler.model.ElementType;
 import guru.qa.niffler.model.UserJson;
@@ -9,16 +10,29 @@ import java.time.Duration;
 
 import static com.codeborne.selenide.Condition.value;
 import static com.codeborne.selenide.Selectors.byText;
-import static com.codeborne.selenide.Selenide.$;
 
-public class LoginPage extends BasePage{
+public class LoginPage extends BasePage {
 
-  private final SelenideElement usernameInput = $("input[name='username']");
-  private final SelenideElement passwordInput = $("input[name='password']");
-  private final SelenideElement submitBtn = $("button[type='submit']");
-  private final SelenideElement registerButton = $("a[class='form__register']");
-  private final SelenideElement showPasswordIcon = $("button[class=form__password-button]");
-  private final SelenideElement errorComponent = $(byText("Неверные учетные данные пользователя"));
+  private final SelenideElement usernameInput;
+  private final SelenideElement passwordInput;
+  private final SelenideElement submitBtn;
+  private final SelenideElement registerButton;
+  private final SelenideElement showPasswordIcon;
+  private final SelenideElement errorComponent;
+
+  public LoginPage(SelenideDriver driver) {
+    super(driver);
+    this.usernameInput = $("input[name='username']");
+    this.passwordInput = $("input[name='password']");
+    this.submitBtn = $("button[type='submit']");
+    this.registerButton = $("a[class='form__register']");
+    this.showPasswordIcon = $("button[class=form__password-button]");
+    this.errorComponent = $(byText("Неверные учетные данные пользователя"));
+  }
+
+  public LoginPage() {
+    this(null);
+  }
 
   public MainPage doLogin(String username, String password) {
     return setUserName(username)
@@ -44,12 +58,12 @@ public class LoginPage extends BasePage{
 
   public MainPage clickLogin(){
     submitBtn.click();
-    return new MainPage();
+    return new MainPage(driver);
   }
 
   public RegistrationPage clickRegister() {
     registerButton.click();
-    return new RegistrationPage();
+    return new RegistrationPage(driver);
   }
 
   public LoginPage assertPasswordType(ElementType type){

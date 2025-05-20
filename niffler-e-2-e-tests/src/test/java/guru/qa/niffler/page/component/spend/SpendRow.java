@@ -1,6 +1,10 @@
 package guru.qa.niffler.page.component.spend;
 
+import com.codeborne.selenide.Driver;
+import com.codeborne.selenide.Selenide;
+import com.codeborne.selenide.SelenideDriver;
 import com.codeborne.selenide.SelenideElement;
+import guru.qa.niffler.jupiter.extension.NonStaticBrowserExtension;
 import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.model.CurrencyValues;
 import guru.qa.niffler.model.SpendJson;
@@ -15,12 +19,14 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.regex.Pattern;
 
-import static com.codeborne.selenide.Selenide.$;
-
 public class SpendRow extends BaseComponent<SpendRow> {
 
     protected SpendRow(SelenideElement self) {
         super(self);
+    }
+
+    protected SpendRow(SelenideDriver driver, SelenideElement self) {
+        super(driver,self);
     }
 
     private SelenideElement checkBoxCell = self.$$("td").get(0);
@@ -36,12 +42,12 @@ public class SpendRow extends BaseComponent<SpendRow> {
 
     protected EditSpendingPage editSpend(){
         editButton.click();
-        return new EditSpendingPage();
+        return new EditSpendingPage(driver);
     }
 
     protected MainPage clickCheckBox(){
         checkBoxCell.click();
-        return new MainPage();
+        return new MainPage(driver);
     }
 
 
@@ -63,8 +69,16 @@ public class SpendRow extends BaseComponent<SpendRow> {
         );
     }
 
-    public static SpendJson toJson(WebElement element){
-        return new SpendRow($(element)).toJson();
+    public static SpendJson toJson(WebElement element, Driver driver) {
+        SpendRow row = NonStaticBrowserExtension
+                .find(driver)
+                .map(selenideDriver ->
+                        new SpendRow(
+                                selenideDriver,
+                                selenideDriver.$(element)))
+                .orElseGet(() -> new SpendRow(Selenide.$(element)));
+
+        return row.toJson();
     }
 
     private String getDescription() {

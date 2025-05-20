@@ -89,13 +89,16 @@ public class UsersDbClient implements UsersClient {
 
             xaTransactionTemplate.execute(() -> {
             for (int i = 0; i < count; i++) {
-                            String username = randomUsername();
-                            AuthUserEntity authUser = authUserEntity(username, "12345");
-                            authUserRepository.create(authUser);
-                            UserEntity adressee = userdataUserRepository.create(userEntity(username));
-                            userdataUserRepository.addInvitation(targetEntity, adressee, FriendshipStatus.ACCEPTED);
-                        }
-                return null;
+                String username = randomUsername();
+                AuthUserEntity authUser = authUserEntity(username, "12345");
+                authUserRepository.create(authUser);
+                UserEntity adressee = userdataUserRepository.create(userEntity(username));
+                userdataUserRepository.addInvitation(targetEntity, adressee, FriendshipStatus.ACCEPTED);
+                targetUser.testData().friends().add(
+                        UserJson.fromEntity(adressee).withPassword("12345")
+                );
+            }
+            return null;
             });
 
         }
@@ -115,7 +118,9 @@ public class UsersDbClient implements UsersClient {
                     authUserRepository.create(authUser);
                     UserEntity adressee = userdataUserRepository.create(userEntity(username));
                     userdataUserRepository.addInvitation(targetEntity, adressee, FriendshipStatus.PENDING);
-
+                    targetUser.testData().outcomeInvitations().add(
+                            UserJson.fromEntity(adressee).withPassword("12345")
+                    );
                 }
                 return null;
             });
@@ -136,6 +141,9 @@ public class UsersDbClient implements UsersClient {
                     authUserRepository.create(authUser);
                     UserEntity adressee = userdataUserRepository.create(userEntity(username));
                     userdataUserRepository.addInvitation(adressee, targetEntity, FriendshipStatus.PENDING);
+                    targetUser.testData().incomeInvitations().add(
+                            UserJson.fromEntity(adressee).withPassword("12345")
+                    );
                 }
                 return null;
             });

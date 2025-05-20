@@ -1,6 +1,7 @@
 package guru.qa.niffler.page;
 
 import com.codeborne.selenide.Condition;
+import com.codeborne.selenide.SelenideDriver;
 import com.codeborne.selenide.SelenideElement;
 import guru.qa.niffler.model.ElementType;
 import org.junit.jupiter.api.Assertions;
@@ -9,17 +10,33 @@ import java.time.Duration;
 
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selectors.byXpath;
-import static com.codeborne.selenide.Selenide.$;
 
 public class RegistrationPage extends BasePage {
-    private final SelenideElement loginHyperLink = $(byText("Log in!"));
-    private final SelenideElement usernameInput = $("input[id=username]");
-    private final SelenideElement passwordInput = $("input[id=password]");
-    private final SelenideElement showPasswordIcon = $("button[id=passwordBtn]");
-    private final SelenideElement passwordSubmitInput = $("input[id=passwordSubmit]");
-    private final SelenideElement showPasswordSubmitIcon = $("button[id=passwordSubmitBtn]");
-    private final SelenideElement signUpButton = $(byXpath("//button[normalize-space(text())='Sign Up']"));
-    private final SelenideElement signInButton = $(byText("Sign in"));
+
+    private final SelenideElement loginHyperLink;
+    private final SelenideElement usernameInput;
+    private final SelenideElement passwordInput;
+    private final SelenideElement showPasswordIcon;
+    private final SelenideElement passwordSubmitInput;
+    private final SelenideElement showPasswordSubmitIcon;
+    private final SelenideElement signUpButton;
+    private final SelenideElement signInButton;
+
+    public RegistrationPage(SelenideDriver driver) {
+        super(driver);
+        this.loginHyperLink = $(byText("Log in!"));
+        this.usernameInput = $("input[id=username]");
+        this.passwordInput = $("input[id=password]");
+        this.showPasswordIcon = $("button[id=passwordBtn]");
+        this.passwordSubmitInput = $("input[id=passwordSubmit]");
+        this.showPasswordSubmitIcon = $("button[id=passwordSubmitBtn]");
+        this.signUpButton = $(byXpath("//button[normalize-space(text())='Sign Up']"));
+        this.signInButton = $(byText("Sign in"));
+    }
+
+    public RegistrationPage() {
+        this(null);
+    }
 
     public RegistrationPage setUserName(String userName) {
         usernameInput.val(userName);
@@ -63,17 +80,17 @@ public class RegistrationPage extends BasePage {
         signInButton
                 .shouldBe(Condition.visible, Duration.ofSeconds(5))
                 .click();
-        return new LoginPage();
+        return new LoginPage(driver);
     }
 
     public LoginPage redirectToLogin(){
         loginHyperLink.click();
-        return new LoginPage();
+        return new LoginPage(driver);
     }
 
     public RegistrationPage assertUserExistError(String username){
-        String text = String.format("Username `%s` already exists",username);
-        $(byText(text)).shouldBe(Condition.visible,Duration.ofSeconds(5));
+        SelenideElement errorNotification = $(byText(String.format("Username `%s` already exists",username)));
+        errorNotification.shouldBe(Condition.visible,Duration.ofSeconds(5));
         return this;
     }
 

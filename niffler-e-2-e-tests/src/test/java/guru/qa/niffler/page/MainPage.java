@@ -1,8 +1,8 @@
 package guru.qa.niffler.page;
 
 import com.codeborne.selenide.ElementsCollection;
+import com.codeborne.selenide.SelenideDriver;
 import com.codeborne.selenide.SelenideElement;
-import guru.qa.niffler.model.UserJson;
 import guru.qa.niffler.page.component.spend.SpendsTable;
 import guru.qa.niffler.page.component.StatComponent;
 import io.qameta.allure.Step;
@@ -11,21 +11,35 @@ import java.time.Duration;
 
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Condition.visible;
-import static com.codeborne.selenide.Selectors.byText;
-import static com.codeborne.selenide.Selenide.$;
-import static com.codeborne.selenide.Selenide.$$;
 
 public class MainPage extends BasePage {
 
-    private final ElementsCollection tableRows = $$("#spendings tbody tr");
-    private final SelenideElement historyBox = $("#spendings");
-    private final SelenideElement statisticsBox = $("#stat");
-    private final SelenideElement searchInput = $("input");
-    private final SelenideElement profileImage = $(".MuiAvatar-img");
-    private final SelenideElement deleteBtn = $("#delete");
-    private final SelenideElement dialogWindow = $("div[role='dialog']");
-    private final SelenideElement contextMenuInAvatarBtn = $("button[aria-label='Menu']");
-    private final ElementsCollection contextMenuElements = $$(".MuiList-padding li");
+    private final ElementsCollection tableRows;
+    private final SelenideElement historyBox;
+    private final SelenideElement statisticsBox;
+    private final SelenideElement searchInput;
+    private final SelenideElement profileImage;
+    private final SelenideElement deleteBtn;
+    private final SelenideElement dialogWindow ;
+    private final SelenideElement contextMenuInAvatarBtn;
+    private final ElementsCollection contextMenuElements;
+
+    public MainPage(SelenideDriver driver){
+        super(driver);
+        this.tableRows = $$("#spendings tbody tr");
+        this.historyBox = $("#spendings");
+        this.statisticsBox = $("#stat");
+        this.searchInput = $("input");
+        this.profileImage = $(".MuiAvatar-img");
+        this.deleteBtn = $("#delete");
+        this.dialogWindow = $("div[role='dialog']");
+        this.contextMenuInAvatarBtn = $("button[aria-label='Menu']");
+        this.contextMenuElements = $$(".MuiList-padding li");
+    }
+
+    public MainPage(){
+        this(null);
+    }
 
     @Step("Assert main components")
     public MainPage assertMainComponents(){
@@ -38,21 +52,21 @@ public class MainPage extends BasePage {
     public ProfilePage goToProfile() {
         contextMenuInAvatarBtn.click();
         contextMenuElements.find(text("Profile")).click();
-        return new ProfilePage();
+        return new ProfilePage(driver());
     }
 
     @Step("Go to Friends")
     public FriendsPage goToFriendsList() {
         contextMenuInAvatarBtn.click();
         contextMenuElements.find(text("Friends")).click();
-        return new FriendsPage();
+        return new FriendsPage(driver);
     }
 
     @Step("Go to All People")
     public AllPeoplePage goToAllPeopleList() {
         contextMenuInAvatarBtn.click();
         contextMenuElements.find(text("All People")).click();
-        return new AllPeoplePage();
+        return new AllPeoplePage(driver);
     }
 
     public MainPage search(String spend) {
@@ -62,11 +76,15 @@ public class MainPage extends BasePage {
     }
 
     public StatComponent getStatComponent(){
-        return new StatComponent();
+        return driver == null
+                ? new StatComponent()
+                : new StatComponent(driver);
     }
 
 
     public SpendsTable getSpendTable(){
-        return new SpendsTable();
+        return driver == null
+                ? new SpendsTable()
+                : new SpendsTable(driver);
     }
 }

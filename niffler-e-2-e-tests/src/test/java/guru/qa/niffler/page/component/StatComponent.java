@@ -2,6 +2,7 @@ package guru.qa.niffler.page.component;
 
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.Selenide;
+import com.codeborne.selenide.SelenideDriver;
 import com.codeborne.selenide.SelenideElement;
 import guru.qa.niffler.jupiter.extension.ScreenShotTestExtension;
 import guru.qa.niffler.model.Bubble;
@@ -22,20 +23,25 @@ import java.util.stream.Collectors;
 
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Condition.visible;
-import static com.codeborne.selenide.Selenide.$;
 import static guru.qa.niffler.condition.StatConditions.*;
 import static java.util.Objects.requireNonNull;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
 @ParametersAreNonnullByDefault
 public class StatComponent extends BaseComponent<StatComponent> {
+    private final ElementsCollection bubbles = self.$("#legend-container").$$("li");
+    private final SelenideElement chart;
 
+    public StatComponent(SelenideDriver driver) {
+        super(driver, driver.$("#stat"));
+        this.chart = $("canvas[role='img']");
+    }
     public StatComponent() {
-        super($("#stat"));
+        super(Selenide.$("#stat"));
+        this.chart = $("canvas[role='img']");
     }
 
-    private final ElementsCollection bubbles = self.$("#legend-container").$$("li");
-    private final SelenideElement chart = $("canvas[role='img']");
+
     @Step("Check that statistic image matches the expected image")
     @Nonnull
     public StatComponent checkStatisticImage(BufferedImage expectedImage) throws IOException {
@@ -124,6 +130,8 @@ public class StatComponent extends BaseComponent<StatComponent> {
     }
 
     public SpendsTable getSpendsTable(){
-        return new SpendsTable();
+        return driver == null
+                ? new SpendsTable()
+                : new SpendsTable(driver);
     }
 }

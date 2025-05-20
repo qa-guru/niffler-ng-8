@@ -1,7 +1,7 @@
 package guru.qa.niffler.page;
 
-
 import com.codeborne.selenide.ElementsCollection;
+import com.codeborne.selenide.SelenideDriver;
 import com.codeborne.selenide.SelenideElement;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.model.UserJson;
@@ -9,23 +9,33 @@ import guru.qa.niffler.model.UserJson;
 import static com.codeborne.selenide.CollectionCondition.size;
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selectors.byText;
-import static com.codeborne.selenide.Selenide.$;
-import static com.codeborne.selenide.Selenide.$$;
 import static guru.qa.niffler.model.ElementType.BUTTON;
 
 public class FriendsPage extends BasePage {
-    private final SelenideElement allPeopleTab = $(byText("All people"));
-    private final ElementsCollection requestsTableRows = $$("#requests tr");
-    private final ElementsCollection friendsTableRows = $$("#friends tr");
-    private final SelenideElement noFriendsText = $(byText("There are no users yet"));
-    private final SelenideElement lonelyNifflerImage = $("img[alt='Lonely niffler']");
-    private final SelenideElement searchInput = $("input");
 
-    private static final String ACCEPT_FRIEND_BUTTON_XPATH = ".//button[text()='Accept']";
-    private static final String DECLINE_FRIEND_BUTTON_XPATH = ".//button[text()='Decline']";
-    private static final String UNFRIEND_BUTTON_XPATH = ".//button[text()='Unfriend']";
     private static final String LONELY_NIFFLER_IMG_URL = "assets/niffler-with-a-coin-Cb77k8MX.png";
 
+    // Элементы страницы
+    private final SelenideElement allPeopleTab;
+    private final ElementsCollection requestsTableRows;
+    private final ElementsCollection friendsTableRows;
+    private final SelenideElement noFriendsText;
+    private final SelenideElement lonelyNifflerImage;
+    private final SelenideElement searchInput;
+
+    public FriendsPage(SelenideDriver driver) {
+        super(driver);
+        this.allPeopleTab = $(byText("All people"));
+        this.requestsTableRows = $$("#requests tr");
+        this.friendsTableRows = $$( "#friends tr");
+        this.noFriendsText = $(byText("There are no users yet"));
+        this.lonelyNifflerImage = $("img[alt='Lonely niffler']");
+        this.searchInput = $("input");
+    }
+
+    public FriendsPage() {
+        this(null);
+    }
 
     public FriendsPage assertEmptyUser(){
         friendsTableRows.shouldHave(size(0));
@@ -40,16 +50,16 @@ public class FriendsPage extends BasePage {
     }
     public AllPeoplePage clickAllPeopleTab(){
         allPeopleTab.click();
-        return new AllPeoplePage();
+        return new AllPeoplePage(driver);
     }
 
     public FriendsPage assertFriendRequestExist(String username){
         searchInput.setValue(username).pressEnter();
         SelenideElement targetRow = requestsTableRows.find(text(username));
-        targetRow.$x(ACCEPT_FRIEND_BUTTON_XPATH)
+        targetRow.$x(".//button[text()='Accept']")
                 .shouldBe(visible)
                 .shouldHave(BUTTON.assertType());
-        targetRow.$x(DECLINE_FRIEND_BUTTON_XPATH)
+        targetRow.$x(".//button[text()='Decline']")
                 .shouldBe(visible)
                 .shouldHave(BUTTON.assertType());
         return this;
@@ -69,7 +79,7 @@ public class FriendsPage extends BasePage {
 
     public FriendsPage assertFriendExist(String username){
         SelenideElement targetRow = friendsTableRows.find(text(username));
-        targetRow.$x(UNFRIEND_BUTTON_XPATH)
+        targetRow.$x(".//button[text()='Unfriend']")
                 .shouldBe(visible)
                 .shouldHave(BUTTON.assertType());
         return this;

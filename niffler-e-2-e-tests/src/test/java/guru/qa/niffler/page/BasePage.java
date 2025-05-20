@@ -2,6 +2,7 @@ package guru.qa.niffler.page;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.ElementsCollection;
+import com.codeborne.selenide.SelenideDriver;
 import com.codeborne.selenide.SelenideElement;
 import guru.qa.niffler.config.Config;
 import org.openqa.selenium.By;
@@ -9,13 +10,24 @@ import org.openqa.selenium.By;
 
 import java.time.Duration;
 
+import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selectors.byXpath;
-import static com.codeborne.selenide.Selenide.*;
 import static com.codeborne.selenide.WebDriverConditions.url;
 
-public class BasePage {
-    private static final SelenideElement avatarButton = $(byXpath("//header//button"));
-    private static final ElementsCollection menuButtons = $$(byXpath("//ul[@role='menu']//li"));
+
+public class BasePage extends SelenideProviderService {
+    private final SelenideElement avatarButton;
+    private final ElementsCollection menuButtons;
+
+    public BasePage(SelenideDriver driver){
+        super(driver);
+        avatarButton = $(byXpath("//header//button"));
+        menuButtons = $$(byXpath("//ul[@role='menu']//li"));
+    }
+
+    public BasePage(){
+        this(null);
+    }
 
     public <T extends BasePage> T openMenu(){
         avatarButton
@@ -32,13 +44,13 @@ public class BasePage {
     public ProfilePage openProfilePage(){
         openMenu()
                 .clickMenuButtonsExcludeLogout(0);
-        return new ProfilePage();
+        return new ProfilePage(driver);
     }
 
     public FriendsPage openFriendsPage(){
         openMenu()
                 .clickMenuButtonsExcludeLogout(1);
-        return new FriendsPage();
+        return new FriendsPage(driver);
     }
 
     public <T extends BasePage> T assertRedirectToPage(Class<T> clazz, String... strings){

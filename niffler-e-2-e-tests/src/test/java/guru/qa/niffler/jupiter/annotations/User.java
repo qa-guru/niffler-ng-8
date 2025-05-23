@@ -1,9 +1,7 @@
-package guru.qa.niffler.jupiter.users;
+package guru.qa.niffler.jupiter.annotations;
 
-import guru.qa.niffler.jupiter.category.Category;
-import guru.qa.niffler.jupiter.category.CategoryExtension;
-import guru.qa.niffler.jupiter.spending.Spend;
-import guru.qa.niffler.jupiter.spending.SpendingExtension;
+import guru.qa.niffler.jupiter.extensions.CategoryExtension;
+import guru.qa.niffler.jupiter.extensions.SpendingExtension;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.lang.annotation.ElementType;

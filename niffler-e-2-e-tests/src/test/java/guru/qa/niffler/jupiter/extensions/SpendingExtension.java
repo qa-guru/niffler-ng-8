@@ -1,12 +1,12 @@
-package guru.qa.niffler.jupiter.spending;
+package guru.qa.niffler.jupiter.extensions;
 
 import com.github.javafaker.Faker;
-import guru.qa.niffler.RandomDataUtils;
-import guru.qa.niffler.api.SpendApiClient;
-import guru.qa.niffler.jupiter.users.User;
+import guru.qa.niffler.jupiter.annotations.User;
 import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.model.SpendJson;
+import guru.qa.niffler.model.users.UserJson;
 import guru.qa.niffler.service.SpendDbClient;
+import guru.qa.niffler.utils.RandomDataUtils;
 import org.junit.jupiter.api.extension.*;
 import org.junit.platform.commons.support.AnnotationSupport;
 
@@ -20,6 +20,7 @@ public class SpendingExtension implements BeforeEachCallback, AfterEachCallback,
     @Override
     public void beforeEach(ExtensionContext context) {
         SpendDbClient db = new SpendDbClient();
+
         UUID id = RandomDataUtils.generateID();
         String categoryName = new Faker().company().name();
         AnnotationSupport.findAnnotation(context.getRequiredTestMethod(), User.class)
@@ -42,6 +43,7 @@ public class SpendingExtension implements BeforeEachCallback, AfterEachCallback,
                             anno.username()
                     );
 
+                    db.deleteAllSpendsByUsername(anno.username()); //Safety check
                     SpendJson created = db.createSpend(spendJson);
                     context.getStore(NAMESPACE).put(context.getUniqueId(), created);
                 });
@@ -49,14 +51,14 @@ public class SpendingExtension implements BeforeEachCallback, AfterEachCallback,
 
     @Override
     public void afterEach(ExtensionContext context) throws Exception {
-        CategoryJson category = context.getStore(NAMESPACE).get(context.getUniqueId(), CategoryJson.class);
         SpendJson spend = context.getStore(NAMESPACE).get(context.getUniqueId(), SpendJson.class);
         SpendDbClient db = new SpendDbClient();
         if (spend != null) {
             db.deleteTxSpend(spend);
         }
-        if (category != null) {
-            db.deleteTxCategory(category);
+        assert spend != null;
+        if (spend.category() != null) {
+            db.deleteTxCategory(spend.category());
         }
     }
 

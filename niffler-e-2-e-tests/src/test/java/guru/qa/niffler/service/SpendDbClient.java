@@ -3,8 +3,6 @@ package guru.qa.niffler.service;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.dao.impl.jdbc.CategoryDaoJdbc;
 import guru.qa.niffler.data.dao.impl.jdbc.SpendDaoJdbc;
-import guru.qa.niffler.data.dao.impl.springJdbc.CategoryDaoSpringJdbc;
-import guru.qa.niffler.data.dao.impl.springJdbc.SpendDaoSpringJdbc;
 import guru.qa.niffler.data.dao.interfaces.CategoryDao;
 import guru.qa.niffler.data.dao.interfaces.SpendDao;
 import guru.qa.niffler.data.entity.category.CategoryEntity;
@@ -25,8 +23,8 @@ public class SpendDbClient {
             CFG.spendJdbcUrl()
     );
 
-    private CategoryDao categoryDao = new CategoryDaoSpringJdbc();
-    private SpendDao spendDao = new SpendDaoSpringJdbc();
+    private CategoryDao categoryDao = new CategoryDaoJdbc();
+    private SpendDao spendDao = new SpendDaoJdbc();
 
     public SpendJson createSpend(SpendJson spend) {
         SpendEntity spendEntity = SpendEntity.fromJson(spend);
@@ -68,6 +66,13 @@ public class SpendDbClient {
     public void deleteTxSpend(SpendJson spend) {
         jdbcTxTemplate.executeVoid(() -> {
                     spendDao.deleteSpend(SpendEntity.fromJson(spend));
+                }, TransactionIsolation.READ_UNCOMMITTED
+        );
+    }
+
+    public void deleteAllSpendsByUsername(String username) {
+        jdbcTxTemplate.executeVoid(() -> {
+                    spendDao.deleteAllSpendsByUsername(username);
                 }, TransactionIsolation.READ_UNCOMMITTED
         );
     }

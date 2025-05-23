@@ -6,7 +6,7 @@ import static com.codeborne.selenide.Selenide.$x;
 
 public class SidebarPage {
 
-    private final SelenideElement menu = $x("//*[@data-testid='PersonIcon']");
+    private final SelenideElement menu = $x("//button[@aria-label='Menu']");
     private final SelenideElement profile = $x("//*[contains(text(),'Profile')]");
     private final SelenideElement friends = $x("//*[contains(text(),'Friends')]");
     private final SelenideElement allPeople = $x("//*[contains(text(),'All People')]");

@@ -2,17 +2,17 @@ package guru.qa.niffler.test.web;
 
 import com.codeborne.selenide.Selenide;
 import guru.qa.niffler.config.Config;
-import guru.qa.niffler.jupiter.BrowserExtension;
-import guru.qa.niffler.jupiter.users.UsersQueueExtension;
+import guru.qa.niffler.jupiter.extensions.BrowserExtension;
+import guru.qa.niffler.jupiter.extensions.UsersQueueExtension;
 import guru.qa.niffler.page.FriendsPage;
 import guru.qa.niffler.page.LoginPage;
 import guru.qa.niffler.page.SidebarPage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import static guru.qa.niffler.jupiter.users.UsersQueueExtension.StaticUser;
-import static guru.qa.niffler.jupiter.users.UsersQueueExtension.UserType;
-import static guru.qa.niffler.jupiter.users.UsersQueueExtension.UserType.Type.*;
+import static guru.qa.niffler.jupiter.extensions.UsersQueueExtension.StaticUser;
+import static guru.qa.niffler.jupiter.extensions.UsersQueueExtension.UserType;
+import static guru.qa.niffler.jupiter.extensions.UsersQueueExtension.UserType.Type.*;
 import static guru.qa.niffler.page.FriendsPage.FriendType.*;
 
 @ExtendWith({BrowserExtension.class})

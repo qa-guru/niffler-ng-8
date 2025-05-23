@@ -122,8 +122,8 @@ public class CategoryDaoJdbc implements CategoryDao {
     @Override
     public void deleteCategory(CategoryEntity category) {
         try (PreparedStatement ps = holder(CFG.spendJdbcUrl()).connection().prepareStatement(
-                "DELETE FROM category WHERE id=?")) {
-            ps.setObject(1, category.getId());
+                "DELETE FROM category WHERE name=?")) {
+            ps.setObject(1, category.getName());
             ps.execute();
         } catch (SQLException e) {
             throw new RuntimeException(e);

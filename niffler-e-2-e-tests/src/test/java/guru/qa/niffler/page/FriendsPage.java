@@ -3,7 +3,6 @@ package guru.qa.niffler.page;
 import com.codeborne.selenide.CollectionCondition;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.ElementsCollection;
-import guru.qa.niffler.jupiter.users.UsersQueueExtension;
 
 import static com.codeborne.selenide.Selenide.$$x;
 import static com.codeborne.selenide.Selenide.$x;

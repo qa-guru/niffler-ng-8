@@ -1,8 +1,8 @@
-package guru.qa.niffler.jupiter.category;
+package guru.qa.niffler.jupiter.extensions;
 
-import guru.qa.niffler.RandomDataUtils;
+import guru.qa.niffler.utils.RandomDataUtils;
 import guru.qa.niffler.api.SpendApiClient;
-import guru.qa.niffler.jupiter.users.User;
+import guru.qa.niffler.jupiter.annotations.User;
 import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.service.SpendDbClient;
 import org.junit.jupiter.api.extension.*;
@@ -36,7 +36,9 @@ public class CategoryExtension implements BeforeEachCallback, AfterEachCallback,
     public void afterEach(ExtensionContext context) throws Exception {
         CategoryJson category = context.getStore(NAMESPACE).get(context.getUniqueId(), CategoryJson.class);
         SpendDbClient db = new SpendDbClient();
-        db.deleteTxCategory(category);
+        if (category != null) {
+            db.deleteTxCategory(category);
+        }
     }
 
     @Override

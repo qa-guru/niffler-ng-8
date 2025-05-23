@@ -20,4 +20,6 @@ public interface UserRepository {
     void deleteFriendshipForUser(UserEntity user);
 
     void deleteUser(UserEntity user);
+
+    void clearPhotoDataByUsername(String username);
 }

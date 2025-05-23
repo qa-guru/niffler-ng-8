@@ -8,7 +8,10 @@ import guru.qa.niffler.data.entity.spend.SpendEntity;
 import guru.qa.niffler.data.enums.CurrencyValues;
 
 import javax.annotation.Nonnull;
-import java.sql.*;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -120,8 +123,19 @@ public class SpendDaoJdbc implements SpendDao {
     @Override
     public void deleteSpend(SpendEntity spend) {
         try (PreparedStatement ps = holder(CFG.spendJdbcUrl()).connection().prepareStatement(
-                "DELETE FROM spend WHERE id=?")) {
-            ps.setObject(1, spend.getId());
+                "DELETE FROM spend WHERE description=?")) {
+            ps.setObject(1, spend.getDescription());
+            ps.execute();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void deleteAllSpendsByUsername(String username) {
+        try (PreparedStatement ps = holder(CFG.spendJdbcUrl()).connection().prepareStatement(
+                "DELETE FROM spend WHERE username=?")) {
+            ps.setObject(1, username);
             ps.execute();
         } catch (SQLException e) {
             throw new RuntimeException(e);

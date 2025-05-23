@@ -3,18 +3,26 @@ package guru.qa.niffler.page;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
+import com.codeborne.selenide.WebDriverRunner;
+import guru.qa.niffler.utils.CommonSteps;
+import org.openqa.selenium.JavascriptExecutor;
+
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
 import static com.codeborne.selenide.Selenide.*;
 
 public class ProfilePage {
 
-    private final SelenideElement profileIcon = $x("//*[@id='image__input']/following-sibling::[@data-testid='PersonIcon']");
+    private final SelenideElement profileIcon = $x("//*[@id='image__input']/following-sibling::div//div");
     private final SelenideElement imageInput = $x("//*[@id='image__input']");
     private final SelenideElement userName = $("#username");
     private final SelenideElement name = $("#name");
-    private final SelenideElement saveChanges = $("#:r1:");
+    private final SelenideElement saveChanges = $x("//*[.='Save changes']//span");
     private final SelenideElement showArchived = $x("//*[contains(@class, 'MuiSwitch-switchBase')]");
     private final SelenideElement newCategory = $("#category");
+
 
     private final ElementsCollection categoriesTable = $$x("//*[contains(@class, 'css-1lekzkb')]");
     private final SelenideElement edit = $x("//*[@aria-label='Edit category']");
@@ -70,5 +78,24 @@ public class ProfilePage {
     public ProfilePage checkCategoryNotExistInTable(String name) {
         categoriesTable.filter(Condition.text(name)).first().shouldNotBe(Condition.exist);
         return this;
+    }
+
+    public ProfilePage uploadProfileImage(File image1) {
+        $("input[type='file']").should(Condition.exist);
+        JavascriptExecutor js = (JavascriptExecutor) WebDriverRunner.getWebDriver();
+        js.executeScript("document.getElementById(\"image__input\").removeAttribute('hidden');");
+        imageInput.uploadFile(image1);
+        return this;
+    }
+
+    public ProfilePage clickSaveChanges() {
+        JavascriptExecutor js = (JavascriptExecutor) WebDriverRunner.getWebDriver();
+        saveChanges.shouldBe(Condition.visible);
+        js.executeScript("arguments[0].click();", saveChanges);
+        return this;
+    }
+
+    public BufferedImage screenshotProfileIcon() throws IOException {
+        return CommonSteps.screenshot(profileIcon);
     }
 }

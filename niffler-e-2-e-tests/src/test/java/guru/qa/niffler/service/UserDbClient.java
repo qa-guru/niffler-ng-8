@@ -175,6 +175,10 @@ public class UserDbClient {
         authUserRepository.deleteUser(authUser.orElseThrow());
     }
 
+    public void clearPhotoDataByUsername(String username) {
+        userRepository.clearPhotoDataByUsername(username);
+    }
+
 
     //Закомментировано, поскольку в уроке 5.1 произошёл переход на Spring Jdbc
     //  и метод AuthAuthorityDao.create стал принимать AuthAuthorityEntity...

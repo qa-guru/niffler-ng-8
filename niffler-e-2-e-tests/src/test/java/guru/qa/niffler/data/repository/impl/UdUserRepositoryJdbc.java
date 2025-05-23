@@ -167,6 +167,21 @@ public class UdUserRepositoryJdbc implements UserRepository {
         }
     }
 
+    @Override
+    public void clearPhotoDataByUsername(String username) {
+        try (PreparedStatement ps = holder(CFG.userdataJdbcUrl()).connection().prepareStatement(
+                "UPDATE \"user\"" +
+                        "SET photo = NULL, photo_small = NULL\n" +
+                        "WHERE username = ?"
+
+        )) {
+            ps.setObject(1, username);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 //    @Override
 //    public List<UserEntity> findByUsername(String username) {
 //        List<UserEntity> users = new ArrayList<>();

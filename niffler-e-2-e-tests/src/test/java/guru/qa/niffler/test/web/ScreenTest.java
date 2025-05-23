@@ -14,6 +14,7 @@ import guru.qa.niffler.page.ProfilePage;
 import guru.qa.niffler.page.SidebarPage;
 import guru.qa.niffler.service.SpendDbClient;
 import guru.qa.niffler.service.UserDbClient;
+import guru.qa.niffler.steps.AssertionSteps;
 import guru.qa.niffler.utils.RandomDataUtils;
 import guru.qa.niffler.utils.ScreenDiffResult;
 import org.junit.jupiter.api.Assertions;
@@ -27,7 +28,7 @@ import java.io.IOException;
 import static com.codeborne.selenide.Selenide.$;
 
 @ExtendWith(BrowserExtension.class)
-public class ScreenTest {
+public class ScreenTest extends BaseTest {
 
     private static final Config CFG = Config.getInstance();
     String actualLogin = CFG.mainUserLogin();
@@ -59,15 +60,14 @@ public class ScreenTest {
                     currency = CurrencyValues.RUB))
     @ScreenShootTest(value = "img/stats/stat_two_spends_main.png")
         void screenTwoSpendTest(BufferedImage expectedImage) throws IOException {
-        SpendDbClient db = new SpendDbClient();
         SpendJson secondSpend = RandomDataUtils.generateSpend(actualLogin, 150.0);
-        db.createSpend(secondSpend);
+        spendDbClient.createSpend(secondSpend);
         Selenide.open(CFG.frontUrl(), LoginPage.class)
                 .doLogin(actualLogin, actualPass);
         BufferedImage actualImage = new MainPage().screenshotStats();
-        db.deleteTxSpend(secondSpend);
-        db.deleteTxCategory(secondSpend.category());
-        Assertions.assertFalse(new ScreenDiffResult(expectedImage, actualImage));
+        spendDbClient.deleteTxSpend(secondSpend);
+        spendDbClient.deleteTxCategory(secondSpend.category());
+        AssertionSteps.assertScreenshotsEquals(expectedImage, actualImage);
     }
 
     @ScreenShootTest(value = "img/stats/stat_without_spends.png")
@@ -80,30 +80,28 @@ public class ScreenTest {
 
     @ScreenShootTest(value = "img/expected/expected_Kiwi.png")
     void checkSetProfilePicture(BufferedImage expectedImage) throws IOException {
-        UserDbClient db = new UserDbClient();
         Selenide.open(CFG.frontUrl(), LoginPage.class)
                 .doLogin(actualLogin, actualPass);
         new SidebarPage().clickMenu().clickProfile();
-        new ProfilePage().uploadProfileImage(new File(CFG.kiwiPngPath()))
+        new ProfilePage().uploadProfileImage(new File(kiwiPngPath))
                 .clickSaveChanges();
         BufferedImage actualImage = new ProfilePage().screenshotProfileIcon();
 
         Assertions.assertFalse(new ScreenDiffResult(expectedImage, actualImage));
 
-        db.clearPhotoDataByUsername(actualLogin);
+        userDbClient.clearPhotoDataByUsername(actualLogin);
     }
 
     @ScreenShootTest(value = "img/expected/expected_Kiwi.png")
     void checkResetProfilePicture(BufferedImage expectedImage) throws IOException {
-        UserDbClient db = new UserDbClient();
         //Safety check
-        db.clearPhotoDataByUsername(actualLogin);
+        userDbClient.clearPhotoDataByUsername(actualLogin);
         //Act
         Selenide.open(CFG.frontUrl(), LoginPage.class)
                 .doLogin(actualLogin, actualPass);
         new SidebarPage().clickMenu().clickProfile();
         //Загружаем обезьянку
-        new ProfilePage().uploadProfileImage(new File(CFG.monkeyPngPath()))
+        new ProfilePage().uploadProfileImage(new File(monkeyPngPath))
                 .clickSaveChanges();
         Selenide.open(CFG.frontUrl() + "main", SidebarPage.class)
                 .clickMenu().clickProfile();
@@ -114,14 +112,14 @@ public class ScreenTest {
                 new File("C:\\niffler-ng-81\\niffler-e-2-e-tests\\src\\test\\resources" +
                         "\\img\\expected\\expected_monkey.png")), actualMonkey));
         //Меняем обезьянку на Киви   (Киви это мой кот :) )
-        new ProfilePage().uploadProfileImage(new File(CFG.kiwiPngPath()))
+        new ProfilePage().uploadProfileImage(new File(kiwiPngPath))
                 .clickSaveChanges();
         //Скриншотим Киви
         BufferedImage actualKiwi = new ProfilePage().screenshotProfileIcon();
         //Проверяем что Киви реально
         Assertions.assertFalse(new ScreenDiffResult(expectedImage, actualKiwi));
         //Cleanup
-        db.clearPhotoDataByUsername(actualLogin);
+        userDbClient.clearPhotoDataByUsername(actualLogin);
     }
 
 }

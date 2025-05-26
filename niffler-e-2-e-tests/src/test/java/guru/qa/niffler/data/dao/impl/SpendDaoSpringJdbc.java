@@ -14,7 +14,6 @@ import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.List;
 import java.util.Optional;
-import java.util.Optional;
 import java.util.UUID;
 
 public class SpendDaoSpringJdbc implements SpendDao {

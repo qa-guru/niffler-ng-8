@@ -59,7 +59,7 @@ public class CategoryDaoJdbc implements CategoryDao {
                         SET name     = ?,
                             archived = ?
                         WHERE id = ?
-                    """);
+                    """)
         ) {
             ps.setString(1, category.getName());
             ps.setBoolean(2, category.isArchived());

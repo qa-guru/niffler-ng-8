@@ -106,7 +106,7 @@ public class SpendDaoJdbc implements SpendDao {
                     amount      = ?,
                     description = ?
                 WHERE id = ?
-            """);
+            """)
     ) {
       ps.setDate(1, new java.sql.Date(spend.getSpendDate().getTime()));
       ps.setString(2, spend.getCurrency().name());

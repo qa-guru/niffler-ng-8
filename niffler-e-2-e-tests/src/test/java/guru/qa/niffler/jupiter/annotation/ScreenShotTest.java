@@ -2,6 +2,9 @@ package guru.qa.niffler.jupiter.annotation;
 
 import guru.qa.niffler.jupiter.extension.ScreenShotTestExtension;
 import org.junit.jupiter.api.Test;
+import guru.qa.niffler.jupiter.extension.CategoryExtension;
+import guru.qa.niffler.jupiter.extension.SpendingExtension;
+import guru.qa.niffler.jupiter.extension.UserExtension;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.lang.annotation.ElementType;
@@ -15,5 +18,16 @@ import java.lang.annotation.Target;
 @ExtendWith(ScreenShotTestExtension.class)
 public @interface ScreenShotTest {
     String value();
+
     boolean rewriteExpected() default false;
+
+    @ExtendWith({UserExtension.class, CategoryExtension.class, SpendingExtension.class})
+
+    public @interface User {
+        String username() default "";
+
+        Category[] categories() default {};
+
+        Spend[] spendings() default {};
+    }
 }

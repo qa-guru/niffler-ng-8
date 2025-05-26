@@ -45,12 +45,12 @@ public class SpendRepositoryHibernate implements SpendRepository {
     }
 
     @Override
-    public Optional<CategoryEntity> findCategoryByUsernameAndSpendName(String username, String name) {
+    public Optional<CategoryEntity> findCategoryByUsernameAndCategoryName(String username, String name) {
         try {
             return Optional.of(
                     entityManager.createQuery(
                             "select c from CategoryEntity c " +
-                                    "where c.username =: username and c.category = :name",
+                                    "where c.username = :username and c.name = :name",
                                     CategoryEntity.class)
                             .setParameter("username", username)
                             .setParameter("name", name)
@@ -59,6 +59,13 @@ public class SpendRepositoryHibernate implements SpendRepository {
         } catch (NoResultException e) {
             return Optional.empty();
         }
+    }
+
+    @Override
+    public Optional<SpendEntity> findSpendById(UUID id) {
+        return Optional.ofNullable(
+                entityManager.find(SpendEntity.class, id)
+        );
     }
 
     @Override
@@ -93,23 +100,6 @@ public class SpendRepositoryHibernate implements SpendRepository {
         CategoryEntity managedCategory = entityManager.find(CategoryEntity.class, category.getId());
         if (managedCategory != null) {
             entityManager.remove(managedCategory);
-        }
-    }
-
-    @Override
-    public Optional<CategoryEntity> findCategoryByUsernameAndCategoryName(String username, String name) {
-        try {
-            return Optional.of(
-                    entityManager.createQuery(
-                                    "SELECT c FROM CategoryEntity c " +
-                                            "WHERE c.username = :username AND c.name = :name",
-                                    CategoryEntity.class)
-                            .setParameter("username", username)
-                            .setParameter("name", name)
-                            .getSingleResult()
-            );
-        } catch (NoResultException e) {
-            return Optional.empty();
         }
     }
 }

@@ -3,6 +3,8 @@ package guru.qa.niffler.data.dao.impl;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.dao.CategoryDao;
 import guru.qa.niffler.data.entity.spend.CategoryEntity;
+import guru.qa.niffler.data.jdbc.Connections;
+import guru.qa.niffler.data.mapper.CategoryEntityRowMapper;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -13,7 +15,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static guru.qa.niffler.data.tpl.Connections.holder;
+import static guru.qa.niffler.data.jdbc.Connections.holder;
 
 public class CategoryDaoJdbc implements CategoryDao {
 
@@ -23,8 +25,10 @@ public class CategoryDaoJdbc implements CategoryDao {
   @Override
   public CategoryEntity create(CategoryEntity category) {
     try (PreparedStatement ps = holder(url).connection().prepareStatement(
-        "INSERT INTO category (username, name, archived) " +
-            "VALUES (?, ?, ?)",
+        """
+                INSERT INTO category (username, name, archived) 
+                VALUES (?, ?, ?)
+            """,
         Statement.RETURN_GENERATED_KEYS
     )) {
       ps.setString(1, category.getUsername());
@@ -49,24 +53,22 @@ public class CategoryDaoJdbc implements CategoryDao {
     }
 
     public CategoryEntity update(CategoryEntity category) {
-        if (category.getId() == null) {
-            throw new IllegalArgumentException("Category ID must not be null");
-        }
-        try (PreparedStatement ps = holder(CFG.authJdbcUrl()).connection().prepareStatement(
-                "UPDATE \"category\" SET name = ?, username = ?, archived = ? WHERE id = ?"
-        )) {
+        try (PreparedStatement ps = Connections.holder(url).connection().prepareStatement(
+                """
+                      UPDATE "category"
+                        SET name     = ?,
+                            archived = ?
+                        WHERE id = ?
+                    """);
+        ) {
             ps.setString(1, category.getName());
-            ps.setString(2, category.getUsername());
-            ps.setBoolean(3, category.isArchived());
-            ps.setObject(4, category.getId());
-            int affectedRows = ps.executeUpdate();
-            if (affectedRows == 0) {
-                throw new SQLException("Updating category failed, no rows affected");
-            }
-            return category;
+            ps.setBoolean(2, category.isArchived());
+            ps.setObject(3, category.getId());
+            ps.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+        return category;
     }
 
     @Override
@@ -119,27 +121,24 @@ public class CategoryDaoJdbc implements CategoryDao {
         }
     }
 
-    @Override
-    public List<CategoryEntity> findAll() {
-        try (PreparedStatement ps = holder(url).connection().prepareStatement(
-                "SELECT * FROM category")) {
-            ps.execute();
-            List<CategoryEntity> result = new ArrayList<>();
-            try (ResultSet rs = ps.getResultSet()) {
-                while (rs.next()) {
-                    CategoryEntity ce = new CategoryEntity();
-                    ce.setId(rs.getObject("id", UUID.class));
-                    ce.setUsername(rs.getString("username"));
-                    ce.setName(rs.getString("name"));
-                    ce.setArchived(rs.getBoolean("archived"));
-                    result.add(ce);
-                }
-            }
-            return result;
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
+  @Override
+  public List<CategoryEntity> findAll() {
+      try (PreparedStatement ps = holder(url).connection().prepareStatement(
+              "SELECT * FROM category")) {
+          ps.execute();
+          List<CategoryEntity> result = new ArrayList<>();
+          try (ResultSet rs = ps.getResultSet()) {
+              while (rs.next()) {
+                  result.add(
+                          CategoryEntityRowMapper.instance.mapRow(rs, rs.getRow())
+                  );
+              }
+          }
+          return result;
+      } catch (SQLException e) {
+          throw new RuntimeException(e);
+      }
+  }
 
     @Override
     public void deleteCategory(CategoryEntity category) {

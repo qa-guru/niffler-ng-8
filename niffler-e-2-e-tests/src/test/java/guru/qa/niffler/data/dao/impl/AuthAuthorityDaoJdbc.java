@@ -4,6 +4,7 @@ import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.dao.AuthAuthorityDao;
 import guru.qa.niffler.data.entity.auth.Authority;
 import guru.qa.niffler.data.entity.auth.AuthorityEntity;
+import guru.qa.niffler.data.mapper.AuthorityEntityRowMapper;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -14,7 +15,7 @@ import java.util.UUID;
 import java.sql.*;
 import java.util.Optional;
 
-import static guru.qa.niffler.data.tpl.Connections.holder;
+import static guru.qa.niffler.data.jdbc.Connections.holder;
 
 public class AuthAuthorityDaoJdbc implements AuthAuthorityDao {
 
@@ -94,16 +95,12 @@ public class AuthAuthorityDaoJdbc implements AuthAuthorityDao {
     @Override
     public List<AuthorityEntity> findAll() {
         try (PreparedStatement ps = holder(url).connection().prepareStatement(
-                "SELECT * FROM \"authority\"")) {
+                "SELECT * FROM authority")) {
             ps.execute();
             List<AuthorityEntity> result = new ArrayList<>();
             try (ResultSet rs = ps.getResultSet()) {
                 while (rs.next()) {
-                    AuthorityEntity ae = new AuthorityEntity();
-                    ae.setId(rs.getObject("id", UUID.class));
-//        ae.setUser(rs.getObject("user_id", UUID.class));
-                    ae.setAuthority(Authority.valueOf(rs.getString("authority")));
-                    result.add(ae);
+                    result.add(AuthorityEntityRowMapper.instance.mapRow(rs, rs.getRow()));
                 }
             }
             return result;
@@ -114,29 +111,20 @@ public class AuthAuthorityDaoJdbc implements AuthAuthorityDao {
 
     @Override
     public List<AuthorityEntity> findByUserId(UUID userId) {
-        List<AuthorityEntity> authorityList = new ArrayList<>();
-        try (PreparedStatement ps = holder(CFG.authJdbcUrl()).connection().prepareStatement(
-                "SELECT * FROM \"authority\" WHERE user_id = ?"
-        )) {
+        try (PreparedStatement ps = holder(url).connection().prepareStatement(
+                "SELECT * FROM authority where user_id = ?")) {
             ps.setObject(1, userId);
             ps.execute();
+            List<AuthorityEntity> result = new ArrayList<>();
             try (ResultSet rs = ps.getResultSet()) {
                 while (rs.next()) {
-                    AuthorityEntity authority = new AuthorityEntity();
-                    authority.setId(rs.getObject("id", UUID.class));
-                    authority.getUser().setId(rs.getObject("user_id", UUID.class));
-                    authority.setAuthority(
-                            Authority.valueOf(
-                                    rs.getString("authority")
-                            )
-                    );
-                    authorityList.add(authority);
+                    result.add(AuthorityEntityRowMapper.instance.mapRow(rs, rs.getRow()));
                 }
             }
+            return result;
         } catch (SQLException e) {
-            throw new RuntimeException("Failed to find authority with userId: " + userId, e);
+            throw new RuntimeException(e);
         }
-        return authorityList;
     }
 
     @Override

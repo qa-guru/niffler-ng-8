@@ -14,9 +14,9 @@ public interface UdUserDao {
 
   Optional<UserEntity> findById(UUID id);
 
-  List<UserEntity> findAll();
-
   Optional<UserEntity> findByUsername(String username);
+
+  List<UserEntity> findAll();
 
   void delete(UserEntity user);
 

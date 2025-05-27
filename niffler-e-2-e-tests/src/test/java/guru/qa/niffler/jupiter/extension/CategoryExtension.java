@@ -77,11 +77,13 @@ public class CategoryExtension implements
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public CategoryJson[] resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
-        return (CategoryJson[]) extensionContext.getStore(NAMESPACE)
-                .get(extensionContext.getUniqueId(), List.class)
-                .stream()
-                .toArray(CategoryJson[]::new);
+        return createdCategories(extensionContext).toArray(CategoryJson[]::new);
     }
+
+  @SuppressWarnings("unchecked")
+  public static List<CategoryJson> createdCategories(ExtensionContext extensionContext) {
+    return Optional.ofNullable(extensionContext.getStore(NAMESPACE).get(extensionContext.getUniqueId(), List.class))
+        .orElse(Collections.emptyList());
+  }
 }

@@ -1,16 +1,16 @@
 package guru.qa.niffler.config;
 
-enum LocalConfig implements Config {
+enum DockerConfig implements Config {
   INSTANCE;
 
   @Override
   public String frontUrl() {
-    return "http://127.0.0.1:3000/";
+    return "http://frontend.niffler.dc/";
   }
 
   @Override
   public String authUrl() {
-    return "http://127.0.0.1:9000/";
+    return "http://auth.niffler.dc:9000/";
   }
 
   @Override
@@ -20,12 +20,12 @@ enum LocalConfig implements Config {
 
   @Override
   public String gatewayUrl() {
-    return "http://127.0.0.1:8090/";
+    return "http://auth.niffler.dc:8090/";
   }
 
   @Override
   public String userdataUrl() {
-    return "http://127.0.0.1:8089/";
+    return "http://auth.niffler.dc:8089/";
   }
 
   @Override
@@ -35,7 +35,7 @@ enum LocalConfig implements Config {
 
   @Override
   public String currencyUrl() {
-    return "http://127.0.0.1:8091/";
+    return "http://auth.niffler.dc:8091/";
   }
 
   @Override

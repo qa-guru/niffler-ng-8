@@ -1,16 +1,24 @@
 package guru.qa.niffler.page;
 
+import com.codeborne.selenide.CollectionCondition;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideDriver;
 import com.codeborne.selenide.SelenideElement;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.model.UserJson;
+import guru.qa.niffler.page.component.SearchField;
+import io.qameta.allure.Step;
+import lombok.Getter;
+
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 
 import static com.codeborne.selenide.CollectionCondition.size;
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selectors.byText;
 import static guru.qa.niffler.model.ElementType.BUTTON;
 
+@ParametersAreNonnullByDefault
 public class FriendsPage extends BasePage {
 
     private static final String LONELY_NIFFLER_IMG_URL = "assets/niffler-with-a-coin-Cb77k8MX.png";
@@ -21,22 +29,26 @@ public class FriendsPage extends BasePage {
     private final ElementsCollection friendsTableRows;
     private final SelenideElement noFriendsText;
     private final SelenideElement lonelyNifflerImage;
-    private final SelenideElement searchInput;
+    private final SelenideElement declineButtonDialogWindow;
+    @Getter
+    private final SearchField searchField = new SearchField(driver);
 
-    public FriendsPage(SelenideDriver driver) {
+    public FriendsPage(@Nullable SelenideDriver driver) {
         super(driver);
         this.allPeopleTab = $(byText("All people"));
         this.requestsTableRows = $$("#requests tr");
         this.friendsTableRows = $$( "#friends tr");
         this.noFriendsText = $(byText("There are no users yet"));
         this.lonelyNifflerImage = $("img[alt='Lonely niffler']");
-        this.searchInput = $("input");
+        this.declineButtonDialogWindow = $$("div[role='dialog'] button")
+                .find(text("Decline"));
     }
 
     public FriendsPage() {
         this(null);
     }
 
+    @Step("assert that user haven't friends")
     public FriendsPage assertEmptyUser(){
         friendsTableRows.shouldHave(size(0));
         requestsTableRows.shouldBe(size(0));
@@ -48,13 +60,16 @@ public class FriendsPage extends BasePage {
                         Config.getInstance().frontUrl()+LONELY_NIFFLER_IMG_URL));
         return this;
     }
+
+    @Step("Click all peoples tab")
     public AllPeoplePage clickAllPeopleTab(){
         allPeopleTab.click();
         return new AllPeoplePage(driver);
     }
 
+    @Step("assert request from {username} exist")
     public FriendsPage assertFriendRequestExist(String username){
-        searchInput.setValue(username).pressEnter();
+        searchField.search(username);
         SelenideElement targetRow = requestsTableRows.find(text(username));
         targetRow.$x(".//button[text()='Accept']")
                 .shouldBe(visible)
@@ -77,6 +92,7 @@ public class FriendsPage extends BasePage {
         return this;
     }
 
+    @Step("assert friend with username {username} exist")
     public FriendsPage assertFriendExist(String username){
         SelenideElement targetRow = friendsTableRows.find(text(username));
         targetRow.$x(".//button[text()='Unfriend']")
@@ -94,6 +110,43 @@ public class FriendsPage extends BasePage {
         ) {
             assertFriendExist(username);
         }
+        return this;
+    }
+
+    public FriendsPage acceptFriend(String name){
+        searchField.search(name);
+        requestsTableRows
+                .find(text(name))
+                .$x(".//button[text()='Accept']")
+                .click();
+        searchField.clearIfNotEmpty();
+        return assertFriendExist(name);
+    }
+
+    public FriendsPage acceptFriend(UserJson friend){
+        return acceptFriend(friend.username());
+    }
+
+    public FriendsPage declineFriend(UserJson friend){
+        return declineFriend(friend.username());
+    }
+
+    public FriendsPage declineFriend(String name){
+        searchField.search(name);
+        requestsTableRows
+                .find(text(name))
+                .$x(".//button[text()='Decline']")
+                .click();
+        declineButtonDialogWindow.shouldBe(visible).click();
+        searchField.clearIfNotEmpty();
+        requestsTableRows.shouldBe(CollectionCondition.noneMatch(
+                "Проверка отсутствия текста '" + name + "'",
+                element -> element.findElement(byText(name)).isDisplayed()
+        ));
+        friendsTableRows.shouldBe(CollectionCondition.noneMatch(
+                "Проверка отсутствия текста '" + name + "'",
+                element -> element.findElement(byText(name)).isDisplayed()
+        ));
         return this;
     }
 

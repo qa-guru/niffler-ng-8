@@ -24,7 +24,6 @@ import static java.util.stream.Collectors.toSet;
 @ParametersAreNonnullByDefault
 public class StatConditions {
 
-    @Nonnull
     public static WebElementCondition statBubble(Bubble expectedBubble) {
         return new WebElementCondition(expectedBubble.expected()) {
             @NotNull
@@ -39,37 +38,30 @@ public class StatConditions {
         };
     }
 
-    @Nonnull
     public static WebElementsCondition statBubbles(List<Bubble> expectedBubbles) {
         return statBubblesTemplate(expectedBubbles,toList(),Object::equals);
     }
 
-    @Nonnull
     public static WebElementsCondition statBubblesInAnyOrder(List<Bubble> expectedBubbles) {
         return statBubblesTemplate(expectedBubbles,toSet(),Object::equals);
     }
-    @Nonnull
     public static WebElementsCondition statBubblesContains(List<Bubble> expectedBubbles) {
         return statBubblesTemplate(expectedBubbles,toSet(),Collection::containsAll);
     }
 
-    @Nonnull
     public static WebElementsCondition statBubbles(Bubble... expected) {
         return statBubbles(List.of(expected));
     }
 
-    @Nonnull
     public static WebElementsCondition statBubblesInAnyOrder(Bubble... expected) {
         return statBubblesInAnyOrder(List.of(expected));
     }
 
-    @Nonnull
     public static WebElementsCondition statBubblesContains(Bubble... expected) {
         return statBubblesContains(List.of(expected));
     }
 
 
-    @Nonnull
     private static <T extends Collection<String>> T mapExpectedElements(Collector<String, ?, T> collector, List<Bubble> expected) {
         if (expected.isEmpty()) {
             throw new IllegalArgumentException("No expected bubbles given");
@@ -80,14 +72,12 @@ public class StatConditions {
                 .collect(collector);
     }
 
-    @Nonnull
     private static <T extends Collection<String>> T mapActualElements(Collector<String, ?, T> collector, List<WebElement> elements) {
         return elements.stream()
                 .map(e -> new Actual(e).actual())
                 .collect(collector);
     }
 
-    @Nonnull
     private static <T extends Collection<String>> WebElementsCondition statBubblesTemplate(
             List<Bubble> expectedBubbles,
             Collector<String, ?, T> collector,

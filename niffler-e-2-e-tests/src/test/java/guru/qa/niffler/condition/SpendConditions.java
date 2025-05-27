@@ -11,6 +11,7 @@ import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
 
 import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.BiPredicate;
@@ -21,9 +22,10 @@ import static com.codeborne.selenide.CheckResult.rejected;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 
+@ParametersAreNonnullByDefault
 public class SpendConditions {
 
-    @Nonnull
+
     public static WebElementCondition spend(SpendJson expectedSpend) {
         return new WebElementCondition(expectedSpend.toString()) {
             @NotNull
@@ -37,36 +39,31 @@ public class SpendConditions {
             }
         };
     }
-
-    @Nonnull
+    
     public static WebElementsCondition spendRows(UserJson user) {
         return spendRows(user.spends());
     }
-
-    @Nonnull
+    
     public static WebElementsCondition spendRowsInAnyOrder(UserJson user) {
         return spendRowsInAnyOrder(user.spends());
     }
-    @Nonnull
+    
     public static WebElementsCondition spendRowsContains(UserJson user) {
         return spendRowsContains(user.spends());
     }
-
-    @Nonnull
+    
     public static WebElementsCondition spendRows(List<SpendJson> expectedSpends) {
         return spendsTemplate(expectedSpends,toList(),Object::equals);
     }
-
-    @Nonnull
+    
     public static WebElementsCondition spendRowsInAnyOrder(List<SpendJson> expectedSpends) {
         return spendsTemplate(expectedSpends,toSet(),Object::equals);
     }
-    @Nonnull
+
     public static WebElementsCondition spendRowsContains(List<SpendJson> expectedSpends) {
         return spendsTemplate(expectedSpends,toSet(),Collection::containsAll);
     }
 
-    @Nonnull
     private static <T extends Collection<SpendJson>> WebElementsCondition spendsTemplate(
             List<SpendJson> expectedSpends,
             Collector<SpendJson, ?, T> collector,
@@ -103,7 +100,6 @@ public class SpendConditions {
         };
     }
 
-    @Nonnull
     private static <T extends Collection<SpendJson>> T mapExpectedElements(Collector<SpendJson, ?, T> collector, List<SpendJson> expectedSpends) {
         if (expectedSpends.isEmpty()) {
             throw new IllegalArgumentException("No expected spends given");
@@ -115,7 +111,6 @@ public class SpendConditions {
                 .collect(collector);
     }
 
-    @Nonnull
     private static <T extends Collection<SpendJson>> T mapActualElements(
             Collector<SpendJson, ?, T> collector,
             List<WebElement> elements,

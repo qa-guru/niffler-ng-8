@@ -11,14 +11,13 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
+@ParametersAreNonnullByDefault
 public class UserDaoSpringJdbc implements UdUserDao {
 
     private static final Config CFG = Config.getInstance();
@@ -44,7 +43,7 @@ public class UserDaoSpringJdbc implements UdUserDao {
             return ps;
         }, kh);
 
-        final UUID generatedKey = (UUID) kh.getKeys().get("id");
+        final UUID generatedKey = (UUID) Objects.requireNonNull(kh.getKeys()).get("id");
         user.setId(generatedKey);
         return user;
     }
@@ -73,12 +72,8 @@ public class UserDaoSpringJdbc implements UdUserDao {
         );
 
         List<FriendshipEntity> allFriendships = new ArrayList<>();
-        for (FriendshipEntity fe : user.getFriendshipRequests()) {
-            allFriendships.add(fe);
-        }
-        for (FriendshipEntity fe : user.getFriendshipAddressees()) {
-            allFriendships.add(fe);
-        }
+        allFriendships.addAll(user.getFriendshipRequests());
+        allFriendships.addAll(user.getFriendshipAddressees());
 
         jdbcTemplate.batchUpdate("""
             INSERT INTO friendship (requester_id, addressee_id, status)

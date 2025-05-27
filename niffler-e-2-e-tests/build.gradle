@@ -144,6 +144,7 @@ tasks.register('printVersion') {
 }
 
 test {
+    systemProperty "test.env", "docker"
     options {
         systemProperties(System.getProperties())
     }

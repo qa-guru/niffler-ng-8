@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import guru.qa.niffler.data.entity.userdata.UserEntity;
+
+import javax.annotation.Nonnull;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -51,7 +53,7 @@ public record UserJson(
     );
   }
 
-    public static UserJson fromEntity(UserEntity entity) {
+    public @Nonnull static UserJson fromEntity(@Nonnull UserEntity entity) {
         return new UserJson(
                 entity.getId(),
                 entity.getUsername(),

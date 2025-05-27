@@ -5,6 +5,7 @@ import guru.qa.niffler.data.entity.spend.CategoryEntity;
 import guru.qa.niffler.data.entity.spend.SpendEntity;
 import guru.qa.niffler.utils.RandomDataUtils;
 
+import javax.annotation.Nonnull;
 import java.util.Date;
 import java.util.UUID;
 
@@ -24,7 +25,8 @@ public record SpendJson(
     @JsonProperty("username")
     String username) {
 
-    public static SpendJson fromEntity(SpendEntity entity) {
+    @Nonnull
+    public static SpendJson fromEntity(@Nonnull SpendEntity entity) {
         final CategoryEntity category = entity.getCategory();
         final String username = entity.getUsername();
 
@@ -44,6 +46,7 @@ public record SpendJson(
         );
     }
 
+    @Nonnull
     public static SpendJson spendJson(String username, String categoryName){
         return new SpendJson(
                 null,
@@ -61,6 +64,7 @@ public record SpendJson(
         );
     }
 
+    @Nonnull
     public SpendJson toUI(){
         return new SpendJson(
                 null,

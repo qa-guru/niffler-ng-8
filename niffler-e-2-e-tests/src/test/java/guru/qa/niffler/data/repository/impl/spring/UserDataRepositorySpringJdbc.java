@@ -11,6 +11,7 @@ import guru.qa.niffler.data.tpl.DataSources;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
@@ -20,6 +21,7 @@ import java.util.UUID;
 import static guru.qa.niffler.data.entity.userdata.FriendshipStatus.ACCEPTED;
 
 
+@ParametersAreNonnullByDefault
 public class UserDataRepositorySpringJdbc implements UserdataUserRepository {
     private static final Config CFG = Config.getInstance();
 

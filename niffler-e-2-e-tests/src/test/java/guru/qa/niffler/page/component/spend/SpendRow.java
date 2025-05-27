@@ -11,21 +11,25 @@ import guru.qa.niffler.model.SpendJson;
 import guru.qa.niffler.page.EditSpendingPage;
 import guru.qa.niffler.page.MainPage;
 import guru.qa.niffler.page.component.BaseComponent;
+import io.qameta.allure.Step;
 import org.openqa.selenium.WebElement;
 
 
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.regex.Pattern;
 
+@ParametersAreNonnullByDefault
 public class SpendRow extends BaseComponent<SpendRow> {
 
     protected SpendRow(SelenideElement self) {
         super(self);
     }
 
-    protected SpendRow(SelenideDriver driver, SelenideElement self) {
+    protected SpendRow(@Nullable SelenideDriver driver, SelenideElement self) {
         super(driver,self);
     }
 
@@ -40,11 +44,13 @@ public class SpendRow extends BaseComponent<SpendRow> {
         return self.$$("td").get(i).$("span");
     }
 
+    @Step("Edit spend")
     protected EditSpendingPage editSpend(){
         editButton.click();
         return new EditSpendingPage(driver);
     }
 
+    @Step("Click checkbox")
     protected MainPage clickCheckBox(){
         checkBoxCell.click();
         return new MainPage(driver);

@@ -5,7 +5,6 @@ import guru.qa.niffler.config.Config;
 import guru.qa.niffler.jupiter.annotation.User;
 import guru.qa.niffler.jupiter.annotation.meta.WebTest;
 import guru.qa.niffler.jupiter.annotation.Category;
-import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.model.UserJson;
 import guru.qa.niffler.page.LoginPage;
 import org.junit.jupiter.api.Test;
@@ -21,7 +20,8 @@ public class CategoriesTest {
         String name = userJson.testData().categories().getFirst().name();
         Selenide.open(CFG.frontUrl(), LoginPage.class)
                 .doLogin(userJson)
-                .openProfilePage()
+                .getHeader()
+                .toProfilePage()
                 .showArchiveCategory()
                 .assertActiveCategory(name)
                 .archiveCategory(name)
@@ -39,7 +39,8 @@ public class CategoriesTest {
         String name = userJson.testData().categories().getFirst().name();
         Selenide.open(CFG.frontUrl(), LoginPage.class)
                 .doLogin(userJson)
-                .openProfilePage()
+                .getHeader()
+                .toProfilePage()
                 .showArchiveCategory()
                 .assertArchiveCategory(name)
                 .unarchiveCategory(name)

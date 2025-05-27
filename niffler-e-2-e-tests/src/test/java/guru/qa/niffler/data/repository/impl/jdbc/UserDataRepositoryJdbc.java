@@ -6,6 +6,7 @@ import guru.qa.niffler.data.entity.userdata.FriendshipStatus;
 import guru.qa.niffler.data.entity.userdata.UserEntity;
 import guru.qa.niffler.data.repository.UserdataUserRepository;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Optional;
@@ -14,6 +15,7 @@ import java.util.UUID;
 import static guru.qa.niffler.data.entity.userdata.FriendshipStatus.ACCEPTED;
 import static guru.qa.niffler.data.tpl.Connections.holder;
 
+@ParametersAreNonnullByDefault
 public class UserDataRepositoryJdbc implements UserdataUserRepository {
     private static final Config CFG = Config.getInstance();
     private static final UdUserDaoJdbc userDao = new UdUserDaoJdbc();

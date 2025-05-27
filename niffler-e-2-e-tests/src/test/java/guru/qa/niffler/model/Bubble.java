@@ -50,6 +50,7 @@ public record Bubble(
         );
     }
 
+
     public static Bubble bubble(Color color, SpendJson spendJson){
         return new Bubble(
                 color,

@@ -2,15 +2,22 @@ package guru.qa.niffler.page;
 
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideDriver;
-import com.codeborne.selenide.SelenideElement;
 import guru.qa.niffler.model.UserJson;
+import guru.qa.niffler.page.component.SearchField;
+import io.qameta.allure.Step;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
+
 import static com.codeborne.selenide.Condition.text;
 
+@ParametersAreNonnullByDefault
 public class AllPeoplePage extends BasePage {
     private final ElementsCollection tableRows;
+    @Getter
+    private final SearchField searchField = new SearchField(driver);
 
     @Getter
     @AllArgsConstructor
@@ -20,7 +27,7 @@ public class AllPeoplePage extends BasePage {
         private String buttonText;
     }
 
-    public AllPeoplePage(SelenideDriver driver){
+    public AllPeoplePage(@Nullable SelenideDriver driver){
         super(driver);
         this.tableRows = $$("#all tr");
     }
@@ -30,10 +37,7 @@ public class AllPeoplePage extends BasePage {
     }
 
 
-    private SelenideElement getUser(String username) {
-        return  tableRows.find(text(username));
-    }
-
+    @Step("assert that user {username} status is {status}")
     public AllPeoplePage assertUserStatus(String username, Status status){
         tableRows.find(text(username))
                 .$$("td")
@@ -43,6 +47,7 @@ public class AllPeoplePage extends BasePage {
         return this;
     }
 
+    @Step("assert outcome invitations for user {user}")
     public AllPeoplePage assertOutcomeInvitations(UserJson user){
         for (String username : user
                 .testData()

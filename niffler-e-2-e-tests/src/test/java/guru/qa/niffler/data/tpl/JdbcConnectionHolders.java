@@ -1,7 +1,9 @@
 package guru.qa.niffler.data.tpl;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 
+@ParametersAreNonnullByDefault
 public class JdbcConnectionHolders implements AutoCloseable {
 
     private final List<JdbcConnectionHolder> holders;

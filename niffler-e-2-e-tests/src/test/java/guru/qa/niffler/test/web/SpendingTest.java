@@ -9,15 +9,21 @@ import guru.qa.niffler.jupiter.annotation.User;
 import guru.qa.niffler.jupiter.annotation.meta.WebTest;
 import guru.qa.niffler.jupiter.annotation.Spending;
 import guru.qa.niffler.model.Bubble;
+import guru.qa.niffler.model.CurrencyValues;
 import guru.qa.niffler.model.SpendJson;
 import guru.qa.niffler.model.UserJson;
 import guru.qa.niffler.page.LoginPage;
+import guru.qa.niffler.page.MainPage;
 import org.junit.jupiter.api.Test;
 
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.Date;
 import java.util.Map;
+
+import static guru.qa.niffler.utils.RandomDataUtils.randomSpendingAmount;
+import static guru.qa.niffler.utils.RandomDataUtils.randomSpendingDescription;
 
 @WebTest
 public class SpendingTest {
@@ -146,4 +152,27 @@ public class SpendingTest {
             .getSpendsTable()
             .checkContainsSpends(user);
   }
+
+  @Test
+  @User(categories = {@Category})
+  void addSpendTest(UserJson user){
+      SpendJson spend = new SpendJson(
+              user.id(),
+              new Date(System.currentTimeMillis()),
+              user.testData().categories().getFirst(),
+              CurrencyValues.RUB,
+              randomSpendingAmount(),
+              randomSpendingDescription(),
+              user.username()
+      );
+      Selenide.open(CFG.frontUrl(), LoginPage.class)
+              .doLogin(user.username(), user.testData().password())
+              .getHeader()
+              .addSpendingPage()
+              .fillPage(spend);
+
+      new MainPage().getSpendTable()
+              .checkSpend(spend);
+  }
+
 }

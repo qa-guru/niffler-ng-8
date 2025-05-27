@@ -14,7 +14,6 @@ public class IssueExtension implements ExecutionCondition {
 
   private static final GhApiClient ghApiClient = new GhApiClient();
 
-  @SneakyThrows
   @Override
   public ConditionEvaluationResult evaluateExecutionCondition(ExtensionContext context) {
     return AnnotationSupport.findAnnotation(

@@ -16,7 +16,8 @@ public class FriendsWebTest {
     void friendShouldBePresentInFriendsTable(UserJson user) {
         Selenide.open(CFG.frontUrl(), LoginPage.class)
                 .doLogin(user)
-                .openFriendsPage()
+                .getHeader()
+                .toFriendsPage()
                 .assertFriendExist(user);
     }
 
@@ -25,7 +26,8 @@ public class FriendsWebTest {
     void friendsTableShouldBeEmptyForNewUser(UserJson user) {
         Selenide.open(CFG.frontUrl(), LoginPage.class)
                 .doLogin(user)
-                .openFriendsPage()
+                .getHeader()
+                .toFriendsPage()
                 .assertEmptyUser();
     }
 
@@ -34,7 +36,8 @@ public class FriendsWebTest {
     void incomeInvitationBePresentInFriendsTable(UserJson user) {
         Selenide.open(CFG.frontUrl(), LoginPage.class)
                 .doLogin(user)
-                .openFriendsPage()
+                .getHeader()
+                .toFriendsPage()
                 .assertFriendRequestExist(user);
     }
     @User(outcomeInvitations = 1)
@@ -42,8 +45,33 @@ public class FriendsWebTest {
     void outcomeInvitationBePresentInAllPeoplesTable(UserJson user) {
         Selenide.open(CFG.frontUrl(), LoginPage.class)
                 .doLogin(user)
-                .openFriendsPage()
+                .getHeader()
+                .toFriendsPage()
                 .clickAllPeopleTab()
                 .assertOutcomeInvitations(user);
+    }
+
+    //TODO написать логику
+
+    @User(incomeInvitations = 1)
+    @Test
+    void acceptFriendRequest(UserJson user) {
+        Selenide.open(CFG.frontUrl(), LoginPage.class)
+                .doLogin(user)
+                .getHeader()
+                .toFriendsPage()
+                .assertFriendRequestExist(user)
+                .acceptFriend(user.testData().incomeInvitations().getFirst());
+    }
+
+    @User(incomeInvitations = 1)
+    @Test
+    void declineFriendRequest(UserJson user) {
+        Selenide.open(CFG.frontUrl(), LoginPage.class)
+                .doLogin(user)
+                .getHeader()
+                .toFriendsPage()
+                .assertFriendRequestExist(user)
+                .declineFriend(user.testData().incomeInvitations().getFirst());
     }
 }

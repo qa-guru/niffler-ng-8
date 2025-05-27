@@ -9,11 +9,14 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.sql.*;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
+@ParametersAreNonnullByDefault
 public class CategoryDaoSpringJdbc implements CategoryDao {
 
     private static final Config CFG = Config.getInstance();
@@ -33,7 +36,7 @@ public class CategoryDaoSpringJdbc implements CategoryDao {
             ps.setBoolean(3, category.isArchived());
             return ps;
         },kh);
-        final UUID generatedKey = (UUID) kh.getKeys().get("id");
+        final UUID generatedKey = (UUID) Objects.requireNonNull(kh.getKeys()).get("id");
         category.setId(generatedKey);
         return category;
     }

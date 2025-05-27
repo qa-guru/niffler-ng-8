@@ -11,6 +11,7 @@ import guru.qa.niffler.data.repository.SpendRepository;
 import guru.qa.niffler.data.tpl.JdbcTransactionTemplate;
 import guru.qa.niffler.model.CurrencyValues;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -19,6 +20,7 @@ import java.util.UUID;
 
 import static guru.qa.niffler.data.tpl.Connections.holder;
 
+@ParametersAreNonnullByDefault
 public class SpendRepositoryJdbc implements SpendRepository {
     private static final Config CFG = Config.getInstance();
     private static final SpendDao spendDao = new SpendDaoJdbc();
@@ -117,7 +119,7 @@ public class SpendRepositoryJdbc implements SpendRepository {
                                     .findCategoryById(
                                             rs.getObject("category_id", UUID.class)
                                     )
-                                    .get()
+                                    .orElse(null)
                     );
                     spendOpt = Optional.of(se);
                 } else {

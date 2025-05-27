@@ -8,11 +8,14 @@ import guru.qa.niffler.data.tpl.XaTransactionTemplate;
 import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.model.SpendJson;
 import guru.qa.niffler.service.SpendClient;
+import io.qameta.allure.Step;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Optional;
 import java.util.UUID;
 
 
+@ParametersAreNonnullByDefault
 public class SpendDbClient implements SpendClient {
 
     protected static final Config CFG = Config.getInstance();
@@ -32,6 +35,7 @@ public class SpendDbClient implements SpendClient {
     }
 
     @Override
+    @Step("Create spend")
     public SpendJson createSpend(SpendJson spend) {
         return xaTransactionTemplate.execute(() -> {
             SpendEntity entity = SpendEntity.fromJson(spend);
@@ -41,8 +45,9 @@ public class SpendDbClient implements SpendClient {
 
 
     @Override
+    @Step("Delete spend")
     public void deleteSpend(SpendJson spend) {
-        xaTransactionTemplate .execute(() -> {
+        xaTransactionTemplate.execute(() -> {
             spendRepository.remove(
                     SpendEntity.fromJson(spend)
             );
@@ -51,8 +56,9 @@ public class SpendDbClient implements SpendClient {
     }
 
     @Override
+    @Step("Create category")
     public CategoryJson createCategory(CategoryJson category) {
-        return xaTransactionTemplate .execute(() ->
+        return xaTransactionTemplate.execute(() ->
                 CategoryJson.fromEntity(
                 spendRepository.createCategory(
                         CategoryEntity.fromJson(category)
@@ -61,8 +67,9 @@ public class SpendDbClient implements SpendClient {
     }
 
     @Override
+    @Step("Delete category")
     public void deleteCategory(CategoryJson category) {
-        xaTransactionTemplate .execute(() -> {
+        xaTransactionTemplate.execute(() -> {
             spendRepository.removeCategory(
                     CategoryEntity.fromJson(category)
             );
@@ -71,8 +78,9 @@ public class SpendDbClient implements SpendClient {
     }
 
     @Override
+    @Step("Find spend by id {spendId}")
     public Optional<SpendJson> findById(UUID spendId) {
-        return xaTransactionTemplate .execute(() ->
+        return xaTransactionTemplate.execute(() ->
                 spendRepository.findById(spendId)
                         .map(SpendJson::fromEntity)
         );

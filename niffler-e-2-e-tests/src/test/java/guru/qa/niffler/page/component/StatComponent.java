@@ -14,6 +14,7 @@ import guru.qa.niffler.utils.ScreenDiffResult;
 import io.qameta.allure.Step;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -32,8 +33,12 @@ public class StatComponent extends BaseComponent<StatComponent> {
     private final ElementsCollection bubbles = self.$("#legend-container").$$("li");
     private final SelenideElement chart;
 
-    public StatComponent(SelenideDriver driver) {
-        super(driver, driver.$("#stat"));
+    public StatComponent(@Nullable SelenideDriver driver) {
+        super(driver,
+                driver == null
+                    ? Selenide.$("#stat")
+                    : driver.$("#stat")
+        );
         this.chart = $("canvas[role='img']");
     }
     public StatComponent() {
@@ -43,7 +48,6 @@ public class StatComponent extends BaseComponent<StatComponent> {
 
 
     @Step("Check that statistic image matches the expected image")
-    @Nonnull
     public StatComponent checkStatisticImage(BufferedImage expectedImage) throws IOException {
         Selenide.sleep(2000);
         assertFalse(
@@ -57,27 +61,23 @@ public class StatComponent extends BaseComponent<StatComponent> {
     }
 
     @Step("Get screenshot of stat chart")
-    @Nonnull
     public BufferedImage chartScreenshot() throws IOException {
         return ImageIO.read(requireNonNull(chart.screenshot()));
     }
 
     @Step("Check that stat bubbles equals expected bubbles {expectedBubbles}")
-    @Nonnull
     public StatComponent checkBubbles(Bubble... expectedBubbles) {
         bubbles.should(statBubbles(expectedBubbles));
         return this;
     }
 
     @Step("Check that stat bubbles equals expected bubbles in any order {expectedBubbles}")
-    @Nonnull
     public StatComponent checkBubblesInAnyOrder(Bubble... expectedBubbles) {
         bubbles.should(statBubblesInAnyOrder(expectedBubbles));
         return this;
     }
 
     @Step("Check that stat bubbles contains expected bubbles {expectedBubbles}")
-    @Nonnull
     public StatComponent checkContainsBubbles(Bubble... expectedBubbles) {
         bubbles.should(statBubblesContains(expectedBubbles));
         return this;
@@ -92,6 +92,7 @@ public class StatComponent extends BaseComponent<StatComponent> {
     }
 
 
+    @Step("Check statistic diagram info")
     public StatComponent checkStatisticDiagramInfo(Map<CategoryJson, Double> info) {
         List<String> spendInfo = new ArrayList<>();
         info.forEach((key,value)->{

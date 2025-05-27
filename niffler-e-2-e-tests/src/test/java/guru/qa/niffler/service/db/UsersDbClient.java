@@ -12,13 +12,16 @@ import guru.qa.niffler.data.tpl.XaTransactionTemplate;
 import guru.qa.niffler.model.CurrencyValues;
 import guru.qa.niffler.model.UserJson;
 import guru.qa.niffler.service.UsersClient;
+import io.qameta.allure.Step;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Arrays;
 
 import static guru.qa.niffler.utils.RandomDataUtils.randomUsername;
 
+@ParametersAreNonnullByDefault
 public class UsersDbClient implements UsersClient {
 
     private static final Config CFG = Config.getInstance();
@@ -41,6 +44,7 @@ public class UsersDbClient implements UsersClient {
     }
 
     @Override
+    @Step("Create user with username {username} and password {password}")
     public UserJson createUser(String username, String password) {
         return xaTransactionTemplate.execute(() -> {
             AuthUserEntity authUserEntity = authUserEntity(username,password);
@@ -81,6 +85,7 @@ public class UsersDbClient implements UsersClient {
     }
 
     @Override
+    @Step("Create {count} friend for user {targetUser}")
     public void createFriends(UserJson targetUser, int count) {
         if (count > 0) {
             UserEntity targetEntity = userdataUserRepository.findById(
@@ -105,6 +110,7 @@ public class UsersDbClient implements UsersClient {
     }
 
     @Override
+    @Step("Create {count} outcome invitations for user {targetUser}")
     public void createOutcomeInvitations(UserJson targetUser, int count) {
         if (count > 0) {
             UserEntity targetEntity = userdataUserRepository.findById(
@@ -129,6 +135,7 @@ public class UsersDbClient implements UsersClient {
     }
 
     @Override
+    @Step("Create {count} income invitations for user {targetUser}")
     public void createIncomeInvitations(UserJson targetUser, int count) {
         if (count > 0) {
             UserEntity targetEntity = userdataUserRepository.findById(

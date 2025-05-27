@@ -4,11 +4,16 @@ import com.codeborne.selenide.SelenideElement;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
+import static com.codeborne.selenide.Selenide.$;
+
 @ParametersAreNonnullByDefault
-public class Calendar {
-  private final SelenideElement self;
+public class Calendar extends BaseComponent<Calendar> {
 
   public Calendar(SelenideElement self) {
-    this.self = self;
+    super(self);
+  }
+
+  public Calendar() {
+    super($(".MuiPickersLayout-root"));
   }
 }

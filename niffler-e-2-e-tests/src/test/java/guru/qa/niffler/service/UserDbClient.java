@@ -57,7 +57,7 @@ public class UserDbClient {
     );
 
     public UserJson createUserTxJdbc(UserJson user) {
-        return xaTransactionTemplate.execute(TransactionIsolation.READ_UNCOMMITTED, () -> {
+        return xaTransactionTemplate.execute(() -> {
                     AuthUserEntity authUserEntity = new AuthUserEntity();
                     authUserEntity.setUsername(user.username());
                     authUserEntity.setPassword(ENCODER.encode(user.password()));

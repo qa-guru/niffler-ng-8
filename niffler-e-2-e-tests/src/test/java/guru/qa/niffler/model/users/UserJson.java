@@ -2,10 +2,9 @@ package guru.qa.niffler.model.users;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import guru.qa.niffler.data.entity.auth.AuthAuthorityEntity;
-
 import guru.qa.niffler.data.entity.user.UserEntity;
 import guru.qa.niffler.data.enums.CurrencyValues;
-
+import lombok.Setter;
 
 import javax.annotation.Nonnull;
 import java.nio.charset.StandardCharsets;
@@ -13,6 +12,7 @@ import java.util.UUID;
 
 public record UserJson(
         @JsonProperty("id")
+        @Setter
         UUID id,
         @JsonProperty("username")
         String username,

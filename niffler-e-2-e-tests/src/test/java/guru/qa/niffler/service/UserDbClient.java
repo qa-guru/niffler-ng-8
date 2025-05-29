@@ -149,6 +149,10 @@ public class UserDbClient {
         userRepository.addIncomeInvitation(requester, addressee);
     }
 
+    public void addIncomeInvitation(UserJson requester, UserJson addressee) {
+        addIncomeInvitation(requester.id(), addressee.id());
+    }
+
     public void addOutcomeInvitation(UUID requesterUUID, UUID addresseeUUID) {
         UserEntity requester = new UserEntity();
         requester.setId(requesterUUID);
@@ -173,6 +177,11 @@ public class UserDbClient {
         Optional<AuthUserEntity> authUser = authUserRepository.findByName(user.username());
         authUserRepository.deleteAuthority(authUser.orElseThrow());
         authUserRepository.deleteUser(authUser.orElseThrow());
+    }
+
+    public UUID getUserId(UserJson user) {
+        Optional<UserEntity> userJson = userRepository.findByUsername(user.username());
+        return userJson.map(UserEntity::getId).orElse(null);
     }
 
     public void clearPhotoDataByUsername(String username) {

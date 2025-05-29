@@ -8,6 +8,7 @@ import guru.qa.niffler.model.users.UserJson;
 
 import java.security.SecureRandom;
 import java.util.Date;
+import java.util.Random;
 import java.util.UUID;
 
 public class RandomDataUtils {
@@ -88,5 +89,14 @@ public class RandomDataUtils {
                 faker.weather().description(),
                 username
         );
+    }
+
+    public static int getRandomNumberInRange(int min, int max) {
+        if (min > max)
+            throw new IllegalArgumentException("max must be greater than min");
+        else if (max == min)
+            return min;
+        Random r = new Random();
+        return r.nextInt((max - min) + 1) + min;
     }
 }

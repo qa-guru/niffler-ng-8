@@ -41,7 +41,9 @@ public class ProfileTest {
                 .doLogin(user)
                 .getHeader()
                 .toProfilePage()
-                .setName(newName);
+                .setName(newName)
+                .submitProfile()
+                .checkAlertMessage("Profile successfully updated");
 
         Selenide.refresh();
 

@@ -15,7 +15,7 @@ import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selectors.byXpath;
 
 @ParametersAreNonnullByDefault
-public class RegistrationPage extends BasePage {
+public class RegistrationPage extends BasePage<RegistrationPage> {
 
     private final SelenideElement loginHyperLink = $(byText("Log in!"));
     private final SelenideElement usernameInput = $("input[id=username]");

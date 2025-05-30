@@ -20,7 +20,7 @@ import static com.codeborne.selenide.Condition.visible;
 
 
 @ParametersAreNonnullByDefault
-public class EditSpendingPage extends BasePage {
+public class EditSpendingPage extends BasePage<EditSpendingPage> {
 
   private final SelectField currencySelect = new SelectField($("#currency"));
 

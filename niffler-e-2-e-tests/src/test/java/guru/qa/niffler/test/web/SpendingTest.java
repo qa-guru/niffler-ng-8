@@ -175,4 +175,17 @@ public class SpendingTest {
               .checkSpend(spend);
   }
 
+    @Test
+    @User
+    void shouldNotAddSpendingWithEmptyAmount(UserJson user) {
+        Selenide.open(CFG.frontUrl(), LoginPage.class)
+                .doLogin(user.username(), user.testData().password())
+                .getHeader()
+                .addSpendingPage()
+                .setNewSpendingCategory("Friends")
+                .setNewSpendingDate(new Date())
+                .saveSpending()
+                .checkFormErrorMessage("Amount has to be not less then 0.01");
+    }
+
 }

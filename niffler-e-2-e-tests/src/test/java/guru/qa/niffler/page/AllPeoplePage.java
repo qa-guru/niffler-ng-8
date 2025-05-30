@@ -14,7 +14,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import static com.codeborne.selenide.Condition.text;
 
 @ParametersAreNonnullByDefault
-public class AllPeoplePage extends BasePage {
+public class AllPeoplePage extends BasePage<AllPeoplePage> {
     private final ElementsCollection tableRows = $$("#all tr");
 
     @Getter

@@ -1,21 +1,24 @@
 package guru.qa.niffler.page;
 
-import com.codeborne.selenide.SelenideDriver;
+import com.codeborne.selenide.*;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.page.component.Header;
 import io.qameta.allure.Step;
 import lombok.Getter;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 import static com.codeborne.selenide.WebDriverConditions.url;
 
 @ParametersAreNonnullByDefault
-public class BasePage extends SelenideProviderService {
+public class BasePage<T extends BasePage<?>> extends SelenideProviderService {
 
     @Getter
     private final Header header = new Header(driver);
+    private final SelenideElement alert = $(".MuiSnackbar-root");
+    private final ElementsCollection formErrors = $$("p.Mui-error, .input__helper-text");
 
     public BasePage(@Nullable SelenideDriver driver){
         super(driver);
@@ -39,5 +42,21 @@ public class BasePage extends SelenideProviderService {
         } catch (Exception e) {
             throw new AssertionError("Не удалось создать объект класса страницы.");
         }
+    }
+
+    @Step("Check that alert message appears: {expectedText}")
+    @SuppressWarnings("unchecked")
+    @Nonnull
+    public T checkAlertMessage(String expectedText) {
+        alert.should(Condition.visible).should(Condition.text(expectedText));
+        return (T) this;
+    }
+
+    @Step("Check that form error message appears: {expectedText}")
+    @SuppressWarnings("unchecked")
+    @Nonnull
+    public T checkFormErrorMessage(String... expectedText) {
+        formErrors.should(CollectionCondition.textsInAnyOrder(expectedText));
+        return (T) this;
     }
 }

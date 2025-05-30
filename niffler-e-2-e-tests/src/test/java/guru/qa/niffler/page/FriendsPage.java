@@ -19,7 +19,7 @@ import static com.codeborne.selenide.Selectors.byText;
 import static guru.qa.niffler.model.ElementType.BUTTON;
 
 @ParametersAreNonnullByDefault
-public class FriendsPage extends BasePage {
+public class FriendsPage extends BasePage<FriendsPage> {
 
     private static final String LONELY_NIFFLER_IMG_URL = "assets/niffler-with-a-coin-Cb77k8MX.png";
 

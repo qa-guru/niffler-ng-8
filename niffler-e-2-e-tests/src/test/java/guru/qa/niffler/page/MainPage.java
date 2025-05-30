@@ -16,7 +16,7 @@ import java.time.Duration;
 import static com.codeborne.selenide.Condition.visible;
 
 @ParametersAreNonnullByDefault
-public class MainPage extends BasePage {
+public class MainPage extends BasePage<MainPage> {
     private final SelenideElement historyBox = $("#spendings");
     private final SelenideElement statisticsBox = $("#stat");
     private final SelenideElement contextMenuInAvatarBtn = $("button[aria-label='Menu']");

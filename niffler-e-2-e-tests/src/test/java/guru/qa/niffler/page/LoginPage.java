@@ -5,6 +5,7 @@ import com.codeborne.selenide.SelenideDriver;
 import com.codeborne.selenide.SelenideElement;
 import guru.qa.niffler.model.ElementType;
 import guru.qa.niffler.model.UserJson;
+import guru.qa.niffler.page.component.Header;
 import io.qameta.allure.Step;
 
 import javax.annotation.Nullable;
@@ -15,7 +16,7 @@ import static com.codeborne.selenide.Condition.value;
 import static com.codeborne.selenide.Selectors.byText;
 
 @ParametersAreNonnullByDefault
-public class LoginPage extends BasePage {
+public class LoginPage extends BasePage<LoginPage> {
 
   private final SelenideElement usernameInput = $("input[name='username']");
   private final SelenideElement passwordInput = $("input[name='password']");
@@ -98,5 +99,10 @@ public class LoginPage extends BasePage {
   public LoginPage assertError(){
     errorComponent.shouldBe(Condition.visible,Duration.ofSeconds(5));
     return this;
+  }
+
+  @Override
+  public Header getHeader(){
+    throw new UnsupportedOperationException("Login page haven't header");
   }
 }

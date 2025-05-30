@@ -1,6 +1,7 @@
 package guru.qa.niffler.service.api;
 
 import guru.qa.niffler.api.core.RestClient;
+import guru.qa.niffler.api.core.ThreadSafeCookieStore;
 import guru.qa.niffler.utils.SuccessRequestExecutor;
 import guru.qa.niffler.api.AuthApi;
 import guru.qa.niffler.api.UserdataApi;
@@ -11,6 +12,7 @@ import guru.qa.niffler.utils.RandomDataUtils;
 import io.qameta.allure.Step;
 import retrofit2.Call;
 
+import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +31,7 @@ public class UsersApiClient implements UsersClient {
 
     @Override
     @Step("Create user with username {username} and password {password}")
+    @Nonnull
     public UserJson createUser(String username, String password) {
         return sre.<UserJson>executeRequest(
                 authApi.getRegisterPage(),
@@ -36,7 +39,7 @@ public class UsersApiClient implements UsersClient {
                         username,
                         password,
                         password,
-                        null
+                        ThreadSafeCookieStore.INSTANCE.cookieValue("XSRF-TOKEN")
                 ),
                 userdataApi.currentUser(username)
         ).withPassword(DEFAULT_PASSWORD);

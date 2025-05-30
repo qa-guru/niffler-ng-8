@@ -17,29 +17,21 @@ import static com.codeborne.selenide.Selectors.byXpath;
 @ParametersAreNonnullByDefault
 public class RegistrationPage extends BasePage {
 
-    private final SelenideElement loginHyperLink;
-    private final SelenideElement usernameInput;
-    private final SelenideElement passwordInput;
-    private final SelenideElement showPasswordIcon;
-    private final SelenideElement passwordSubmitInput;
-    private final SelenideElement showPasswordSubmitIcon;
-    private final SelenideElement signUpButton;
-    private final SelenideElement signInButton;
+    private final SelenideElement loginHyperLink = $(byText("Log in!"));
+    private final SelenideElement usernameInput = $("input[id=username]");
+    private final SelenideElement passwordInput = $("input[id=password]");
+    private final SelenideElement showPasswordIcon = $("button[id=passwordBtn]");
+    private final SelenideElement passwordSubmitInput = $("input[id=passwordSubmit]");
+    private final SelenideElement showPasswordSubmitIcon = $("button[id=passwordSubmitBtn]");
+    private final SelenideElement signUpButton = $(byXpath("//button[normalize-space(text())='Sign Up']"));
+    private final SelenideElement signInButton = $(byText("Sign in"));
 
     public RegistrationPage(@Nullable SelenideDriver driver) {
         super(driver);
-        this.loginHyperLink = $(byText("Log in!"));
-        this.usernameInput = $("input[id=username]");
-        this.passwordInput = $("input[id=password]");
-        this.showPasswordIcon = $("button[id=passwordBtn]");
-        this.passwordSubmitInput = $("input[id=passwordSubmit]");
-        this.showPasswordSubmitIcon = $("button[id=passwordSubmitBtn]");
-        this.signUpButton = $(byXpath("//button[normalize-space(text())='Sign Up']"));
-        this.signInButton = $(byText("Sign in"));
     }
 
     public RegistrationPage() {
-        this(null);
+        super();
     }
 
     @Step("Set username {userName}")

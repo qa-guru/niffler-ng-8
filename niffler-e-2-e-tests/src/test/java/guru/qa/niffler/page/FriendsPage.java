@@ -24,28 +24,22 @@ public class FriendsPage extends BasePage {
     private static final String LONELY_NIFFLER_IMG_URL = "assets/niffler-with-a-coin-Cb77k8MX.png";
 
     // Элементы страницы
-    private final SelenideElement allPeopleTab;
-    private final ElementsCollection requestsTableRows;
-    private final ElementsCollection friendsTableRows;
-    private final SelenideElement noFriendsText;
-    private final SelenideElement lonelyNifflerImage;
-    private final SelenideElement declineButtonDialogWindow;
+    private final SelenideElement allPeopleTab = $(byText("All people"));
+    private final ElementsCollection requestsTableRows = $$("#requests tr");
+    private final ElementsCollection friendsTableRows = $$( "#friends tr");
+    private final SelenideElement noFriendsText = $(byText("There are no users yet"));
+    private final SelenideElement lonelyNifflerImage = $("img[alt='Lonely niffler']");
+    private final SelenideElement declineButtonDialogWindow = $$("div[role='dialog'] button")
+            .find(text("Decline"));
     @Getter
     private final SearchField searchField = new SearchField(driver);
 
     public FriendsPage(@Nullable SelenideDriver driver) {
         super(driver);
-        this.allPeopleTab = $(byText("All people"));
-        this.requestsTableRows = $$("#requests tr");
-        this.friendsTableRows = $$( "#friends tr");
-        this.noFriendsText = $(byText("There are no users yet"));
-        this.lonelyNifflerImage = $("img[alt='Lonely niffler']");
-        this.declineButtonDialogWindow = $$("div[role='dialog'] button")
-                .find(text("Decline"));
     }
 
     public FriendsPage() {
-        this(null);
+        super();
     }
 
     @Step("assert that user haven't friends")

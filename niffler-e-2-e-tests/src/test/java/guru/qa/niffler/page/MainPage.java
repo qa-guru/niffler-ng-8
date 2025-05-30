@@ -13,15 +13,14 @@ import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.time.Duration;
 
-import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Condition.visible;
 
 @ParametersAreNonnullByDefault
 public class MainPage extends BasePage {
-    private final SelenideElement historyBox;
-    private final SelenideElement statisticsBox;
-    private final SelenideElement contextMenuInAvatarBtn;
-    private final ElementsCollection contextMenuElements;
+    private final SelenideElement historyBox = $("#spendings");
+    private final SelenideElement statisticsBox = $("#stat");
+    private final SelenideElement contextMenuInAvatarBtn = $("button[aria-label='Menu']");
+    private final ElementsCollection contextMenuElements = $$(".MuiList-padding li");
 
     @Getter
     private SearchField searchField = new SearchField(driver);
@@ -34,14 +33,10 @@ public class MainPage extends BasePage {
 
     public MainPage(@Nullable SelenideDriver driver){
         super(driver);
-        this.historyBox = $("#spendings");
-        this.statisticsBox = $("#stat");
-        this.contextMenuInAvatarBtn = $("button[aria-label='Menu']");
-        this.contextMenuElements = $$(".MuiList-padding li");
     }
 
     public MainPage(){
-        this(null);
+        super();
     }
 
     @Step("Assert main components")

@@ -8,7 +8,6 @@ import org.openqa.selenium.By;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
-import java.security.AllPermission;
 import java.time.Duration;
 
 import static com.codeborne.selenide.Selectors.byXpath;

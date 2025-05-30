@@ -17,25 +17,19 @@ import static com.codeborne.selenide.Selectors.byText;
 @ParametersAreNonnullByDefault
 public class LoginPage extends BasePage {
 
-  private final SelenideElement usernameInput;
-  private final SelenideElement passwordInput;
-  private final SelenideElement submitBtn;
-  private final SelenideElement registerButton;
-  private final SelenideElement showPasswordIcon;
-  private final SelenideElement errorComponent;
+  private final SelenideElement usernameInput = $("input[name='username']");
+  private final SelenideElement passwordInput = $("input[name='password']");
+  private final SelenideElement submitBtn = $("button[type='submit']");
+  private final SelenideElement registerButton = $("a[class='form__register']");
+  private final SelenideElement showPasswordIcon = $("button[class=form__password-button]");
+  private final SelenideElement errorComponent = $(byText("Неверные учетные данные пользователя"));
 
   public LoginPage(@Nullable SelenideDriver driver) {
     super(driver);
-    this.usernameInput = $("input[name='username']");
-    this.passwordInput = $("input[name='password']");
-    this.submitBtn = $("button[type='submit']");
-    this.registerButton = $("a[class='form__register']");
-    this.showPasswordIcon = $("button[class=form__password-button]");
-    this.errorComponent = $(byText("Неверные учетные данные пользователя"));
   }
 
   public LoginPage() {
-    this(null);
+    super();
   }
 
   @Step("Log in with user {username}")

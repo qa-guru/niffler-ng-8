@@ -40,7 +40,7 @@ public class EditSpendingPage extends BasePage {
   }
 
   public EditSpendingPage(){
-    this(null);
+    super();
   }
 
   @Step("Edit description to {description}")

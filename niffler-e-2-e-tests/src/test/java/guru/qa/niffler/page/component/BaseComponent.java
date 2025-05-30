@@ -3,12 +3,15 @@ package guru.qa.niffler.page.component;
 import com.codeborne.selenide.SelenideDriver;
 import com.codeborne.selenide.SelenideElement;
 import guru.qa.niffler.page.SelenideProviderService;
+import lombok.Getter;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
+@Getter
 public abstract class BaseComponent<T extends BaseComponent<?>> extends SelenideProviderService {
+
 
     protected final SelenideElement self;
 
@@ -18,10 +21,7 @@ public abstract class BaseComponent<T extends BaseComponent<?>> extends Selenide
     }
 
     protected BaseComponent(SelenideElement self) {
-        this(null,self);
-    }
-
-    public SelenideElement getSelf() {
-        return self;
+        super();
+        this.self = self;
     }
 }

@@ -15,9 +15,11 @@ public abstract class SelenideProviderService {
 
     public SelenideProviderService(@Nullable SelenideDriver driver) {
         this.driver = driver;
-        if (driver != null) {
-            NonStaticBrowserExtension.add(driver);
-        }
+        NonStaticBrowserExtension.add(driver);
+    }
+
+    public SelenideProviderService() {
+        this.driver = null;
     }
 
     public SelenideDriver driver(){

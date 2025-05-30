@@ -22,7 +22,7 @@ public class BasePage extends SelenideProviderService {
     }
 
     public BasePage(){
-        this(null);
+        super();
     }
 
     @Step("assert redirect to page {strings}")

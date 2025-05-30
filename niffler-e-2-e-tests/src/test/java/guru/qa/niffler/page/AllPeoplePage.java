@@ -15,7 +15,8 @@ import static com.codeborne.selenide.Condition.text;
 
 @ParametersAreNonnullByDefault
 public class AllPeoplePage extends BasePage {
-    private final ElementsCollection tableRows;
+    private final ElementsCollection tableRows = $$("#all tr");
+
     @Getter
     private final SearchField searchField = new SearchField(driver);
 
@@ -29,11 +30,10 @@ public class AllPeoplePage extends BasePage {
 
     public AllPeoplePage(@Nullable SelenideDriver driver){
         super(driver);
-        this.tableRows = $$("#all tr");
     }
 
     public AllPeoplePage(){
-        this(null);
+        super();
     }
 
 

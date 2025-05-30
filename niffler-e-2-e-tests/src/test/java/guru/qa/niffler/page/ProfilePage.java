@@ -46,7 +46,7 @@ public class ProfilePage extends BasePage {
 
 
     public ProfilePage() {
-        this(null);
+        super();
     }
 
     @Step("Set category: '{0}'")

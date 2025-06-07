@@ -3,15 +3,17 @@ package guru.qa.niffler.page;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
+import guru.qa.niffler.jupiter.extension.ScreenShotTestExtension;
 import guru.qa.niffler.utils.ScreenDifResult;
+import guru.qa.niffler.utils.ScreenDiffResult;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.Objects;
 
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.*;
+import static java.util.Objects.requireNonNull;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
 public class ProfilePage {
@@ -27,6 +29,8 @@ public class ProfilePage {
     private final SelenideElement archivedSwitcher = $(".MuiSwitch-input");
     private final ElementsCollection bubbles = $$(".MuiChip-filled.MuiChip-colorPrimary");
     private final ElementsCollection bubblesArchived = $$(".MuiChip-filled.MuiChip-colorDefault");
+    private final SelenideElement userName = $("#username");
+    private final SelenideElement nameInput = $("#name");
 
     public ProfilePage checkProfilePageShouldBeLoaded() {
         categoriesLabel.shouldBe(visible);
@@ -55,7 +59,7 @@ public class ProfilePage {
         Selenide.sleep(3000);
         BufferedImage actual;
         try {
-            actual = ImageIO.read(Objects.requireNonNull(avatar.screenshot()));
+            actual = ImageIO.read(requireNonNull(avatar.screenshot()));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

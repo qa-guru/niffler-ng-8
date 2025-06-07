@@ -4,6 +4,7 @@ import com.codeborne.selenide.CollectionCondition;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
+import guru.qa.niffler.model.SpendJson;
 import guru.qa.niffler.utils.ScreenDifResult;
 import org.openqa.selenium.By;
 import guru.qa.niffler.page.component.StatComponent;
@@ -17,6 +18,7 @@ import java.util.Objects;
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.*;
+import static guru.qa.niffler.condition.SpendConditions.spends;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
 public class MainPage {
@@ -31,6 +33,9 @@ public class MainPage {
     private final SelenideElement deleteButton = $("#delete");
     private final SelenideElement dialogWindow = $("div[role='dialog']");
     private final SelenideElement spendingTable = $("#spendings");
+    private final SelenideElement header = $("#root header");
+    private final SelenideElement headerMenu = $("ul[role='menu']");
+
 
     private final StatComponent statComponent = new StatComponent();
 
@@ -152,6 +157,15 @@ public class MainPage {
     public MainPage checkThatPageLoaded() {
         statComponent.self.should(visible).shouldHave(text("Statistics"));
         spendingTable.should(visible).shouldHave(text("History of Spendings"));
+        return this;
+    }
+
+    public void checkThatTableContainsSpending(String spendingDescription) {
+        tableRows.find(text(spendingDescription)).should(visible);
+    }
+
+    public MainPage checkSpendingByFields(SpendJson... expectedSpends) {
+        tableRows.should(spends(expectedSpends));
         return this;
     }
 

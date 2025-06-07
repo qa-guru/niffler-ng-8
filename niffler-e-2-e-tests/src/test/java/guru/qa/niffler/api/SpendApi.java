@@ -18,8 +18,7 @@ public interface SpendApi {
     Call<SpendJson> editSpend(@Body SpendJson spend);
 
     @GET("internal/spends/{id}")
-    Call<SpendJson> getSpend(@Path("id") String id,
-                             @Query("username") String username);
+    Call<SpendJson> getSpend(@Path("id") String id);
 
     @GET("internal/spends/all")
     Call<List<SpendJson>> getSpends(@Query("username") String username,
@@ -40,4 +39,17 @@ public interface SpendApi {
     @GET("internal/categories/all")
     Call<List<CategoryJson>> getCategories(@Query("username") String username,
                                            @Query("excludeArchived") boolean excludeArchived);
+
+    @GET("internal/spends/all")
+    Call<List<SpendJson>> allSpends(@Query("username") String username,
+                                    @Query("filterCurrency") CurrencyValues filterCurrency,
+                                    @Query("from") String from,
+                                    @Query("to") String to);
+
+    @DELETE("internal/spends/remove")
+    Call<Void> removeSpends(@Query("username") String username, @Query("ids") List<String> ids);
+
+    @GET("internal/categories/all")
+    Call<List<CategoryJson>> allCategories(@Query("username") String username);
 }
+

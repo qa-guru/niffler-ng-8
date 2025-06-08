@@ -3,6 +3,7 @@ package guru.qa.niffler.data.entity;
 import guru.qa.niffler.model.CategoryJson;
 import lombok.Getter;
 import lombok.Setter;
+
 import java.io.Serializable;
 import java.util.UUID;
 

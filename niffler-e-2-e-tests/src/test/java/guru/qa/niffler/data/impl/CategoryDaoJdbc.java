@@ -4,13 +4,14 @@ import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.Databases;
 import guru.qa.niffler.data.dao.CategoryDao;
 import guru.qa.niffler.data.entity.CategoryEntity;
-import org.hibernate.annotations.processing.SQL;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+
+import static java.lang.String.format;
 
 public class CategoryDaoJdbc implements CategoryDao {
     private static final Config CFG = Config.getInstance();
@@ -130,7 +131,7 @@ public class CategoryDaoJdbc implements CategoryDao {
                 ps.setObject(1, category.getId());
                 int count = ps.executeUpdate();
                 if (count != 1) {
-                    throw new SQLException("");
+                    throw new SQLException(format("Не удалось удалить сущность с id = %s", category.getId()));
                 }
             }
         } catch (SQLException e) {

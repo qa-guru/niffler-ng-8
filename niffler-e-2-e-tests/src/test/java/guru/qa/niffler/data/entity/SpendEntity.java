@@ -4,8 +4,9 @@ import guru.qa.niffler.model.CurrencyValues;
 import guru.qa.niffler.model.SpendJson;
 import lombok.Getter;
 import lombok.Setter;
+
 import java.io.Serializable;
-import java.util.Date;
+import java.sql.Date;
 import java.util.UUID;
 
 @Getter

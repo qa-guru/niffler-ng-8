@@ -1,5 +1,6 @@
 package guru.qa.niffler.jupiter.extension;
 
+import guru.qa.niffler.config.Config;
 import guru.qa.niffler.jupiter.annotation.User;
 import guru.qa.niffler.model.UserJson;
 import guru.qa.niffler.service.UsersClient;
@@ -13,7 +14,7 @@ public class UserExtension implements
         ParameterResolver {
 
     public static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(UserExtension.class);
-    private static final String defaultPassword = "12345";
+    private static final Config CFG = Config.getInstance();
 
     private final UsersClient usersClient = new UsersDbClient();
 
@@ -26,7 +27,7 @@ public class UserExtension implements
 
                         UserJson user = usersClient.createUser(
                                 username,
-                                defaultPassword
+                                CFG.defaultPassword()
                         );
                         usersClient.createIncomeInvitations(user, userAnno.incomeInvitations());
                         usersClient.createOutcomeInvitations(user, userAnno.outcomeInvitations());

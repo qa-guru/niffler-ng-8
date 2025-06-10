@@ -13,6 +13,7 @@ import io.qameta.allure.Step;
 import retrofit2.Call;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +22,6 @@ import java.util.List;
 public class UsersApiClient implements UsersClient {
 
     private static final Config CFG = Config.getInstance();
-    private static final String DEFAULT_PASSWORD = "12345";
 
     private final SuccessRequestExecutor sre = new SuccessRequestExecutor();
 
@@ -42,7 +42,7 @@ public class UsersApiClient implements UsersClient {
                         ThreadSafeCookieStore.INSTANCE.cookieValue("XSRF-TOKEN")
                 ),
                 userdataApi.currentUser(username)
-        ).withPassword(DEFAULT_PASSWORD);
+        ).withPassword(CFG.defaultPassword());
     }
 
     @Override
@@ -52,7 +52,7 @@ public class UsersApiClient implements UsersClient {
             List<Call<?>> calls = new ArrayList<>();
             for(int i = 0; i < count; i++){
                 final String username = RandomDataUtils.randomUsername();
-                UserJson friend = createUser(username, DEFAULT_PASSWORD);
+                UserJson friend = createUser(username, CFG.defaultPassword());
                 calls.add(userdataApi.sendInvitation(
                         friend
                                 .username(),
@@ -70,7 +70,7 @@ public class UsersApiClient implements UsersClient {
             List<Call<?>> calls = new ArrayList<>();
             for(int i = 0; i<count;i++){
                 final String username = RandomDataUtils.randomUsername();
-                UserJson friend = createUser(username, DEFAULT_PASSWORD);
+                UserJson friend = createUser(username, CFG.defaultPassword());
                 calls.add(
                         userdataApi.sendInvitation(
                                 targetUser
@@ -90,7 +90,7 @@ public class UsersApiClient implements UsersClient {
             List<Call<?>> calls = new ArrayList<>();
             for(int i = 0; i<count;i++){
                 final String username = RandomDataUtils.randomUsername();
-                UserJson friend = createUser(username, DEFAULT_PASSWORD);
+                UserJson friend = createUser(username, CFG.defaultPassword());
                 calls.add(
                         userdataApi.sendInvitation(
                                 friend
@@ -107,5 +107,10 @@ public class UsersApiClient implements UsersClient {
             }
             sre.executeRequest(calls.toArray(Call<?>[]::new));
         }
+    }
+
+    @Step("Get all users")
+    public List<UserJson> allUsers(String username,@Nullable String query){
+        return sre.executeRequest(userdataApi.allUsers(username,query));
     }
 }

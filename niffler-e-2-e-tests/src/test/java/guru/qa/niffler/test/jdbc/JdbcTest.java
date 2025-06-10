@@ -1,5 +1,6 @@
-package guru.qa.niffler.test.web;
+package guru.qa.niffler.test.jdbc;
 
+import guru.qa.niffler.config.Config;
 import guru.qa.niffler.model.*;
 import guru.qa.niffler.service.db.Realization;
 import guru.qa.niffler.service.db.SpendDbClient;
@@ -14,7 +15,7 @@ import java.util.Optional;
 
 public class JdbcTest {
 
-    private static final String PASSWORD = "12345";
+    private static final String PASSWORD = Config.getInstance().defaultPassword();
 
     @ParameterizedTest
     @EnumSource(Realization.class)

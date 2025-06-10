@@ -18,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Arrays;
+import java.util.List;
 
 import static guru.qa.niffler.utils.RandomDataUtils.randomUsername;
 
@@ -95,18 +96,23 @@ public class UsersDbClient implements UsersClient {
             xaTransactionTemplate.execute(() -> {
             for (int i = 0; i < count; i++) {
                 String username = randomUsername();
-                AuthUserEntity authUser = authUserEntity(username, "12345");
+                AuthUserEntity authUser = authUserEntity(username, CFG.defaultPassword());
                 authUserRepository.create(authUser);
                 UserEntity adressee = userdataUserRepository.create(userEntity(username));
                 userdataUserRepository.addInvitation(targetEntity, adressee, FriendshipStatus.ACCEPTED);
                 targetUser.testData().friends().add(
-                        UserJson.fromEntity(adressee).withPassword("12345")
+                        UserJson.fromEntity(adressee).withPassword(CFG.defaultPassword())
                 );
             }
             return null;
             });
 
         }
+    }
+
+    @Override
+    public List<UserJson> allUsers(String username, String query) {
+        throw new UnsupportedOperationException("operation not supported");
     }
 
     @Override
@@ -120,12 +126,12 @@ public class UsersDbClient implements UsersClient {
                 for (int i = 0; i < count; i++) {
 
                     String username = randomUsername();
-                    AuthUserEntity authUser = authUserEntity(username, "12345");
+                    AuthUserEntity authUser = authUserEntity(username, CFG.defaultPassword());
                     authUserRepository.create(authUser);
                     UserEntity adressee = userdataUserRepository.create(userEntity(username));
                     userdataUserRepository.addInvitation(targetEntity, adressee, FriendshipStatus.PENDING);
                     targetUser.testData().outcomeInvitations().add(
-                            UserJson.fromEntity(adressee).withPassword("12345")
+                            UserJson.fromEntity(adressee).withPassword(CFG.defaultPassword())
                     );
                 }
                 return null;
@@ -144,12 +150,12 @@ public class UsersDbClient implements UsersClient {
             xaTransactionTemplate.execute(() -> {
                 for (int i = 0; i < count; i++) {
                     String username = randomUsername();
-                    AuthUserEntity authUser = authUserEntity(username, "12345");
+                    AuthUserEntity authUser = authUserEntity(username, CFG.defaultPassword());
                     authUserRepository.create(authUser);
                     UserEntity adressee = userdataUserRepository.create(userEntity(username));
                     userdataUserRepository.addInvitation(adressee, targetEntity, FriendshipStatus.PENDING);
                     targetUser.testData().incomeInvitations().add(
-                            UserJson.fromEntity(adressee).withPassword("12345")
+                            UserJson.fromEntity(adressee).withPassword(CFG.defaultPassword())
                     );
                 }
                 return null;

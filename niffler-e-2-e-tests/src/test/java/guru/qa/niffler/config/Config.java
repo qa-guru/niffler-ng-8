@@ -28,5 +28,11 @@ public interface Config {
 
   String currencyJdbcUrl();
 
-  String ghUrl();
+  default String ghUrl(){
+    return "https://api.github.com/";
+  }
+
+  default String defaultPassword(){
+    return "12345";
+  }
 }

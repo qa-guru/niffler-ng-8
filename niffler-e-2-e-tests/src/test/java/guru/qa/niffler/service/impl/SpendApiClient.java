@@ -62,10 +62,10 @@ public class SpendApiClient implements SpendClient {
         return response.body();
     }
 
-    public SpendJson getSpend(String id, String username) {
+    public SpendJson getSpend(String id) {
         final Response<SpendJson> response;
         try {
-            response = spendApi.getSpend(id, username)
+            response = spendApi.getSpend(id)
                     .execute();
         } catch (IOException e) {
             throw new AssertionError(e);

@@ -1,11 +1,12 @@
 package guru.qa.niffler.test.auth;
 
+import guru.qa.niffler.jupiter.annotation.ApiLogin;
+import guru.qa.niffler.jupiter.annotation.Token;
 import guru.qa.niffler.jupiter.annotation.User;
-import guru.qa.niffler.jupiter.extension.TestMethodContextExtension;
+import guru.qa.niffler.jupiter.extension.ApiLoginExtension;
 import guru.qa.niffler.model.UserJson;
 import guru.qa.niffler.service.api.AuthApiClient;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtensionContext;
 
 import static guru.qa.niffler.utils.OauthUtils.generateCodeVerifier;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -22,11 +23,7 @@ public class OauthTest {
         authApi.preRequest(codeVerifier);
         authApi.login(user);
 
-        String code = (String) TestMethodContextExtension.context()
-                .getStore(ExtensionContext.Namespace.create(AuthApiClient.class))
-                .get("code");
-
-        String token = authApi.token(code,codeVerifier);
+        String token = authApi.token(ApiLoginExtension.getCode(),codeVerifier);
         assertNotNull(token);
         System.out.println(token);
     }
@@ -37,5 +34,22 @@ public class OauthTest {
         String token = authApi.token(user);
         assertNotNull(token);
         System.out.println(token);
+    }
+
+    @Test
+    @User
+    @ApiLogin
+    void oauthTestMethod(@Token String token, UserJson user){
+        assertNotNull(token);
+        System.out.println(token);
+        System.out.println(user);
+    }
+
+    @Test
+    @ApiLogin(username = "Timofey",password = "12345")
+    void oauthTestMethodTwo(@Token String token, UserJson user){
+        assertNotNull(token);
+        System.out.println(token);
+        System.out.println(user);
     }
 }

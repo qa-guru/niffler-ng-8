@@ -1,13 +1,16 @@
 package guru.qa.niffler.test.api;
 
 import guru.qa.niffler.jupiter.annotation.User;
+import guru.qa.niffler.jupiter.extension.ClearBaseSetupExtension;
 import guru.qa.niffler.model.UserJson;
 import guru.qa.niffler.service.api.UsersApiClient;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.util.List;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@ExtendWith(ClearBaseSetupExtension.class)
 class OrderedTests {
 
 

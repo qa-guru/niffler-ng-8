@@ -55,4 +55,9 @@ public class UserExtension implements
         final ExtensionContext context = TestMethodContextExtension.context();
         return context.getStore(NAMESPACE).get(context.getUniqueId(), UserJson.class);
     }
+
+    public static void setUser(UserJson user) {
+        final ExtensionContext context = TestMethodContextExtension.context();
+        context.getStore(NAMESPACE).put(context.getUniqueId(), user);
+    }
 }

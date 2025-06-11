@@ -2,24 +2,21 @@ package guru.qa.niffler.service.api;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import guru.qa.niffler.api.AuthApi;
+import guru.qa.niffler.api.core.CodeInterceptor;
 import guru.qa.niffler.api.core.RestClient;
 import guru.qa.niffler.api.core.ThreadSafeCookieStore;
 import guru.qa.niffler.config.Config;
-import guru.qa.niffler.jupiter.extension.TestMethodContextExtension;
+import guru.qa.niffler.jupiter.extension.ApiLoginExtension;
 import guru.qa.niffler.model.UserJson;
 import guru.qa.niffler.utils.SuccessRequestExecutor;
-import org.junit.jupiter.api.extension.ExtensionContext;
-import retrofit2.Response;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
-import java.io.IOException;
 import java.util.Objects;
 
 import static guru.qa.niffler.utils.OauthUtils.generateCodeChallenge;
 import static guru.qa.niffler.utils.OauthUtils.generateCodeVerifier;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ParametersAreNonnullByDefault
 public class AuthApiClient extends RestClient {
@@ -32,7 +29,7 @@ public class AuthApiClient extends RestClient {
 
 
     public AuthApiClient() {
-        super(CFG.authUrl(), true);
+        super(CFG.authUrl(), true, new CodeInterceptor());
         this.authApi = create(AuthApi.class);
     }
 
@@ -48,32 +45,12 @@ public class AuthApiClient extends RestClient {
     }
 
     public void login(UserJson user){
-        TestMethodContextExtension.context()
-                .getStore(ExtensionContext.Namespace.create(AuthApiClient.class))
-                .put("code",loginAndGetCode(user));
-    }
-
-    @Nonnull
-    private String loginAndGetCode(UserJson user){
-        final Response<Void> response;
-
-        try {
-            response = authApi.login(
-                    user.username(),
-                    user.testData().password(),
-                    ThreadSafeCookieStore.INSTANCE.cookieValue("XSRF-TOKEN")
-            )
-                    .execute();
-            assertTrue(response.isSuccessful());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        return Objects.requireNonNull(
-                response
-                        .raw()
-                        .request()
-                        .url()
-                        .queryParameter("code")
+        sre.executeRequest(
+                authApi.login(
+                        user.username(),
+                        user.testData().password(),
+                        ThreadSafeCookieStore.INSTANCE.cookieValue("XSRF-TOKEN")
+                )
         );
     }
 
@@ -96,7 +73,7 @@ public class AuthApiClient extends RestClient {
     public String token(UserJson userJson){
         String codeVerifier = generateCodeVerifier();
         preRequest(codeVerifier);
-        String code = loginAndGetCode(userJson);
-        return token(code,codeVerifier);
+        login(userJson);
+        return token(ApiLoginExtension.getCode(),codeVerifier);
     }
 }

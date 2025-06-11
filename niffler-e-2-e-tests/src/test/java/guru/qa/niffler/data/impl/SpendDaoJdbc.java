@@ -19,18 +19,18 @@ public class SpendDaoJdbc implements SpendDao {
     public SpendEntity create(SpendEntity spend) {
         try (Connection connection = Databases.connection(CFG.spendJdbcUrl())) {
             try (PreparedStatement ps = connection.prepareStatement(
-                    "INSERT INTO spend (username, currency, spend_date, amount, description, category) VALUES (?, ?, ?, ?, ?, ?)",
+                    "INSERT INTO spend (username, currency, spend_date, amount, description, category_id) VALUES (?, ?, ?, ?, ?, ?)",
                     Statement.RETURN_GENERATED_KEYS
             )) {
                 ps.setString(1, spend.getUsername());
-                ps.setObject(2, spend.getCurrency());
+                ps.setObject(2, spend.getCurrency().name());
                 ps.setDate(3, spend.getSpendDate());
                 ps.setDouble(4, spend.getAmount());
                 ps.setString(5, spend.getDescription());
-                ps.setObject(6, spend.getCategory());
+                ps.setObject(6, spend.getCategory().getId());
                 ps.executeUpdate();
                 final UUID generatedKey;
-                try (ResultSet rs = ps.getResultSet()) {
+                try (ResultSet rs = ps.getGeneratedKeys()) {
                     if (rs.next()) {
                         generatedKey = rs.getObject("id", UUID.class);
                         spend.setId(generatedKey);

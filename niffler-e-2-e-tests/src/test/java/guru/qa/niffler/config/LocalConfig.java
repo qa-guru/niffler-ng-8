@@ -30,7 +30,7 @@ enum LocalConfig implements Config {
 
   @Override
   public String spendJdbcUrl() {
-    return "jdbc:postgresql://niffler-all-db:5432/niffler-spend";
+    return "jdbc:postgresql://localhost:5432/niffler-spend";
   }
 
   @Override

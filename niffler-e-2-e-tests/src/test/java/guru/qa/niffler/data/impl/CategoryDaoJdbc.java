@@ -20,7 +20,7 @@ public class CategoryDaoJdbc implements CategoryDao {
     public CategoryEntity create(CategoryEntity category) {
         try (Connection connection = Databases.connection(CFG.spendJdbcUrl())) {
             try (PreparedStatement ps = connection.prepareStatement(
-                    "INSERT INTO spend (name, username, archived) VALUES (?, ?, ?)",
+                    "INSERT INTO category (name, username, archived) VALUES (?, ?, ?)",
                     Statement.RETURN_GENERATED_KEYS
             )) {
                 ps.setString(1, category.getName());
@@ -28,7 +28,7 @@ public class CategoryDaoJdbc implements CategoryDao {
                 ps.setBoolean(3, category.isArchived());
                 ps.executeUpdate();
                 final UUID generatedKey;
-                try (ResultSet rs = ps.getResultSet()) {
+                try (ResultSet rs = ps.getGeneratedKeys()) {
                     if (rs.next()) {
                         generatedKey = rs.getObject("id", UUID.class);
                         category.setId(generatedKey);

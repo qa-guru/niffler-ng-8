@@ -5,6 +5,7 @@ import guru.qa.niffler.config.Config;
 import guru.qa.niffler.model.UserJson;
 import guru.qa.niffler.service.UsersClient;
 import guru.qa.niffler.utils.RandomDataUtils;
+import io.qameta.allure.okhttp3.AllureOkHttp3;
 import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Response;
@@ -20,7 +21,12 @@ public class UsersApiClient implements UsersClient {
 
     private static final Config CFG = Config.getInstance();
 
-    private final OkHttpClient client = new OkHttpClient.Builder().build();
+    private final OkHttpClient client = new OkHttpClient.Builder()
+            .addNetworkInterceptor(new AllureOkHttp3()
+                    .setRequestTemplate("req-attachment.ftl")
+                    .setResponseTemplate("resp-attachment.ftl"))
+            .build();
+
     private final Retrofit retrofitUser = new Retrofit.Builder()
             .baseUrl(CFG.userdataUrl())
             .client(client)

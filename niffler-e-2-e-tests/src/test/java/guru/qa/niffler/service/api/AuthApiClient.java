@@ -12,6 +12,7 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 import retrofit2.Response;
 
 import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 
 import java.io.IOException;
 import java.util.Objects;
@@ -20,6 +21,7 @@ import static guru.qa.niffler.utils.OauthUtils.generateCodeChallenge;
 import static guru.qa.niffler.utils.OauthUtils.generateCodeVerifier;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@ParametersAreNonnullByDefault
 public class AuthApiClient extends RestClient {
 
     private static final Config CFG = Config.getInstance();
@@ -51,6 +53,7 @@ public class AuthApiClient extends RestClient {
                 .put("code",loginAndGetCode(user));
     }
 
+    @Nonnull
     private String loginAndGetCode(UserJson user){
         final Response<Void> response;
 
@@ -65,8 +68,13 @@ public class AuthApiClient extends RestClient {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        return response.raw().request().url().queryParameter("code");
-
+        return Objects.requireNonNull(
+                response
+                        .raw()
+                        .request()
+                        .url()
+                        .queryParameter("code")
+        );
     }
 
     @Nonnull

@@ -14,6 +14,7 @@ import java.util.UUID;
 
 public class SpendDaoJdbc implements SpendDao {
     private static final Config CFG = Config.getInstance();
+
     @Override
     public SpendEntity create(SpendEntity spend) {
         try (Connection connection = Databases.connection(CFG.spendJdbcUrl())) {

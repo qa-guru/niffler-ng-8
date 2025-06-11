@@ -1,6 +1,7 @@
 package guru.qa.niffler.data.entity;
 
 import guru.qa.niffler.model.CategoryJson;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,6 +10,7 @@ import java.util.UUID;
 
 @Getter
 @Setter
+@EqualsAndHashCode
 public class CategoryEntity implements Serializable {
   private UUID id;
   private String name;

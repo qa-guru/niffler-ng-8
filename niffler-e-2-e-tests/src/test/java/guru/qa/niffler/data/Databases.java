@@ -22,8 +22,9 @@ public class Databases {
                 jdbcUrl,
                 key -> {
                     PGSimpleDataSource pgDataSource = new PGSimpleDataSource();
-                    pgDataSource.setUser("localhost");
+                    pgDataSource.setUser("postgres");
                     pgDataSource.setPassword("secret");
+                    pgDataSource.setURL(key);
                     return pgDataSource;
                 }
         );

@@ -17,7 +17,6 @@ public class SpendingTest {
   private static final Config CFG = Config.getInstance();
 
   @Spending(
-      username = "duck",
       category = "Обучение",
       description = "Обучение Niffler 2.0",
       amount = 89000.00,

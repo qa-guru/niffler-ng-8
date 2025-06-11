@@ -14,12 +14,14 @@ import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
 import org.junit.platform.commons.support.AnnotationSupport;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-
+@ParametersAreNonnullByDefault
 public class CategoryExtension implements
         BeforeEachCallback,
         ParameterResolver {
@@ -78,14 +80,16 @@ public class CategoryExtension implements
         return parameterContext.getParameter().getType().isAssignableFrom(CategoryJson[].class);
     }
 
-    @Override
-    public CategoryJson[] resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
-        return createdCategories(extensionContext).toArray(CategoryJson[]::new);
-    }
+  @Override
+  public CategoryJson[] resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
+    return createdCategories().toArray(CategoryJson[]::new);
+  }
 
+  @Nonnull
   @SuppressWarnings("unchecked")
-  public static List<CategoryJson> createdCategories(ExtensionContext extensionContext) {
-    return Optional.ofNullable(extensionContext.getStore(NAMESPACE).get(extensionContext.getUniqueId(), List.class))
+  public static List<CategoryJson> createdCategories() {
+    final ExtensionContext context = TestsMethodContextExtension.context();
+    return Optional.ofNullable(context.getStore(NAMESPACE).get(context.getUniqueId(), List.class))
         .orElse(Collections.emptyList());
   }
 }

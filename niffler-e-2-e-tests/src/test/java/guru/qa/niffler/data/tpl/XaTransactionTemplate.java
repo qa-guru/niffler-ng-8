@@ -6,9 +6,12 @@ import guru.qa.niffler.data.jdbc.JdbcConnectionHolders;
 import jakarta.transaction.SystemException;
 import jakarta.transaction.UserTransaction;
 
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
 
+@ParametersAreNonnullByDefault
 public class XaTransactionTemplate {
 
   private final JdbcConnectionHolders holders;
@@ -23,7 +26,9 @@ public class XaTransactionTemplate {
     return this;
   }
 
-  public <T> T execute(Supplier<T>... actions) {
+  @SafeVarargs
+  @Nullable
+  public final <T> T execute(Supplier<T>... actions) {
     UserTransaction ut = new UserTransactionImp();
     try {
       ut.begin();

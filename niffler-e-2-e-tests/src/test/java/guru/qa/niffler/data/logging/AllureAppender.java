@@ -9,9 +9,12 @@ import io.qameta.allure.attachment.AttachmentProcessor;
 import io.qameta.allure.attachment.DefaultAttachmentProcessor;
 import io.qameta.allure.attachment.FreemarkerAttachmentRenderer;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 import static org.apache.commons.lang3.StringUtils.isNoneEmpty;
 import static org.apache.commons.lang3.StringUtils.substringBetween;
 
+@ParametersAreNonnullByDefault
 public class AllureAppender extends StdoutLogger {
 
   private final String templateName = "sql-attachment.ftl";

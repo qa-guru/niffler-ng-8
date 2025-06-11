@@ -5,12 +5,17 @@ import guru.qa.niffler.model.UserJson;
 import guru.qa.niffler.service.UsersClient;
 import guru.qa.niffler.service.impl.UsersApiClient;
 import guru.qa.niffler.utils.RandomDataUtils;
-import org.junit.jupiter.api.extension.*;
+import org.junit.jupiter.api.extension.BeforeEachCallback;
+import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.ParameterContext;
+import org.junit.jupiter.api.extension.ParameterResolutionException;
+import org.junit.jupiter.api.extension.ParameterResolver;
 import org.junit.platform.commons.support.AnnotationSupport;
 
 import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 
-
+@ParametersAreNonnullByDefault
 public class UserExtension implements
         BeforeEachCallback,
         ParameterResolver {
@@ -30,9 +35,9 @@ public class UserExtension implements
                                 username,
                                 defaultPassword
                         );
-                            usersClient.addIncomeInvitation(user, anno.incomeInvitations());
-                            usersClient.addOutcomeInvitation(user, anno.outcomeInvitations());
-                            usersClient.createFriends(user, anno.friends());
+                        usersClient.addIncomeInvitation(user, anno.incomeInvitations());
+                        usersClient.addOutcomeInvitation(user, anno.outcomeInvitations());
+                        usersClient.createFriends(user, anno.friends());
 
                         context.getStore(NAMESPACE).put(
                                 context.getUniqueId(),

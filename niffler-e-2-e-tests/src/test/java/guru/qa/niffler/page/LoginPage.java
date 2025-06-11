@@ -2,10 +2,14 @@ package guru.qa.niffler.page;
 
 import com.codeborne.selenide.SelenideElement;
 
-import static com.codeborne.selenide.Condition.*;
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
+
+import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Selenide.$;
 
-public class LoginPage {
+@ParametersAreNonnullByDefault
+public class LoginPage extends BasePage<LoginPage> {
 
     private final SelenideElement usernameInput = $("input[name='username']");
     private final SelenideElement passwordInput = $("input[name='password']");
@@ -13,6 +17,7 @@ public class LoginPage {
     private final SelenideElement createNewAccountBtn = $(".form__register");
     private final SelenideElement badCredentialsValidationError = $(".form__error");
 
+    @Nonnull
     public MainPage doLogin(String username, String password) {
         usernameInput.setValue(username);
         passwordInput.setValue(password);
@@ -47,6 +52,7 @@ public class LoginPage {
         return this;
     }
 
+    @Nonnull
     public void checkBadCredentialsValidationErrorIsDisplayed(String errorMessage) {
         badCredentialsValidationError.shouldHave(text(errorMessage));
     }

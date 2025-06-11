@@ -9,24 +9,29 @@ import guru.qa.niffler.utils.ScreenDifResult;
 import org.openqa.selenium.By;
 import guru.qa.niffler.page.component.StatComponent;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.imageio.ImageIO;
+
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 
-import static com.codeborne.selenide.Condition.*;
+import static com.codeborne.selenide.Condition.text;
+import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selectors.byText;
-import static com.codeborne.selenide.Selenide.*;
+import static com.codeborne.selenide.Selenide.$;
+import static com.codeborne.selenide.Selenide.$$;
 import static guru.qa.niffler.condition.SpendConditions.spends;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
-public class MainPage {
+@ParametersAreNonnullByDefault
+public class MainPage extends BasePage<MainPage> {
 
     private final ElementsCollection tableRows = $$("#spendings tbody tr");
     private final SelenideElement profileBtn = $("[data-testid='PersonIcon']");
     private final SelenideElement profileLink = $(By.linkText("Profile"));
-    private final ElementsCollection menuItems = $$("ul[role='menu'] li");
     private final SelenideElement searchField = $("input[placeholder='Search']");
     private final SelenideElement statDiagram = $("canvas[role='img']");
     private final ElementsCollection statCategories = $$("#legend-container li");
@@ -35,26 +40,31 @@ public class MainPage {
     private final SelenideElement spendingTable = $("#spendings");
     private final SelenideElement header = $("#root header");
     private final SelenideElement headerMenu = $("ul[role='menu']");
+    private final SelenideElement menu = $("ul[role='menu']");
+    private final ElementsCollection menuItems = menu.$$("li");
 
 
     private final StatComponent statComponent = new StatComponent();
 
+    @Nonnull
     public StatComponent getStatComponent() {
         return statComponent;
     }
-
+    @Nonnull
     public FriendsPage friendsPage() {
         header.$("button").click();
         headerMenu.$$("li").find(text("Friends")).click();
         return new FriendsPage();
     }
 
+    @Nonnull
     public PeoplePage allPeoplesPage() {
         header.$("button").click();
         headerMenu.$$("li").find(text("All People")).click();
         return new PeoplePage();
     }
 
+    @Nonnull
     public EditSpendingPage editSpending(String spendingDescription) {
         findSpending(spendingDescription);
         tableRows.find(text(spendingDescription))
@@ -64,11 +74,13 @@ public class MainPage {
         return new EditSpendingPage();
     }
 
+    @Nonnull
     public void checkThatTableContains(String spendingDescription) {
         tableRows.find(text(spendingDescription))
                 .should(visible);
     }
 
+    @Nonnull
     public void checkMainPageShouldBeLoaded() {
         checkStatisticsShouldBeLoaded();
         checkHistoryOfSpendingShouldBeLoaded();
@@ -154,6 +166,7 @@ public class MainPage {
         return this;
     }
 
+    @Nonnull
     public MainPage checkThatPageLoaded() {
         statComponent.self.should(visible).shouldHave(text("Statistics"));
         spendingTable.should(visible).shouldHave(text("History of Spendings"));

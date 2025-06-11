@@ -7,6 +7,7 @@ import guru.qa.niffler.data.entity.userdata.UserEntity;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -54,31 +55,47 @@ public record UserJson(
             )
     );
   }
-    public UserJson withTestData(TestData testData) {
-        return new UserJson(
-                id,
-                username,
-                firstname,
-                surname,
-                fullname,
-                currency,
-                photo,
-                photoSmall,
-                friendshipStatus,
-                testData
-        );
-    }
 
-    public UserJson withPassword(String password) {
-        return withTestData(
-                new TestData(
-                        password,
-                        testData.categories(),
-                        testData.spendings(),
-                        testData.friends(),
-                        testData.incomeInvitations(),
-                        testData.outcomeInvitations()
-                )
-        );
-    }
+  public UserJson withPassword(String password) {
+    return withTestData(
+        new TestData(
+            password,
+            testData.categories(),
+            testData.spendings(),
+            testData.friends(),
+            testData.outcomeInvitations(),
+            testData.incomeInvitations()
+        )
+    );
+  }
+
+  public UserJson withUsers(List<UserJson> friends,
+                            List<UserJson> outcomeInvitations,
+                            List<UserJson> incomeInvitations) {
+    return withTestData(
+        new TestData(
+            testData.password(),
+            testData.categories(),
+            testData.spendings(),
+            friends,
+            outcomeInvitations,
+            incomeInvitations
+        )
+    );
+  }
+
+  public UserJson withTestData(TestData testData) {
+    return new UserJson(
+        id,
+        username,
+        firstname,
+        surname,
+        fullname,
+        currency,
+        photo,
+        photoSmall,
+        friendshipStatus,
+        testData
+    );
+  }
 }

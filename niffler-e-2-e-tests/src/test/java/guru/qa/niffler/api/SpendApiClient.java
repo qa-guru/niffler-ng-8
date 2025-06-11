@@ -1,40 +1,33 @@
 package guru.qa.niffler.api;
 
-import guru.qa.niffler.config.Config;
+import guru.qa.niffler.api.core.RestClient;
 import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.model.CurrencyValues;
 import guru.qa.niffler.model.SpendJson;
-import io.qameta.allure.okhttp3.AllureOkHttp3;
-import okhttp3.OkHttpClient;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.jackson.JacksonConverterFactory;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class SpendApiClient {
+@ParametersAreNonnullByDefault
+public class SpendApiClient extends RestClient {
 
-  private static final Config CFG = Config.getInstance();
+  private final SpendApi spendApi;
 
-  private final OkHttpClient client = new OkHttpClient.Builder().addNetworkInterceptor(
-      new AllureOkHttp3()
-          .setRequestTemplate("http-request.ftl")
-          .setResponseTemplate("http-response.ftl")
-  ).build();
+  public SpendApiClient(String baseUrl) {
+    super(CFG.spendUrl());
+    this.spendApi = create(SpendApi.class);
+  }
 
-  private final Retrofit retrofit = new Retrofit.Builder()
-      .baseUrl(CFG.spendUrl())
-      .client(client)
-      .addConverterFactory(JacksonConverterFactory.create())
-      .build();
-
-  private final SpendApi spendApi = retrofit.create(SpendApi.class);
-
-  public SpendJson addSpend(SpendJson spend) {
+  @Nullable
+  public SpendJson createSpend(SpendJson spend) {
     final Response<SpendJson> response;
     try {
       response = spendApi.addSpend(spend)
@@ -46,6 +39,7 @@ public class SpendApiClient {
     return response.body();
   }
 
+  @Nullable
   public SpendJson editSpend(SpendJson spend) {
     final Response<SpendJson> response;
     try {
@@ -58,6 +52,7 @@ public class SpendApiClient {
     return response.body();
   }
 
+  @Nullable
   public SpendJson getSpend(String id) {
     final Response<SpendJson> response;
     try {
@@ -70,10 +65,11 @@ public class SpendApiClient {
     return response.body();
   }
 
+  @Nonnull
   public List<SpendJson> allSpends(String username,
-                                   CurrencyValues currency,
-                                   String from,
-                                   String to) {
+                                   @Nullable CurrencyValues currency,
+                                   @Nullable String from,
+                                   @Nullable String to) {
     final Response<List<SpendJson>> response;
     try {
       response = spendApi.allSpends(username, currency, from, to)
@@ -82,7 +78,9 @@ public class SpendApiClient {
       throw new AssertionError(e);
     }
     assertEquals(200, response.code());
-    return response.body();
+    return response.body() != null
+        ? response.body()
+        : Collections.emptyList();
   }
 
   public void removeSpends(String username, String... ids) {
@@ -96,6 +94,7 @@ public class SpendApiClient {
     assertEquals(200, response.code());
   }
 
+  @Nullable
   public CategoryJson createCategory(CategoryJson category) {
     final Response<CategoryJson> response;
     try {
@@ -108,6 +107,7 @@ public class SpendApiClient {
     return response.body();
   }
 
+  @Nullable
   public CategoryJson updateCategory(CategoryJson category) {
     final Response<CategoryJson> response;
     try {
@@ -120,6 +120,7 @@ public class SpendApiClient {
     return response.body();
   }
 
+  @Nonnull
   public List<CategoryJson> allCategory(String username) {
     final Response<List<CategoryJson>> response;
     try {
@@ -129,6 +130,8 @@ public class SpendApiClient {
       throw new AssertionError(e);
     }
     assertEquals(200, response.code());
-    return response.body();
+    return response.body() != null
+        ? response.body()
+        : Collections.emptyList();
   }
 }

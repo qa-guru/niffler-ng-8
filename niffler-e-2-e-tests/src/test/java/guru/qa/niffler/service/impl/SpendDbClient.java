@@ -10,13 +10,19 @@ import guru.qa.niffler.data.tpl.XaTransactionTemplate;
 import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.model.SpendJson;
 import guru.qa.niffler.service.SpendClient;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 
+import static java.util.Objects.requireNonNull;
+
+@ParametersAreNonnullByDefault
 public class SpendDbClient implements SpendClient {
 
-    private static final Config CFG = Config.getInstance();
+  private static final Config CFG = Config.getInstance();
 
 //  private final CategoryDao categoryDao = new CategoryDaoJdbc();
 //  private final SpendDao spendDao = new SpendDaoJdbc();
@@ -32,6 +38,8 @@ public class SpendDbClient implements SpendClient {
             CFG.spendJdbcUrl()
     );
 
+  @NotNull
+  @Nonnull
   @Override
   public SpendJson createSpend(SpendJson spend) {
     return xaTransactionTemplate.execute(() -> {
@@ -56,6 +64,8 @@ public class SpendDbClient implements SpendClient {
     );
   }
 
+  @NotNull
+  @Nonnull
   @Override
   public CategoryJson createCategory(CategoryJson category) {
         return xaTransactionTemplate.execute(() -> {

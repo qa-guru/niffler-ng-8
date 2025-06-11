@@ -7,6 +7,7 @@ import guru.qa.niffler.service.UsersClient;
 import guru.qa.niffler.utils.RandomDataUtils;
 import io.qameta.allure.okhttp3.AllureOkHttp3;
 import okhttp3.OkHttpClient;
+import org.jetbrains.annotations.NotNull;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
@@ -16,7 +17,9 @@ import javax.annotation.Nullable;
 import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import javax.annotation.ParametersAreNonnullByDefault;
 
+@ParametersAreNonnullByDefault
 public class UsersApiClient implements UsersClient {
 
     private static final Config CFG = Config.getInstance();
@@ -44,6 +47,7 @@ public class UsersApiClient implements UsersClient {
     private static final String defaultPassword = "12345";
 
 
+    @NotNull
     @Override
     public UserJson createUser(String username, String password) {
         return new UsersDbClient().createUser(username, password);

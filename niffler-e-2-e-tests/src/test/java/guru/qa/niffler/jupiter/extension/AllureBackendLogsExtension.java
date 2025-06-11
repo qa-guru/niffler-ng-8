@@ -5,12 +5,14 @@ import io.qameta.allure.AllureLifecycle;
 import io.qameta.allure.model.TestResult;
 import lombok.SneakyThrows;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Set;
 import java.util.UUID;
 
+@ParametersAreNonnullByDefault
 public class AllureBackendLogsExtension implements SuiteExtension {
 
   private static final String caseName = "Niffler backend logs";

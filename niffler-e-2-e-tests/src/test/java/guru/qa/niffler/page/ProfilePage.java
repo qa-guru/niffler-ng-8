@@ -7,6 +7,8 @@ import guru.qa.niffler.jupiter.extension.ScreenShotTestExtension;
 import guru.qa.niffler.utils.ScreenDifResult;
 import guru.qa.niffler.utils.ScreenDiffResult;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -16,7 +18,8 @@ import static com.codeborne.selenide.Selenide.*;
 import static java.util.Objects.requireNonNull;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
-public class ProfilePage {
+@ParametersAreNonnullByDefault
+public class ProfilePage extends BasePage<ProfilePage> {
 
     private final SelenideElement archivedToggleSwitch = $("span.MuiSwitch-root");
     private final ElementsCollection categories = $$("div.MuiChip-root");
@@ -70,11 +73,13 @@ public class ProfilePage {
         return this;
     }
 
+    @Nonnull
     public ProfilePage checkPhotoExist() {
         avatar.should(attributeMatching("src", "data:image.*"));
         return this;
     }
 
+    @Nonnull
     public ProfilePage checkPhoto(BufferedImage expected) throws IOException {
         Selenide.sleep(3000);
         assertFalse(
@@ -100,17 +105,20 @@ public class ProfilePage {
         return this;
     }
 
+    @Nonnull
     public ProfilePage setName(String name) {
         nameInput.clear();
         nameInput.setValue(name);
         return this;
     }
 
+    @Nonnull
     public ProfilePage uploadPhotoFromClasspath(String path) {
         photoInput.uploadFromClasspath(path);
         return this;
     }
 
+    @Nonnull
     public ProfilePage addCategory(String category) {
         categoryInput.setValue(category).pressEnter();
         return this;

@@ -8,6 +8,7 @@ import guru.qa.niffler.model.SpendJson;
 import guru.qa.niffler.service.SpendClient;
 import io.qameta.allure.okhttp3.AllureOkHttp3;
 import okhttp3.OkHttpClient;
+import org.jetbrains.annotations.NotNull;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
@@ -38,6 +39,7 @@ public class SpendApiClient implements SpendClient {
 
     private final SpendApi spendApi = retrofit.create(SpendApi.class);
 
+    @NotNull
     public SpendJson createSpend(SpendJson spend) {
         final Response<SpendJson> response;
         try {
@@ -100,6 +102,7 @@ public class SpendApiClient implements SpendClient {
         assertEquals(SC_ACCEPTED, response.code());
     }
 
+    @NotNull
     public CategoryJson createCategory(CategoryJson category) {
         final Response<CategoryJson> response;
         try {

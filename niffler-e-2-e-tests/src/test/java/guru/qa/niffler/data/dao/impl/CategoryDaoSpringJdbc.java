@@ -5,22 +5,27 @@ import guru.qa.niffler.data.dao.CategoryDao;
 import guru.qa.niffler.data.entity.spend.CategoryEntity;
 import guru.qa.niffler.data.jdbc.DataSources;
 import guru.qa.niffler.data.mapper.CategoryEntityRowMapper;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+@ParametersAreNonnullByDefault
 public class CategoryDaoSpringJdbc implements CategoryDao {
 
   private static final Config CFG = Config.getInstance();
   private final String url = CFG.spendJdbcUrl();
 
+  @Nonnull
   @Override
   public CategoryEntity create(CategoryEntity category) {
     JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(url));
@@ -44,6 +49,7 @@ public class CategoryDaoSpringJdbc implements CategoryDao {
     return category;
   }
 
+  @Nonnull
   @Override
   public CategoryEntity update(CategoryEntity category) {
       JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(url));
@@ -60,6 +66,7 @@ public class CategoryDaoSpringJdbc implements CategoryDao {
       return category;
   }
 
+  @NotNull
   @Override
   public Optional<CategoryEntity> findCategoryById(UUID id) {
     JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(url));
@@ -76,6 +83,7 @@ public class CategoryDaoSpringJdbc implements CategoryDao {
     }
   }
 
+  @Nonnull
   @Override
   public Optional<CategoryEntity> findCategoryByUsernameAndCategoryName(String username, String categoryName) {
     JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(url));
@@ -89,6 +97,7 @@ public class CategoryDaoSpringJdbc implements CategoryDao {
     return result.isEmpty() ? Optional.empty() : Optional.of(result.getFirst());
   }
 
+  @NotNull
   @Override
   public List<CategoryEntity> findAll() {
     JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(url));

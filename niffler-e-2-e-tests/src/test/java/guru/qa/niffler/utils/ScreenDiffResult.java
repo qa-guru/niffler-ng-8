@@ -4,9 +4,11 @@ import guru.qa.niffler.jupiter.extension.ScreenShotTestExtension;
 import ru.yandex.qatools.ashot.comparison.ImageDiff;
 import ru.yandex.qatools.ashot.comparison.ImageDiffer;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.awt.image.BufferedImage;
 import java.util.function.BooleanSupplier;
 
+@ParametersAreNonnullByDefault
 public class ScreenDiffResult implements BooleanSupplier {
 
   private final BufferedImage expected;

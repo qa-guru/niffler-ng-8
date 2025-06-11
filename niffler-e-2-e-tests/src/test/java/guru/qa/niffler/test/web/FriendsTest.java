@@ -7,8 +7,10 @@ import guru.qa.niffler.model.UserJson;
 import guru.qa.niffler.page.LoginPage;
 import org.junit.jupiter.api.Test;
 
+import static guru.qa.niffler.test.web.BaseTest.CFG;
+
 @WebTest
-public class FriendsTest extends BaseTest {
+public class FriendsTest {
 
     @Test
     @User(friends = 1)

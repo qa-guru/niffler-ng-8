@@ -1,14 +1,27 @@
 package guru.qa.niffler.service;
 
 import guru.qa.niffler.model.UserJson;
+import guru.qa.niffler.service.impl.UsersApiClient;
+import guru.qa.niffler.service.impl.UsersDbClient;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
+
+@ParametersAreNonnullByDefault
 public interface UsersClient {
-    UserJson createUser(String username, String password);
 
-    void addIncomeInvitation(UserJson targetUser, int count);
+  static UsersClient getInstance() {
+    return "api".equals(System.getProperty("client.impl"))
+        ? new UsersApiClient()
+        : new UsersDbClient();
+  }
 
-    void addOutcomeInvitation(UserJson targetUser, int count);
+  @Nonnull
+  UserJson createUser(String username, String password);
 
-    void createFriends(UserJson targetUser, int count);
+  void createFriends(UserJson targetUser, int count);
 
+  void addIncomeInvitation(UserJson targetUser, int count);
+
+  void addOutcomeInvitation(UserJson targetUser, int count);
 }

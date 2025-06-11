@@ -15,12 +15,15 @@ import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
 import org.junit.platform.commons.support.AnnotationSupport;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+@ParametersAreNonnullByDefault
 public class SpendingExtension implements BeforeEachCallback, ParameterResolver {
 
   public static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(SpendingExtension.class);
@@ -39,7 +42,7 @@ public class SpendingExtension implements BeforeEachCallback, ParameterResolver 
 
             final List<CategoryJson> existingCategories = user != null
                 ? user.testData().categories()
-                : CategoryExtension.createdCategories(context);
+                : CategoryExtension.createdCategories();
 
             final List<SpendJson> createdSpends = new ArrayList<>();
 
@@ -91,6 +94,7 @@ public class SpendingExtension implements BeforeEachCallback, ParameterResolver 
     return createdSpends(extensionContext).toArray(SpendJson[]::new);
   }
 
+  @Nonnull
   @SuppressWarnings("unchecked")
   public static List<SpendJson> createdSpends(ExtensionContext extensionContext) {
     return Optional.ofNullable(extensionContext.getStore(NAMESPACE).get(extensionContext.getUniqueId(), List.class))

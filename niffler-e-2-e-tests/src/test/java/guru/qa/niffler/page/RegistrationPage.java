@@ -34,6 +34,11 @@ public class RegistrationPage extends BasePage<RegistrationPage> {
         super();
     }
 
+    @Override
+    public String getUrl() {
+        return "register";
+    }
+
     @Step("Set username {userName}")
     public RegistrationPage setUserName(String userName) {
         usernameInput.val(userName);

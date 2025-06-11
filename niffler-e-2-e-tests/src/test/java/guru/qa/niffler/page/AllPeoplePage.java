@@ -17,6 +17,11 @@ import static com.codeborne.selenide.Condition.text;
 public class AllPeoplePage extends BasePage<AllPeoplePage> {
     private final ElementsCollection tableRows = $$("#all tr");
 
+    @Override
+    public String getUrl() {
+        return "people/all";
+    }
+
     @Getter
     private final SearchField searchField = new SearchField(driver);
 
@@ -25,7 +30,7 @@ public class AllPeoplePage extends BasePage<AllPeoplePage> {
     public enum Status{
         REQUEST_SEND("Waiting..."),
         REQUEST_NOT_SEND("Add friend");
-        private String buttonText;
+        private final String buttonText;
     }
 
     public AllPeoplePage(@Nullable SelenideDriver driver){

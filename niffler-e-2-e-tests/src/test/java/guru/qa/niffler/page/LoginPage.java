@@ -33,6 +33,11 @@ public class LoginPage extends BasePage<LoginPage> {
     super();
   }
 
+  @Override
+  public String getUrl() {
+    return "login";
+  }
+
   @Step("Log in with user {username}")
   public MainPage doLogin(String username, String password) {
     return setUserName(username)

@@ -1,46 +1,40 @@
 package guru.qa.niffler.test.web;
 
 import com.codeborne.selenide.Selenide;
-import guru.qa.niffler.config.Config;
+import guru.qa.niffler.jupiter.annotation.ApiLogin;
 import guru.qa.niffler.jupiter.annotation.Category;
 import guru.qa.niffler.jupiter.annotation.ScreenShotTest;
 import guru.qa.niffler.jupiter.annotation.User;
 import guru.qa.niffler.jupiter.annotation.meta.WebTest;
 import guru.qa.niffler.model.UserJson;
-import guru.qa.niffler.page.LoginPage;
 import guru.qa.niffler.page.ProfilePage;
 import org.junit.jupiter.api.Test;
 
 import java.awt.image.BufferedImage;
 
+import static guru.qa.niffler.utils.PageOpenUtil.open;
 import static guru.qa.niffler.utils.RandomDataUtils.randomCategoryName;
 import static guru.qa.niffler.utils.RandomDataUtils.randomName;
 
 @WebTest
 public class ProfileTest {
 
-    private static final Config CFG = Config.getInstance();
-
     @User
     @ScreenShotTest(value = "img/expected-avatar.png")
-    void checkProfileImageTest(UserJson user, BufferedImage expectedProfileImage)  {
-        Selenide.open(CFG.frontUrl(), LoginPage.class)
-                .doLogin(user)
-                .getHeader()
-                .toProfilePage()
+    @ApiLogin
+    void checkProfileImageTest(BufferedImage expectedProfileImage)  {
+        open(ProfilePage.class)
                 .uploadAvatar("img/avatar.png")
                 .checkAvatar(expectedProfileImage);
     }
 
     @Test
     @User
+    @ApiLogin
     void editNameTest(UserJson user){
         final String newName = randomName();
 
-        Selenide.open(CFG.frontUrl(), LoginPage.class)
-                .doLogin(user)
-                .getHeader()
-                .toProfilePage()
+        open(ProfilePage.class)
                 .setName(newName)
                 .submitProfile()
                 .checkAlertMessage("Profile successfully updated");
@@ -56,6 +50,7 @@ public class ProfileTest {
     @User(
             categories = @Category()
     )
+    @ApiLogin
     void activeCategoryShouldPresentInCategoriesList(UserJson user) {
         final String categoryName = user
                 .testData()
@@ -63,22 +58,17 @@ public class ProfileTest {
                 .getFirst()
                 .name();
 
-        Selenide.open(CFG.frontUrl(), LoginPage.class)
-                .doLogin(user)
-                .getHeader()
-                .toProfilePage()
+        open(ProfilePage.class)
                 .assertActiveCategory(categoryName);
     }
 
     @Test
     @User
-    void AddNewCategoryTest(UserJson user) {
+    @ApiLogin
+    void AddNewCategoryTest() {
         String newCategory = randomCategoryName();
 
-        Selenide.open(CFG.frontUrl(), LoginPage.class)
-                .doLogin(user)
-                .getHeader()
-                .toProfilePage()
+        open(ProfilePage.class)
                 .addCategory(newCategory)
                 .assertActiveCategory(newCategory);
     }
@@ -96,11 +86,9 @@ public class ProfileTest {
                     @Category
             }
     )
-    void shouldForbidAddingMoreThat8Categories(UserJson user) {
-        Selenide.open(CFG.frontUrl(), LoginPage.class)
-                .doLogin(user)
-                .getHeader()
-                .toProfilePage()
+    @ApiLogin
+    void shouldForbidAddingMoreThat8Categories() {
+        open(ProfilePage.class)
                 .checkThatCategoryInputDisabled();
     }
 

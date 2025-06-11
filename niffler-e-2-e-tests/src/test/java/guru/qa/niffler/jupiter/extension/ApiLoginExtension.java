@@ -10,6 +10,8 @@ import guru.qa.niffler.model.TestData;
 import guru.qa.niffler.model.UserJson;
 import guru.qa.niffler.page.MainPage;
 import guru.qa.niffler.service.api.AuthApiClient;
+import guru.qa.niffler.service.api.SpendApiClient;
+import guru.qa.niffler.service.api.UsersApiClient;
 import org.junit.jupiter.api.extension.*;
 import org.junit.platform.commons.support.AnnotationSupport;
 import org.openqa.selenium.Cookie;
@@ -22,6 +24,9 @@ public class ApiLoginExtension implements BeforeEachCallback, ParameterResolver 
     private static final Config CFG = Config.getInstance();
 
     private final AuthApiClient authApiClient = new AuthApiClient();
+    private final UsersApiClient usersApiClient = new UsersApiClient();
+    private final SpendApiClient spendApiClient = new SpendApiClient();
+
     private final boolean setupBrowser;
 
     private ApiLoginExtension(boolean setupBrowser){
@@ -50,33 +55,39 @@ public class ApiLoginExtension implements BeforeEachCallback, ParameterResolver 
                         if (extensionUser != null) {
                             throw new IllegalStateException("@User must not be present in case that @ApiLogin contains username and password!");
                         }
-                        user = new UserJson(
-                                null,
-                                apiLogin.username(),
-                                null,
-                                null,
-                                null,
-                                null,
-                                null,
-                                null,
-                                null,
-                                new TestData(apiLogin.password())
-                        );
+                        user = enrichmentUser(apiLogin);
                         setUser(user);
                     }
 
-                    setToken(
-                            authApiClient.token(user)
-                    );
+                    setToken(authApiClient.token(user));
 
                     if (setupBrowser) {
-                        Selenide.open(CFG.frontUrl());
-                        Selenide.localStorage().setItem("id_token", getToken());
-                        WebDriverRunner.getWebDriver().manage().addCookie(getJsessionIdCookie());
-                        Selenide.open(CFG.frontUrl(), MainPage.class).assertMainComponents();
+                        setupBrowserSession();
                     }
 
                 });
+    }
+
+    private void setupBrowserSession(){
+        Selenide.open(CFG.frontUrl());
+        Selenide.localStorage().setItem("id_token", getToken());
+        WebDriverRunner.getWebDriver().manage().addCookie(getJsessionIdCookie());
+        Selenide.open(CFG.frontUrl(), MainPage.class).assertMainComponents();
+    }
+
+    private UserJson enrichmentUser(ApiLogin apiLogin){
+        final String username = apiLogin.username();
+        UserJson user = usersApiClient.currentUser(username);
+        TestData testData = new TestData(
+                apiLogin.password(),
+                spendApiClient.getCategories(username, false),
+                spendApiClient.getSpends(username, null, null, null),
+                usersApiClient.getFriends(username),
+                usersApiClient.getIncomeInvitations(username),
+                usersApiClient.getOutcomeInvitations(username)
+        );
+
+        return user.withTestData(testData);
     }
 
     @Override

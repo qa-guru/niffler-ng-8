@@ -1,27 +1,24 @@
 package guru.qa.niffler.test.web;
 
-import com.codeborne.selenide.Selenide;
-import guru.qa.niffler.config.Config;
+import guru.qa.niffler.jupiter.annotation.ApiLogin;
 import guru.qa.niffler.jupiter.annotation.User;
 import guru.qa.niffler.jupiter.annotation.meta.WebTest;
 import guru.qa.niffler.jupiter.annotation.Category;
 import guru.qa.niffler.model.UserJson;
-import guru.qa.niffler.page.LoginPage;
+import guru.qa.niffler.page.ProfilePage;
 import org.junit.jupiter.api.Test;
+
+import static guru.qa.niffler.utils.PageOpenUtil.open;
 
 @WebTest
 public class CategoriesTest {
-    private static final Config CFG = Config.getInstance();
-    private static final String PASSWORD = "123";
 
-    @User(categories = @Category())
     @Test
+    @User(categories = @Category())
+    @ApiLogin
     void testArchiveCategory(UserJson userJson){
         String name = userJson.testData().categories().getFirst().name();
-        Selenide.open(CFG.frontUrl(), LoginPage.class)
-                .doLogin(userJson)
-                .getHeader()
-                .toProfilePage()
+        open(ProfilePage.class)
                 .showArchiveCategory()
                 .assertActiveCategory(name)
                 .archiveCategory(name)
@@ -35,12 +32,10 @@ public class CategoriesTest {
             )
     )
     @Test
+    @ApiLogin
     void testUnarchiveCategory(UserJson userJson){
         String name = userJson.testData().categories().getFirst().name();
-        Selenide.open(CFG.frontUrl(), LoginPage.class)
-                .doLogin(userJson)
-                .getHeader()
-                .toProfilePage()
+        open(ProfilePage.class)
                 .showArchiveCategory()
                 .assertArchiveCategory(name)
                 .unarchiveCategory(name)

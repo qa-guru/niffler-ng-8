@@ -42,6 +42,11 @@ public class FriendsPage extends BasePage<FriendsPage> {
         super();
     }
 
+    @Override
+    public String getUrl() {
+        return "people/friends";
+    }
+
     @Step("assert that user haven't friends")
     public FriendsPage assertEmptyUser(){
         friendsTableRows.shouldHave(size(0));

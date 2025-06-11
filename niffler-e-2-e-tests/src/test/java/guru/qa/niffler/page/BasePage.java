@@ -13,7 +13,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import static com.codeborne.selenide.WebDriverConditions.url;
 
 @ParametersAreNonnullByDefault
-public class BasePage<T extends BasePage<?>> extends SelenideProviderService {
+public abstract class BasePage<T extends BasePage<?>> extends SelenideProviderService {
 
     @Getter
     private final Header header = new Header(driver);
@@ -28,8 +28,10 @@ public class BasePage<T extends BasePage<?>> extends SelenideProviderService {
         super();
     }
 
+    public abstract String getUrl();
+
     @Step("assert redirect to page {strings}")
-    public <T extends BasePage> T assertRedirectToPage(Class<T> clazz, String... strings){
+    public <B extends BasePage<?>> B assertRedirectToPage(Class<B> clazz, String... strings){
         boolean isAuthPage = clazz.equals(LoginPage.class) || clazz.equals(RegistrationPage.class);
         String basePage = isAuthPage? Config.getInstance().authUrl() : Config.getInstance().frontUrl();
         StringBuilder expectedUrl = new StringBuilder(basePage).append(Pages.getUrlByClass(clazz));

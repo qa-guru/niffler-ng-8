@@ -49,6 +49,11 @@ public class ProfilePage extends BasePage<ProfilePage> {
         super();
     }
 
+    @Override
+    public String getUrl() {
+        return "profile";
+    }
+
     @Step("Set category: '{0}'")
     @Nonnull
     public ProfilePage addCategory(String category) {

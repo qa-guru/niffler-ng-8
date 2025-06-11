@@ -23,7 +23,7 @@ public class MainPage extends BasePage<MainPage> {
     private final ElementsCollection contextMenuElements = $$(".MuiList-padding li");
 
     @Getter
-    private SearchField searchField = new SearchField(driver);
+    private final SearchField searchField = new SearchField(driver);
 
     @Getter
     private final StatComponent statComponent = new StatComponent(driver);
@@ -37,6 +37,11 @@ public class MainPage extends BasePage<MainPage> {
 
     public MainPage(){
         super();
+    }
+
+    @Override
+    public String getUrl() {
+        return "main";
     }
 
     @Step("Assert main components")

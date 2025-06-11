@@ -43,6 +43,11 @@ public class EditSpendingPage extends BasePage<EditSpendingPage> {
     super();
   }
 
+  @Override
+  public String getUrl() {
+    return "spending";
+  }
+
   @Step("Edit description to {description}")
   public MainPage editDescription(String description) {
     descriptionInput.clear();

@@ -1,76 +1,63 @@
 package guru.qa.niffler.test.web;
 
-import com.codeborne.selenide.Selenide;
-import guru.qa.niffler.config.Config;
+import guru.qa.niffler.jupiter.annotation.ApiLogin;
 import guru.qa.niffler.jupiter.annotation.User;
 import guru.qa.niffler.jupiter.annotation.meta.WebTest;
 import guru.qa.niffler.model.UserJson;
-import guru.qa.niffler.page.LoginPage;
+import guru.qa.niffler.page.AllPeoplePage;
+import guru.qa.niffler.page.FriendsPage;
 import org.junit.jupiter.api.Test;
+
+import static guru.qa.niffler.utils.PageOpenUtil.open;
 
 @WebTest
 public class FriendsWebTest {
-    private static final Config CFG = Config.getInstance();
+
     @User(friends = 1)
     @Test
+    @ApiLogin
     void friendShouldBePresentInFriendsTable(UserJson user) {
-        Selenide.open(CFG.frontUrl(), LoginPage.class)
-                .doLogin(user)
-                .getHeader()
-                .toFriendsPage()
+        open(FriendsPage.class)
                 .assertFriendExist(user);
     }
 
     @User
     @Test
+    @ApiLogin
     void friendsTableShouldBeEmptyForNewUser(UserJson user) {
-        Selenide.open(CFG.frontUrl(), LoginPage.class)
-                .doLogin(user)
-                .getHeader()
-                .toFriendsPage()
+        open(FriendsPage.class)
                 .assertEmptyUser();
     }
 
     @User(incomeInvitations = 1)
     @Test
+    @ApiLogin
     void incomeInvitationBePresentInFriendsTable(UserJson user) {
-        Selenide.open(CFG.frontUrl(), LoginPage.class)
-                .doLogin(user)
-                .getHeader()
-                .toFriendsPage()
+        open(FriendsPage.class)
                 .assertFriendRequestExist(user);
     }
     @User(outcomeInvitations = 1)
     @Test
+    @ApiLogin
     void outcomeInvitationBePresentInAllPeoplesTable(UserJson user) {
-        Selenide.open(CFG.frontUrl(), LoginPage.class)
-                .doLogin(user)
-                .getHeader()
-                .toFriendsPage()
-                .clickAllPeopleTab()
+        open(AllPeoplePage.class)
                 .assertOutcomeInvitations(user);
     }
 
-    //TODO написать логику
-
     @User(incomeInvitations = 1)
     @Test
+    @ApiLogin
     void acceptFriendRequest(UserJson user) {
-        Selenide.open(CFG.frontUrl(), LoginPage.class)
-                .doLogin(user)
-                .getHeader()
-                .toFriendsPage()
+        open(FriendsPage.class)
                 .assertFriendRequestExist(user)
                 .acceptFriend(user.testData().incomeInvitations().getFirst());
     }
 
     @User(incomeInvitations = 1)
     @Test
+    @ApiLogin
     void declineFriendRequest(UserJson user) {
-        Selenide.open(CFG.frontUrl(), LoginPage.class)
-                .doLogin(user)
-                .getHeader()
-                .toFriendsPage()
+        open(FriendsPage.class)
                 .assertFriendRequestExist(user)
                 .declineFriend(user.testData().incomeInvitations().getFirst());
     }

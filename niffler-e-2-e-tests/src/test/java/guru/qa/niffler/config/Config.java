@@ -1,5 +1,7 @@
 package guru.qa.niffler.config;
 
+import javax.annotation.Nonnull;
+
 public interface Config {
 
   static Config getInstance() {
@@ -32,6 +34,7 @@ public interface Config {
     return "https://api.github.com/";
   }
 
+  @Nonnull
   default String defaultPassword(){
     return "12345";
   }

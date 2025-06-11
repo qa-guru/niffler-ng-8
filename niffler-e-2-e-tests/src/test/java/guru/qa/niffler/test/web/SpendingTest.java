@@ -1,18 +1,13 @@
 package guru.qa.niffler.test.web;
 
-import com.codeborne.selenide.Selenide;
 import guru.qa.niffler.condition.Color;
-import guru.qa.niffler.config.Config;
-import guru.qa.niffler.jupiter.annotation.Category;
-import guru.qa.niffler.jupiter.annotation.ScreenShotTest;
-import guru.qa.niffler.jupiter.annotation.User;
+import guru.qa.niffler.jupiter.annotation.*;
 import guru.qa.niffler.jupiter.annotation.meta.WebTest;
-import guru.qa.niffler.jupiter.annotation.Spending;
 import guru.qa.niffler.model.Bubble;
 import guru.qa.niffler.model.CurrencyValues;
 import guru.qa.niffler.model.SpendJson;
 import guru.qa.niffler.model.UserJson;
-import guru.qa.niffler.page.LoginPage;
+import guru.qa.niffler.page.EditSpendingPage;
 import guru.qa.niffler.page.MainPage;
 import org.junit.jupiter.api.Test;
 
@@ -22,13 +17,12 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.Map;
 
+import static guru.qa.niffler.utils.PageOpenUtil.open;
 import static guru.qa.niffler.utils.RandomDataUtils.randomSpendingAmount;
 import static guru.qa.niffler.utils.RandomDataUtils.randomSpendingDescription;
 
 @WebTest
 public class SpendingTest {
-
-  private static final Config CFG = Config.getInstance();
 
   @User(
       spendings = @Spending(
@@ -38,12 +32,12 @@ public class SpendingTest {
       )
   )
   @Test
+  @ApiLogin
   void spendingDescriptionShouldBeUpdatedByTableAction(UserJson userJson) {
     final SpendJson spend = userJson.testData().spendings().getFirst();
     final String newDescription = "Обучение Niffler NG";
 
-    Selenide.open(CFG.frontUrl(), LoginPage.class)
-        .doLogin(userJson)
+    open(MainPage.class)
         .getSpendTable()
         .editSpending(spend.description())
         .editDescription(newDescription)
@@ -57,9 +51,9 @@ public class SpendingTest {
           )
   )
   @ScreenShotTest(value = "img/expected-stat.png")
+  @ApiLogin
   void checkStatComponentTest(UserJson userJson, BufferedImage expected) throws IOException {
-    Selenide.open(CFG.frontUrl(), LoginPage.class)
-            .doLogin(userJson)
+      open(MainPage.class)
             .getStatComponent()
             .checkStatisticDiagramInfoUnEditable(userJson)
             .checkStatisticImage(expected)
@@ -83,6 +77,7 @@ public class SpendingTest {
                   )
           })
   @ScreenShotTest(value = "img/expected-stat-edit.png")
+  @ApiLogin
   void checkStatComponentAfterEditingTest(UserJson user, BufferedImage expected) throws IOException {
     SpendJson spend = user.testData().spendings().getFirst();
     double newSum = spend.amount()+50;
@@ -96,8 +91,7 @@ public class SpendingTest {
             spend.username()
     );
 
-    Selenide.open(CFG.frontUrl(), LoginPage.class)
-            .doLogin(user.username(), user.testData().password())
+      open(MainPage.class)
             .getSpendTable()
             .editSpending(spend.description())
             .editSum(String.valueOf(newSum))
@@ -112,9 +106,9 @@ public class SpendingTest {
   @User(
           spendings = @Spending())
   @ScreenShotTest(value = "img/expected-stat-delete.png")
+  @ApiLogin
   void checkStatComponentAfterDeletingSpendTest(UserJson user, BufferedImage expected) throws IOException {
-    Selenide.open(CFG.frontUrl(), LoginPage.class)
-            .doLogin(user.username(), user.testData().password())
+      open(MainPage.class)
             .getSpendTable()
             .deleteSpending(user.spends().getFirst().description())
             .getStatComponent()
@@ -142,10 +136,9 @@ public class SpendingTest {
                   )
           })
   @ScreenShotTest(value = "img/expected-stat-archived.png")
+  @ApiLogin
   void checkStatComponentWithArchiveSpendTest(UserJson user, BufferedImage expected) throws IOException {
-
-    Selenide.open(CFG.frontUrl(), LoginPage.class)
-            .doLogin(user.username(), user.testData().password())
+      open(MainPage.class)
             .getStatComponent()
             .checkStatisticImage(expected)
             .checkStatisticDiagramInfoUnEditable(user)
@@ -155,6 +148,7 @@ public class SpendingTest {
 
   @Test
   @User(categories = {@Category})
+  @ApiLogin
   void addSpendTest(UserJson user){
       SpendJson spend = new SpendJson(
               user.id(),
@@ -165,23 +159,19 @@ public class SpendingTest {
               randomSpendingDescription(),
               user.username()
       );
-      Selenide.open(CFG.frontUrl(), LoginPage.class)
-              .doLogin(user.username(), user.testData().password())
-              .getHeader()
-              .addSpendingPage()
+      open(EditSpendingPage.class)
               .fillPage(spend);
 
-      new MainPage().getSpendTable()
+      new MainPage()
+              .getSpendTable()
               .checkSpend(spend);
   }
 
     @Test
     @User
-    void shouldNotAddSpendingWithEmptyAmount(UserJson user) {
-        Selenide.open(CFG.frontUrl(), LoginPage.class)
-                .doLogin(user.username(), user.testData().password())
-                .getHeader()
-                .addSpendingPage()
+    @ApiLogin
+    void shouldNotAddSpendingWithEmptyAmount() {
+        open(EditSpendingPage.class)
                 .setNewSpendingCategory("Friends")
                 .setNewSpendingDate(new Date())
                 .saveSpending()

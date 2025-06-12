@@ -4,8 +4,10 @@ import guru.qa.niffler.model.CurrencyValues;
 import guru.qa.niffler.model.UserJson;
 import lombok.Getter;
 import lombok.Setter;
+
 import java.io.Serializable;
-import java.util.*;
+import java.util.UUID;
+
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 @Getter

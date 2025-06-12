@@ -19,26 +19,26 @@ public class RegistrationTests {
     @DisplayName("Регистрация нового пользователя")
     void shouldRegisterNewUser() {
         Selenide.open(CFG.frontUrl(), LoginPage.class)
-                .registerSubmit()
-                .setUsername(RandomDataUtils.randomUsername())
-                .setPassword(passwordValid)
-                .setPasswordSubmit(passwordValid)
-                .submitRegistration()
-                .shouldRegistrationText();
+            .registerSubmit()
+            .setUsername(RandomDataUtils.randomUsername())
+            .setPassword(passwordValid)
+            .setPasswordSubmit(passwordValid)
+            .submitRegistration()
+            .shouldRegistrationText();
     }
 
     @Test
     @DisplayName("Регистрация нового пользователя с невалидными данными")
     void shouldRegisteringNewUserInvalidPassword() {
         Selenide.open(CFG.frontUrl(), LoginPage.class)
-                .registerSubmit()
-                .setUsername("a")
-                .setPassword(passwordNonValid)
-                .setPasswordSubmit(passwordNonValid)
-                .submitRegistration();
+            .registerSubmit()
+            .setUsername("a")
+            .setPassword(passwordNonValid)
+            .setPasswordSubmit(passwordNonValid)
+            .submitRegistration();
 
         new RegisterPage().shouldUsernameError()
-                .shouldPasswordError()
-                .shouldPasswordSubmitError();
+            .shouldPasswordError()
+            .shouldPasswordSubmitError();
     }
 }

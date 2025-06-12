@@ -23,42 +23,39 @@ public class ProfilePage {
 
     public ProfilePage shouldArchivedCategoryDisplayed(String categoryName) {
         categories.find(text(categoryName))
-                .shouldBe(visible);
+            .shouldBe(visible);
         return this;
     }
 
     public ProfilePage archivedCategorySubmit(String categoryName) {
         categories.find(text(categoryName))
-                .shouldBe(visible)
-                .click();
-
+            .shouldBe(visible)
+            .$("[aria-label='Archive category']")
+            .click();
         return this;
     }
 
     public ProfilePage unarchivedCategorySubmit(String categoryName) {
         Objects.requireNonNull(categories.stream().filter(element -> element.text().equals(categoryName))
-                        .findFirst()
-                        .orElse(null))
-                .$("[data-testid='UnarchiveOutlinedIcon']").shouldBe(visible)
-                .click();
-
+                .findFirst()
+                .orElse(null))
+            .$("[data-testid='UnarchiveOutlinedIcon']").shouldBe(visible)
+            .click();
         return this;
     }
 
     public ProfilePage buttonSubmit(String buttonName) {
-        button.stream().filter(element -> element.text().equals(buttonName))
-                .findFirst()
-                .orElseThrow()
-                .click();
+        button.find(text(buttonName))
+            .shouldBe(visible)
+            .click();
 
         return this;
     }
 
     public void shouldArchiveCategoryButtonDisplayed(String categoryName) {
-        categories.stream().filter(element -> element.text().equals(categoryName))
-                .findFirst()
-                .orElseThrow()
-                .$("[data-testid='UnarchiveOutlinedIcon']")
-                .shouldBe(visible);
+        categories.find(text(categoryName))
+            .shouldBe(visible)
+            .$("[data-testid='UnarchiveOutlinedIcon']")
+            .shouldNotBe(visible);
     }
 }

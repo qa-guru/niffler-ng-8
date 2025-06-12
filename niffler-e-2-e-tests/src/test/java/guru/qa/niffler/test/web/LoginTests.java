@@ -15,15 +15,16 @@ public class LoginTests {
     @DisplayName("Авторизация с валидными данными")
     void shouldAuthorizationValidData() {
         Selenide.open(CFG.frontUrl(), LoginPage.class)
-                .doLogin("ilesnikov", "12345")
-                .shouldStatisticsVisible()
-                .shouldHistoryOfSpendingVisible();
+            .doLogin("ilesnikov", "12345")
+            .shouldStatisticsVisible()
+            .shouldHistoryOfSpendingVisible();
     }
+
     @Test
     @DisplayName("Авторизация с не валидными данными")
     void shouldAuthorizationNotValidData() {
         Selenide.open(CFG.frontUrl(), LoginPage.class)
-                .doLogin(faker.name().username(), faker.internet().password());
+            .doLogin(faker.name().username(), faker.internet().password());
 
         new LoginPage().shouldErrorVisible();
     }

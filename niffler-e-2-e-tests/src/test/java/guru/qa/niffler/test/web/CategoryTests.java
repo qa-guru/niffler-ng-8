@@ -14,38 +14,38 @@ public class CategoryTests {
 
     @Test
     @User(
-            username = "ilesnikov",
-            categories = @Category(
-                    archived = false
-            )
+        username = "ilesnikov",
+        categories = @Category(
+            archived = false
+        )
     )
     @DisplayName("Архивация категории")
     void shouldCategoryArchiving(CategoryJson category) {
         Selenide.open(CFG.frontUrl(), LoginPage.class)
-                .doLogin("ilesnikov", "12345")
-                .iconSubmit()
-                .profileSubmit()
-                .archivedCategorySubmit(category.name())
-                .buttonSubmit("Archive")
-                .archivedCheckboxSubmit()
-                .shouldArchivedCategoryDisplayed(category.name());
+            .doLogin("ilesnikov", "12345")
+            .iconSubmit()
+            .profileSubmit()
+            .archivedCategorySubmit(category.name())
+            .buttonSubmit("Archive")
+            .archivedCheckboxSubmit()
+            .shouldArchivedCategoryDisplayed(category.name());
     }
 
     @Test
     @User(
-            username = "ilesnikov",
-            categories = @Category(
-                    archived = true
-            ))
+        username = "ilesnikov",
+        categories = @Category(
+            archived = true
+        ))
     @DisplayName("Разархивация категории")
     void shouldUnzippingCategory(CategoryJson category) {
         Selenide.open(CFG.frontUrl(), LoginPage.class)
-                .doLogin("ilesnikov", "12345")
-                .iconSubmit()
-                .profileSubmit()
-                .archivedCheckboxSubmit()
-                .unarchivedCategorySubmit(category.name())
-                .buttonSubmit("Unarchive")
-                .shouldArchiveCategoryButtonDisplayed(category.name());
+            .doLogin("ilesnikov", "12345")
+            .iconSubmit()
+            .profileSubmit()
+            .archivedCheckboxSubmit()
+            .unarchivedCategorySubmit(category.name())
+            .buttonSubmit("Unarchive")
+            .shouldArchiveCategoryButtonDisplayed(category.name());
     }
 }

@@ -19,42 +19,42 @@ public class FriendsTests {
     @ExtendWith(UsersQueueExtension.class)
     void friendShouldBePresentFriendsTable(@UserType(type = WITH_FRIEND) UsersQueueExtension.StaticUser user) {
         Selenide.open(CFG.frontUrl(), LoginPage.class)
-                .doLogin(user.username(), user.password())
-                .iconSubmit()
-                .friendsSubmit()
-                .shouldFriendVisible(user.friend())
-                .shouldUnfriendButtonVisible(user.friend());
+            .doLogin(user.username(), user.password())
+            .iconSubmit()
+            .friendsSubmit()
+            .shouldFriendVisible(user.friend())
+            .shouldUnfriendButtonVisible(user.friend());
     }
 
     @Test
     @ExtendWith(UsersQueueExtension.class)
     void friendsTableShouldBeEmptyForNewUser(@UserType(type = EMPTY) UsersQueueExtension.StaticUser user) {
         Selenide.open(CFG.frontUrl(), LoginPage.class)
-                .doLogin(user.username(), user.password())
-                .iconSubmit()
-                .friendsSubmit()
-                .shouldFriendsNotVisible();
+            .doLogin(user.username(), user.password())
+            .iconSubmit()
+            .friendsSubmit()
+            .shouldFriendsNotVisible();
     }
 
     @Test
     @ExtendWith(UsersQueueExtension.class)
     void incomeInvitationBePresentInFriendsTable(@UserType(type = WITH_INCOME_REQUEST) UsersQueueExtension.StaticUser user) {
         Selenide.open(CFG.frontUrl(), LoginPage.class)
-                .doLogin(user.username(), user.password())
-                .iconSubmit()
-                .friendsSubmit()
-                .allPeopleTabSubmit()
-                .shouldInviteVisible(user.income());
+            .doLogin(user.username(), user.password())
+            .iconSubmit()
+            .friendsSubmit()
+            .allPeopleTabSubmit()
+            .shouldInviteVisible(user.income());
     }
 
     @Test
     @ExtendWith(UsersQueueExtension.class)
     void outcomeInvitationBePresentInFriendsTable(@UserType(type = WITH_OUTCOME_REQUEST) UsersQueueExtension.StaticUser user) {
         Selenide.open(CFG.frontUrl(), LoginPage.class)
-                .doLogin(user.username(), user.password())
-                .iconSubmit()
-                .friendsSubmit()
-                .shouldAcceptButtonVisibleAndEnabled(user.outcome())
-                .shouldDeclineButtonVisibleAndEnabled(user.outcome());
+            .doLogin(user.username(), user.password())
+            .iconSubmit()
+            .friendsSubmit()
+            .shouldAcceptButtonVisibleAndEnabled(user.outcome())
+            .shouldDeclineButtonVisibleAndEnabled(user.outcome());
     }
 }

@@ -4,19 +4,24 @@ import guru.qa.niffler.config.Config;
 import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.model.SpendJson;
 import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
 import java.io.IOException;
 
+import static java.net.HttpURLConnection.HTTP_CREATED;
+import static java.net.HttpURLConnection.HTTP_OK;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class SpendApiClient {
 
   private static final Config CFG = Config.getInstance();
 
-  private final OkHttpClient client = new OkHttpClient.Builder().build();
+  private final OkHttpClient client = new OkHttpClient.Builder()
+      .addInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
+      .build();
   private final Retrofit retrofit = new Retrofit.Builder()
       .baseUrl(CFG.spendUrl())
       .client(client)
@@ -34,7 +39,7 @@ public class SpendApiClient {
     } catch (IOException exception) {
       throw new AssertionError("Не удалось выполнить запрос на эндпоинт internal/spends/add");
     }
-    assertEquals(response.code(), 201);
+    assertEquals(HTTP_CREATED, response.code());
     return response.body();
   }
 
@@ -46,7 +51,7 @@ public class SpendApiClient {
     } catch (IOException exception) {
       throw new AssertionError("Не удалось выполнить запрос на эндпоинт internal/spends/add");
     }
-    assertEquals(response.code(), 200);
+    assertEquals(HTTP_OK, response.code());
     return response.body();
   }
 
@@ -58,7 +63,7 @@ public class SpendApiClient {
     } catch (IOException exception) {
       throw new AssertionError("Не удалось выполнить запрос на эндпоинт internal/spends/add");
     }
-    assertEquals(response.code(), 200);
+    assertEquals(HTTP_OK, response.code());
     return response.body();
   }
 
@@ -71,7 +76,7 @@ public class SpendApiClient {
       var message = String.format("Не удалось выполнить запрос на эндпоинт internal/spends/%s", spend.id().toString());
       throw new AssertionError(message);
     }
-    assertEquals(response.code(), 200);
+    assertEquals(HTTP_OK, response.code());
     return response.body();
   }
 
@@ -83,7 +88,7 @@ public class SpendApiClient {
     } catch (IOException exception) {
       throw new AssertionError("Не удалось выполнить запрос на эндпоинт internal/spends/remove");
     }
-    assertEquals(response.code(), 200);
+    assertEquals(HTTP_OK, response.code());
     return response.body();
   }
 
@@ -95,7 +100,7 @@ public class SpendApiClient {
     } catch (IOException exception) {
       throw new AssertionError("Не удалось выполнить запрос на эндпоинт internal/categories/add");
     }
-    assertEquals(response.code(), 201);
+    assertEquals(HTTP_OK, response.code());
     return response.body();
   }
 
@@ -107,7 +112,7 @@ public class SpendApiClient {
     } catch (IOException exception) {
       throw new AssertionError("Не удалось выполнить запрос на эндпоинт internal/categories/all");
     }
-    assertEquals(response.code(), 200);
+    assertEquals(HTTP_OK, response.code());
     return response.body();
   }
 
@@ -119,7 +124,7 @@ public class SpendApiClient {
     } catch (IOException exception) {
       throw new AssertionError("Не удалось выполнить запрос на эндпоинт internal/categories/update");
     }
-    assertEquals(response.code(), 200);
+    assertEquals(HTTP_OK, response.code());
     return response.body();
   }
 }

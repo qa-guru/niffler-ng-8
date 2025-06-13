@@ -19,4 +19,13 @@ public record CategoryJson(
         );
     }
 
+    public static CategoryJson clone(CategoryJson categoryJson) {
+        return new CategoryJson(
+            categoryJson.id(),
+            categoryJson.name(),
+            categoryJson.username(),
+            categoryJson.archived()
+        );
+    }
+
 }

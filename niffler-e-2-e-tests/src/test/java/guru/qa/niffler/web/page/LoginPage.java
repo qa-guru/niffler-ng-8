@@ -1,6 +1,7 @@
 package guru.qa.niffler.web.page;
 
 import com.codeborne.selenide.SelenideElement;
+import guru.qa.niffler.api.model.UserParts;
 
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Condition.visible;
@@ -16,6 +17,11 @@ public class LoginPage extends BasePage {
 
   public MainPage doLoginSuccess(String username, String password) {
     doLogin(username, password);
+    return new MainPage();
+  }
+
+  public MainPage doLoginSuccess(UserParts user) {
+    doLogin(user.getUsername(), user.getPassword());
     return new MainPage();
   }
 

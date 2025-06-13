@@ -32,6 +32,7 @@ spring:
     open-in-view: false
 
 logging:
+  file: ../logs/niffler-spend
   level:
     root: INFO
     org.springframework.web: INFO

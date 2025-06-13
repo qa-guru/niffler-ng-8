@@ -29,5 +29,4 @@ public record SpendJson(
                 username
         );
     }
-
 }

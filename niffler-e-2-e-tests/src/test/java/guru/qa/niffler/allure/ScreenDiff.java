@@ -1,9 +1,8 @@
 package guru.qa.niffler.allure;
 
-import javax.imageio.ImageIO;
+import guru.qa.niffler.util.IOUtil;
+
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.util.Base64;
 
 public record ScreenDiff(String expected, String actual, String diff) {
@@ -19,16 +18,7 @@ public record ScreenDiff(String expected, String actual, String diff) {
     }
 
     public static String toEncodString(Base64.Encoder encoder, BufferedImage image) {
-        return PNG_BASE64 + encoder.encodeToString(imageToBytes(image));
-    }
-
-    private static byte[] imageToBytes(BufferedImage image) {
-        try (ByteArrayOutputStream os = new ByteArrayOutputStream()) {
-            ImageIO.write(image, "png", os);
-            return os.toByteArray();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        return PNG_BASE64 + encoder.encodeToString(IOUtil.writeImageToByteArr(image));
     }
 
 }

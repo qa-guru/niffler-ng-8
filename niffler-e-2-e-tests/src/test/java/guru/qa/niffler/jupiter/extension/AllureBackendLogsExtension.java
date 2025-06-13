@@ -7,11 +7,13 @@ import lombok.SneakyThrows;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.UUID;
 
 public class AllureBackendLogsExtension implements SuiteExtension {
 
     public static final String caseName = "Niffler backend logs";
+    public static final List<String> SERVICE_NAMES = List.of("auth", "currency", "gateway", "spend", "userdata");
 
     @SneakyThrows
     @Override
@@ -20,7 +22,9 @@ public class AllureBackendLogsExtension implements SuiteExtension {
         final String caseId = UUID.randomUUID().toString();
         allureLifecycle.scheduleTestCase(new TestResult().setUuid(caseId).setName(caseName));
         allureLifecycle.startTestCase(caseId);
-
+        SERVICE_NAMES.forEach(serviceName -> {
+            addLogs(allureLifecycle, serviceName);
+        });
         allureLifecycle.addAttachment(
             "Niffler-auth log",
             "text/html",
@@ -33,4 +37,15 @@ public class AllureBackendLogsExtension implements SuiteExtension {
         allureLifecycle.writeTestCase(caseId);
     }
 
+    @SneakyThrows
+    private void addLogs(AllureLifecycle allureLifecycle, String serviceName) {
+        allureLifecycle.addAttachment(
+            "Niffler-%s log".formatted(serviceName),
+            "text/html",
+            ".log",
+            Files.newInputStream(
+                Path.of("./logs/niffler-%s/app.log".formatted(serviceName))
+            )
+        );
+    }
 }

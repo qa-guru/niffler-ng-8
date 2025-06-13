@@ -1,7 +1,7 @@
 buildscript {
     ext {
         junitVersion = '5.11.4'
-        allureVersion = '2.29.1'
+        allureVersion = '2.29.0'
         selenideVersion = '7.7.1'
         okhttp3Version = '3.14.9'
         retrofitVersion = '2.11.0'
@@ -19,6 +19,7 @@ buildscript {
         wiremockVersion = '3.0.1'
         fakerVersion = '1.0.2'
         atomikOsVersion = '6.0.0'
+        ashotVersion = '1.5.4'
         userdataWsdlUrl = System.getProperty("test.env") == "docker"
                 ? "http://userdata.niffler.dc:8089/ws/userdata.wsdl"
                 : "http://127.0.0.1:8089/ws/userdata.wsdl"
@@ -97,9 +98,11 @@ dependencies {
     }
     testImplementation "io.qameta.allure:allure-okhttp3:${allureVersion}"
     testImplementation "io.qameta.allure:allure-grpc:${allureVersion}"
+    testImplementation "io.qameta.allure:allure-commandline:${allureVersion}"
     // WEB
     testImplementation "com.codeborne:selenide:${selenideVersion}"
     // Utils
+    testImplementation "ru.yandex.qatools.ashot:ashot:${ashotVersion}"
     testImplementation("com.github.javafaker:javafaker:${fakerVersion}") {
         exclude group: 'org.yaml'
     }

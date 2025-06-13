@@ -10,6 +10,7 @@ import static guru.qa.niffler.api.model.CurrencyValues.RUB;
 public final class RandomDataUtils {
 
     private static final Faker FAKER = Faker.instance();
+    public static final String USERNAME_PREFIX = "g_test_";
 
     private RandomDataUtils() {
         throw new UnsupportedOperationException();
@@ -20,7 +21,7 @@ public final class RandomDataUtils {
     }
 
     public static String genUsername() {
-        return FAKER.funnyName().name();
+        return USERNAME_PREFIX + FAKER.funnyName().name();
     }
 
     public static String genCategoryName() {
@@ -48,6 +49,10 @@ public final class RandomDataUtils {
 
     public static UserParts genDefaultUser() {
         return genDefaultUser(genUsername(), genPassword());
+    }
+
+    public static UserParts genDefaultUser(String password) {
+        return genDefaultUser(genUsername(), password);
     }
 
 }

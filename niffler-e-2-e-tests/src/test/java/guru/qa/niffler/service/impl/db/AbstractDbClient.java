@@ -1,4 +1,4 @@
-package guru.qa.niffler.db.service.impl;
+package guru.qa.niffler.service.impl.db;
 
 import guru.qa.niffler.config.Config;
 

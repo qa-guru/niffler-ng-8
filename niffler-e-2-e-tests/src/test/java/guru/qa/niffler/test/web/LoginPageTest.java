@@ -1,7 +1,7 @@
 package guru.qa.niffler.test.web;
 
+import guru.qa.niffler.api.model.UserParts;
 import guru.qa.niffler.jupiter.annotation.User;
-import guru.qa.niffler.web.model.WebUser;
 import org.junit.jupiter.api.Test;
 
 import static guru.qa.niffler.util.RandomDataUtils.genPassword;
@@ -9,19 +9,19 @@ import static guru.qa.niffler.util.RandomDataUtils.genPassword;
 public class LoginPageTest extends BaseWebTest {
 
     @Test
-    @User
-    void mainPageShouldBeDisplayedAfterSuccessLogin(WebUser user) {
+    @User(username = "user")
+    void mainPageShouldBeDisplayedAfterSuccessLogin(UserParts user) {
         openLoginPage()
-                .doLoginSuccess(user.username(), user.password())
+            .doLoginSuccess(user.getUsername(), user.getPassword())
                 .checkMainPage();
     }
 
     @Test
     @User
-    void userShouldStayOnLoginPageAfterLoginWithBadCredential(WebUser user) {
+    void userShouldStayOnLoginPageAfterLoginWithBadCredential(UserParts user) {
         String errPassword = genPassword();
         openLoginPage()
-                .doLoginError(user.username(), errPassword)
+            .doLoginError(user.getUsername(), errPassword)
                 .checkBadCredentialsError();
     }
 

@@ -1,4 +1,4 @@
-package guru.qa.niffler.db.service.impl;
+package guru.qa.niffler.service.impl.db;
 
 import guru.qa.niffler.api.model.AuthUserJson;
 import guru.qa.niffler.api.model.UserParts;
@@ -9,13 +9,14 @@ import guru.qa.niffler.db.repository.AuthUserRepository;
 import guru.qa.niffler.db.repository.UserdataUserRepository;
 import guru.qa.niffler.db.repository.impl.hibernate.AuthUserRepositoryHibernate;
 import guru.qa.niffler.db.repository.impl.hibernate.UserdataUserRepositoryHibernate;
-import guru.qa.niffler.db.service.UserClient;
 import guru.qa.niffler.db.tpl.XaTransactionTemplate;
+import guru.qa.niffler.service.UserClient;
 
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static guru.qa.niffler.util.RandomDataUtils.USERNAME_PREFIX;
 import static guru.qa.niffler.util.RandomDataUtils.genDefaultUser;
 
 public class UserDbClient extends AbstractDbClient implements UserClient {
@@ -68,8 +69,8 @@ public class UserDbClient extends AbstractDbClient implements UserClient {
         return Optional.empty();
     }
 
-    public UserParts createUser(UserParts userJson) {
-        return xaTxTemplate.execute(() -> createUseWithoutTx(userJson));
+    public UserParts createUser(UserParts userPart) {
+        return xaTxTemplate.execute(() -> createUseWithoutTx(userPart));
     }
 
     private UserParts createUseWithoutTx(UserParts userJson) {
@@ -78,10 +79,10 @@ public class UserDbClient extends AbstractDbClient implements UserClient {
         return UserParts.of(authUser, userdataUser);
     }
 
-    public UserParts updateUser(UserParts userJson) {
+    public UserParts updateUser(UserParts userPart) {
         return xaTxTemplate.execute(() -> {
-            AuthUserEntity authUser = authUserRepository.update(userJson.getAuthUserEntity());
-            UserdataUserEntity userdataUser = userdataUserRepository.update(userJson.getUserdataUserEntity());
+            AuthUserEntity authUser = authUserRepository.update(userPart.getAuthUserEntity());
+            UserdataUserEntity userdataUser = userdataUserRepository.update(userPart.getUserdataUserEntity());
             return UserParts.of(authUser, userdataUser);
         });
     }
@@ -99,10 +100,10 @@ public class UserDbClient extends AbstractDbClient implements UserClient {
         });
     }
 
-    public void deleteUser(UserParts userJson) {
+    public void deleteUser(UserParts userPart) {
         xaTxTemplate.execute(() -> {
-            deleteAuthUserAndAuthority(userJson.getAuthUserJson());
-            deleteUserdataUser(userJson.getUserdataUserJson());
+            deleteAuthUserAndAuthority(userPart.getAuthUserJson());
+            deleteUserdataUser(userPart.getUserdataUserJson());
         });
     }
 
@@ -112,9 +113,10 @@ public class UserDbClient extends AbstractDbClient implements UserClient {
             for (int i = 0; i < count; i++) {
                 UserParts userJson = genDefaultUser();
                 UserParts createdUser = createUseWithoutTx(userJson);
-                userdataUserRepository.addOutcomeInvitation(
+                userdataUserRepository.addIncomeInvitation(
                     targetUser.getUserdataUserEntity(), createdUser.getUserdataUserEntity()
                 );
+                targetUser.getTestData().getInInviteNames().add(createdUser.getUsername());
             }
         });
     }
@@ -125,9 +127,10 @@ public class UserDbClient extends AbstractDbClient implements UserClient {
             for (int i = 0; i < count; i++) {
                 UserParts userJson = genDefaultUser();
                 UserParts createdUser = createUseWithoutTx(userJson);
-                userdataUserRepository.addIncomeInvitation(
+                userdataUserRepository.addOutcomeInvitation(
                     targetUser.getUserdataUserEntity(), createdUser.getUserdataUserEntity()
                 );
+                targetUser.getTestData().getOutInviteNames().add(createdUser.getUsername());
             }
         });
     }
@@ -141,8 +144,16 @@ public class UserDbClient extends AbstractDbClient implements UserClient {
                 userdataUserRepository.addFriend(
                     targetUser.getUserdataUserEntity(), createdUser.getUserdataUserEntity()
                 );
+                targetUser.getTestData().getFriendsNames().add(createdUser.getUsername());
             }
         });
+    }
+
+    @Override
+    public void deleteAllGenUser() {
+        findAll().stream()
+            .filter(u -> u.getUsername().startsWith(USERNAME_PREFIX))
+            .forEach(this::deleteUser);
     }
 
     private void deleteUserdataUser(UserdataUserJson userJson) {

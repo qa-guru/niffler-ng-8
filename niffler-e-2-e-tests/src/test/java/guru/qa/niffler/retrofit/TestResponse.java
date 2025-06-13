@@ -42,4 +42,14 @@ public class TestResponse<SUCC_DTO, ERR_DTO> {
         return new TestResponse<>(response, errorDto);
     }
 
+    @Override
+    public String toString() {
+        return "TestResponse{" +
+            "body=" + body +
+            ", errorBody=" + errorBody +
+            ", retrofitRawResponse=" + retrofitRawResponse +
+            ", message=" + retrofitRawResponse.message() +
+            ", headers=" + retrofitRawResponse.headers() +
+            '}';
+    }
 }

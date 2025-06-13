@@ -2,6 +2,7 @@ package guru.qa.niffler.api.model;
 
 import guru.qa.niffler.db.entity.auth.AuthUserEntity;
 import guru.qa.niffler.db.entity.userdata.UserdataUserEntity;
+import guru.qa.niffler.util.TestData;
 import lombok.Data;
 
 import java.util.UUID;
@@ -9,17 +10,38 @@ import java.util.UUID;
 @Data
 public class UserParts {
 
-    private final AuthUserJson authUserJson;
-    private final UserdataUserJson userdataUserJson;
+    private AuthUserJson authUserJson;
+    private UserdataUserJson userdataUserJson;
+    private TestData testData;
 
     public UserParts(AuthUserJson authUserJson, UserdataUserJson userdataUserJson) {
         this.authUserJson = authUserJson;
         this.userdataUserJson = userdataUserJson;
+        this.testData = new TestData();
+    }
+
+    public static UserParts of(String username, String password) {
+        UserParts userParts = UserParts.of(username);
+        userParts.setPassword(password);
+        return userParts;
     }
 
     public static UserParts of(String username) {
         AuthUserJson authUserJson = new AuthUserJson().setUsername(username);
         UserdataUserJson userdataUserJson = new UserdataUserJson().setUsername(username);
+        return new UserParts(authUserJson, userdataUserJson);
+    }
+
+    public static UserParts of(UserdataUserJson userdataUserJson, String username, String password) {
+        AuthUserJson authUserJson = new AuthUserJson()
+            .setUsername(username)
+            .setPassword(password);
+        return new UserParts(authUserJson, userdataUserJson);
+    }
+
+    public static UserParts of(UserdataUserJson userdataUserJson) {
+        AuthUserJson authUserJson = new AuthUserJson()
+            .setUsername(userdataUserJson.getUsername());
         return new UserParts(authUserJson, userdataUserJson);
     }
 
@@ -41,9 +63,8 @@ public class UserParts {
         return authUserJson.getUsername();
     }
 
-    public void setUsername(String name) {
-        authUserJson.setUsername(name);
-        userdataUserJson.setUsername(name);
+    public String getPassword() {
+        return authUserJson.getPassword();
     }
 
     public String getUserdataId() {
@@ -60,6 +81,22 @@ public class UserParts {
 
     public UserdataUserJson getUserdataUserJson() {
         return userdataUserJson;
+    }
+
+    public UserParts setPassword(String password) {
+        authUserJson.setPassword(password);
+        return this;
+    }
+
+    public UserParts setUsername(String name) {
+        authUserJson.setUsername(name);
+        userdataUserJson.setUsername(name);
+        return this;
+    }
+
+    public UserParts setUserdataUser(UserdataUserJson userdataUserJson) {
+        this.userdataUserJson = userdataUserJson;
+        return this;
     }
 
 }

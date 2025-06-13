@@ -1,8 +1,8 @@
 package guru.qa.niffler.test.web;
 
+import guru.qa.niffler.api.model.UserParts;
 import guru.qa.niffler.jupiter.annotation.DisabledByIssue;
 import guru.qa.niffler.jupiter.annotation.User;
-import guru.qa.niffler.web.model.WebUser;
 import org.junit.jupiter.api.Test;
 
 import static guru.qa.niffler.util.RandomDataUtils.genPassword;
@@ -21,8 +21,8 @@ public class RegisterPageTest extends BaseWebTest {
 
     @Test
     @User
-    void shouldNotRegisterUserWithExitingUsername(WebUser user) {
-        String username = user.username();
+    void shouldNotRegisterUserWithExitingUsername(UserParts user) {
+        String username = user.getPassword();
         String password2 = genPassword();
         openRegisterPage()
                 .registerUserError(username, password2, password2)

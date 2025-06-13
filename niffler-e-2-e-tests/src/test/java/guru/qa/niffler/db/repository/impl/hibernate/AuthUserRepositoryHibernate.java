@@ -2,6 +2,8 @@ package guru.qa.niffler.db.repository.impl.hibernate;
 
 import guru.qa.niffler.db.entity.auth.AuthUserEntity;
 import guru.qa.niffler.db.repository.AuthUserRepository;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
 import java.util.Optional;
@@ -10,6 +12,7 @@ import java.util.UUID;
 public class AuthUserRepositoryHibernate extends AbstractRepositoryHibernate implements AuthUserRepository {
 
     private static final Class<AuthUserEntity> USER_CLASS = AuthUserEntity.class;
+    private static final PasswordEncoder passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
 
     public AuthUserRepositoryHibernate() {
         super(CFG.authJdbcUrl());
@@ -17,6 +20,8 @@ public class AuthUserRepositoryHibernate extends AbstractRepositoryHibernate imp
 
     @Override
     public AuthUserEntity create(AuthUserEntity entity) {
+        String encodedPass = passwordEncoder.encode(entity.getPassword());
+        entity.setPassword(encodedPass);
         return super.create(entity);
     }
 

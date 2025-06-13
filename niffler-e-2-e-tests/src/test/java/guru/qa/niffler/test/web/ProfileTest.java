@@ -1,9 +1,9 @@
 package guru.qa.niffler.test.web;
 
-import guru.qa.niffler.jupiter.annotation.Category;
 import guru.qa.niffler.api.model.CategoryJson;
+import guru.qa.niffler.api.model.UserParts;
+import guru.qa.niffler.jupiter.annotation.Category;
 import guru.qa.niffler.jupiter.annotation.User;
-import guru.qa.niffler.web.model.WebUser;
 import org.junit.jupiter.api.Test;
 
 public class ProfileTest extends BaseWebTest {
@@ -12,9 +12,9 @@ public class ProfileTest extends BaseWebTest {
     @User(
             categories = @Category(archived = true)
     )
-    void archivedCategoryShouldPresentInCategoriesList(WebUser user, CategoryJson category) {
+    void archivedCategoryShouldPresentInCategoriesList(UserParts user, CategoryJson category) {
         openLoginPage()
-                .doLoginSuccess(user.username(), user.password())
+            .doLoginSuccess(user.getUsername(), user.getPassword())
                 .getHeader()
                 .goToProfilePage()
                 .clickShowArchivedToggle()
@@ -25,9 +25,9 @@ public class ProfileTest extends BaseWebTest {
     @User(
             categories = @Category(archived = false)
     )
-    void activeCategoryShouldPresentInCategoriesList(WebUser user, CategoryJson category) {
+    void activeCategoryShouldPresentInCategoriesList(UserParts user, CategoryJson category) {
         openLoginPage()
-                .doLoginSuccess(user.username(), user.password())
+            .doLoginSuccess(user.getUsername(), user.getPassword())
                 .getHeader()
                 .goToProfilePage()
                 .checkCategoryExist(category.name(), false);

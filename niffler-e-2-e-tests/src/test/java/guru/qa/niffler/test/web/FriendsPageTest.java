@@ -1,35 +1,42 @@
 package guru.qa.niffler.test.web;
 
+import guru.qa.niffler.api.model.UserParts;
+import guru.qa.niffler.jupiter.annotation.User;
 import org.junit.jupiter.api.Test;
-
-import static guru.qa.niffler.jupiter.extension.UsersQueueExtension.*;
-import static guru.qa.niffler.jupiter.extension.UsersQueueExtension.UserType.Type.*;
 
 public class FriendsPageTest extends BaseWebTest {
 
     @Test
-    void friendShouldBePresentInFriendsTable(@UserType(WITH_FRIEND) StaticUser user) {
+    @User(withFriend = 1)
+    void friendShouldBePresentInFriendsTable(UserParts user) {
+        String friendName = user.getTestData().getFriendsNames().getFirst();
         openFriendsPage(user)
-                .checkFriendTableContainsName(user.friend());
+            .findUsername(friendName)
+            .checkFriendTableContainsName(friendName);
     }
 
     @Test
-    void friendsTableShouldBeEmptyForNewUser(@UserType(EMPTY) StaticUser user) {
+    @User
+    void friendsTableShouldBeEmptyForNewUser(UserParts user) {
         openFriendsPage(user)
-                .checkEmptyFriends();
+            .checkEmptyFriends();
     }
 
     @Test
-    void incomeInvitationBePresentInFriendsTable(@UserType(WITH_INCOME_REQUEST) StaticUser user) {
+    @User(withInInvite = 1)
+    void incomeInvitationBePresentInFriendsTable(UserParts user) {
         openFriendsPage(user)
-                .checkFriendRequestTableContainsName(user.income());
+            .checkFriendRequestTableContainsName(user.getTestData().getInInviteNames().getFirst());
     }
 
     @Test
-    void outcomeInvitationBePresentInAllPeoplesTable(@UserType(WITH_OUTCOME_REQUEST) StaticUser user) {
+    @User(withOutInvite = 1)
+    void outcomeInvitationBePresentInAllPeoplesTable(UserParts user) {
+        String friendName = user.getTestData().getOutInviteNames().getFirst();
         openFriendsPage(user)
-                .clickAllPeopleTab()
-                .checkAllTableContainsOutcomeInvitationWithName(user.outcome());
+            .clickAllPeopleTab()
+            .findUsername(friendName)
+            .checkAllTableContainsOutcomeInvitationWithName(friendName);
     }
 
 }

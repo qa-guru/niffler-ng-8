@@ -3,6 +3,7 @@ package guru.qa.niffler.api;
 import guru.qa.niffler.api.util.SessionCookieJar;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.retrofit.TestResponseAdapterFactory;
+import io.qameta.allure.okhttp3.AllureOkHttp3;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
@@ -11,6 +12,11 @@ public class ApiClients {
 
     private static final OkHttpClient okHttpClient = new OkHttpClient.Builder()
         .cookieJar(new SessionCookieJar())
+        .addInterceptor(
+            new AllureOkHttp3()
+                .setRequestTemplate("http-request-custom.ftl")
+                .setResponseTemplate("http-response-custom.ftl")
+        )
         .build();
 
     private static final Config CFG = Config.getInstance();

@@ -3,6 +3,7 @@ package guru.qa.niffler.test.web;
 import guru.qa.niffler.api.model.CurrencyValues;
 import guru.qa.niffler.api.model.SpendJson;
 import guru.qa.niffler.api.model.UserParts;
+import guru.qa.niffler.condition.Color;
 import guru.qa.niffler.jupiter.annotation.Category;
 import guru.qa.niffler.jupiter.annotation.ScreenShotTest;
 import guru.qa.niffler.jupiter.annotation.Spending;
@@ -31,7 +32,8 @@ public class SpendingTest extends BaseWebTest {
             .findSpending(spendingDescription)
             .editSpending(spendingDescription)
             .editDescription(newDescription)
-            .checkThatTableContains(newDescription);
+            .checkThatTableContains(newDescription)
+            .checkCategoryBubbles(Color.YELLOW);
     }
 
     @User(
@@ -55,7 +57,8 @@ public class SpendingTest extends BaseWebTest {
         openLoginPage()
             .doLoginSuccess(user)
             .checkStatisticScreenshot(expImage)
-            .checkCategoryLabelsContainsAll(spends);
+            .checkCategoryBubblesContainsAll(spends)
+            .checkCategoryBubbles(Color.YELLOW, Color.GREEN);
     }
 
     @User(
@@ -81,9 +84,9 @@ public class SpendingTest extends BaseWebTest {
 
         openLoginPage()
             .doLoginSuccess(user)
-            .checkCategoryLabelsContainsAll(spends)
+            .checkCategoryBubblesContainsAll(spends)
             .deleteSpending(description)
-            .checkCategoryLabelsContainsAll(expSpends)
+            .checkCategoryBubblesContainsAll(expSpends)
             .checkStatisticScreenshot(expImage);
     }
 
@@ -112,11 +115,11 @@ public class SpendingTest extends BaseWebTest {
 
         openLoginPage()
             .doLoginSuccess(user)
-            .checkCategoryLabelsContainsAll(spends)
+            .checkCategoryBubblesContainsAll(spends)
             .editSpending(description)
             .editAmount(newAmount)
             .checkStatisticScreenshot(expImage)
-            .checkCategoryLabelsContainsAll(spends, oldAmount, newAmount);
+            .checkCategoryBubblesContainsAll(spends, oldAmount, newAmount);
     }
 
     @User(
@@ -141,6 +144,6 @@ public class SpendingTest extends BaseWebTest {
         openLoginPage()
             .doLoginSuccess(user)
             .checkStatisticScreenshot(expImage)
-            .checkCategoryLabelsContainsAll(spends, "Авто", "Archived");
+            .checkCategoryBubblesContainsAll(spends, "Авто", "Archived");
     }
 }

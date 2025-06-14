@@ -4,6 +4,7 @@ import com.codeborne.selenide.CollectionCondition;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import guru.qa.niffler.api.model.SpendJson;
+import guru.qa.niffler.condition.Color;
 import guru.qa.niffler.util.FormatUtil;
 import guru.qa.niffler.web.component.DeleteSpendingsAlert;
 import guru.qa.niffler.web.component.Header;
@@ -14,10 +15,12 @@ import java.awt.image.BufferedImage;
 import java.util.Collection;
 import java.util.List;
 
+import static com.codeborne.selenide.CollectionCondition.texts;
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
+import static guru.qa.niffler.condition.StatCondition.color;
 
 public class MainPage extends BasePage {
 
@@ -72,20 +75,24 @@ public class MainPage extends BasePage {
   }
 
   public MainPage checkThatTableContains(String spendingDescription) {
-    spendingTableRows.find(text(spendingDescription))
-        .should(visible);
+    spendingTableRows.shouldHave(texts(spendingDescription));
     return this;
   }
 
-  public MainPage checkCategoryLabelsContainsAll(List<SpendJson> spends, Object target, Object replacement) {
+  public MainPage checkCategoryBubblesContainsAll(List<SpendJson> spends, Object target, Object replacement) {
     List<String> expCategoryLabels = expCategoryLabels(spends, target, replacement);
     categoryLabels.shouldBe(CollectionCondition.textsInAnyOrder(expCategoryLabels));
     return this;
   }
 
-  public MainPage checkCategoryLabelsContainsAll(List<SpendJson> spends) {
+  public MainPage checkCategoryBubblesContainsAll(List<SpendJson> spends) {
     List<String> expCategoryLabels = expCategoryLabels(spends, null, null);
     categoryLabels.shouldBe(CollectionCondition.textsInAnyOrder(expCategoryLabels));
+    return this;
+  }
+
+  public MainPage checkCategoryBubbles(Color... color) {
+    categoryLabels.should(color(color));
     return this;
   }
 

@@ -12,7 +12,7 @@ public class ApiClients {
 
     private static final OkHttpClient okHttpClient = new OkHttpClient.Builder()
         .cookieJar(new SessionCookieJar())
-        .addInterceptor(
+        .addNetworkInterceptor(
             new AllureOkHttp3()
                 .setRequestTemplate("http-request-custom.ftl")
                 .setResponseTemplate("http-response-custom.ftl")

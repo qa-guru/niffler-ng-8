@@ -16,6 +16,7 @@ public class UserdataUserJson {
     private String firstname;
     private String surname;
     private String fullname;
+    private String friendshipStatus;
     private byte[] photo;
     private byte[] photoSmall;
 

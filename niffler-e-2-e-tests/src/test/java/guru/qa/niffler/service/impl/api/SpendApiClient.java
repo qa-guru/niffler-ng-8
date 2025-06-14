@@ -6,6 +6,7 @@ import guru.qa.niffler.api.model.CategoryJson;
 import guru.qa.niffler.api.model.SpendJson;
 import guru.qa.niffler.retrofit.TestResponse;
 import guru.qa.niffler.service.SpendClient;
+import io.qameta.allure.Step;
 
 import java.util.List;
 import java.util.Optional;
@@ -27,17 +28,20 @@ public class SpendApiClient implements SpendClient {
         private static final SpendApiClient INSTANCE = new SpendApiClient();
     }
 
+    @Step("Создание трат")
     @Override
     public SpendJson createSpend(SpendJson spendJson) {
         TestResponse<SpendJson, Void> response = spendClient.addSpend(spendJson);
         return extractResp(response, TestResponse::getBody);
     }
 
+    @Step("Поиск трат по id")
     @Override
     public Optional<SpendJson> findSpendById(UUID id) {
         throw new UnsupportedOperationException("Метод не реализован");
     }
 
+    @Step("Удаление трат")
     @Override
     public boolean deleteSpend(SpendJson spendJson) {
         TestResponse<Void, Void> response = spendClient.deleteSpends(spendJson.username(), List.of(spendJson.id().toString()));
@@ -48,18 +52,21 @@ public class SpendApiClient implements SpendClient {
         }
     }
 
+    @Step("Создание категории трат")
     @Override
     public CategoryJson createCategory(CategoryJson categoryJson) {
         TestResponse<CategoryJson, Void> response = spendClient.addCategory(categoryJson);
         return extractResp(response, TestResponse::getBody);
     }
 
+    @Step("Обновление категории трат")
     @Override
     public CategoryJson updateCategory(CategoryJson categoryJson) {
         TestResponse<CategoryJson, Void> response = spendClient.updateCategory(categoryJson);
         return extractResp(response, TestResponse::getBody);
     }
 
+    @Step("Удаление категории трат")
     @Override
     public boolean deleteCategory(CategoryJson categoryJson) {
         throw new UnsupportedOperationException("Метод не реализован");

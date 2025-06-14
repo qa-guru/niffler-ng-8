@@ -1,6 +1,7 @@
 package guru.qa.niffler.db.tpl;
 
 import com.atomikos.jdbc.AtomikosDataSourceBean;
+import com.p6spy.engine.spy.P6DataSource;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.naming.InitialContext;
@@ -32,13 +33,14 @@ public class DataSources {
                     atomikosDs.setXaProperties(props);
                     atomikosDs.setMaxPoolSize(12);
                     atomikosDs.setPoolSize(3);
+                    P6DataSource p6DataSource = new P6DataSource(atomikosDs);
                     try {
                         InitialContext context = new InitialContext();
-                        context.bind("java:comp/env/jdbc/" + uniqId, atomikosDs);
+                        context.bind("java:comp/env/jdbc/" + uniqId, p6DataSource);
                     } catch (NamingException e) {
                         throw new RuntimeException(e);
                     }
-                    return atomikosDs;
+                    return p6DataSource;
                 }
         );
     }

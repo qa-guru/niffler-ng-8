@@ -46,9 +46,15 @@ public class UserExtension implements BeforeEachCallback, ParameterResolver {
     }
 
     private void addFriends(User userAnno, UserParts user) {
-        userClient.createFriends(user, userAnno.withFriend());
-        userClient.createIncomeInvitation(user, userAnno.withInInvite());
-        userClient.createOutcomeInvitation(user, userAnno.withOutInvite());
+        if (userAnno.withFriend() > 0) {
+            userClient.createFriends(user, userAnno.withFriend());
+        }
+        if (userAnno.withInInvite() > 0) {
+            userClient.createIncomeInvitation(user, userAnno.withInInvite());
+        }
+        if (userAnno.withOutInvite() > 0) {
+            userClient.createOutcomeInvitation(user, userAnno.withOutInvite());
+        }
     }
 
     private UserParts getUser(String username) {

@@ -8,6 +8,7 @@ import guru.qa.niffler.api.model.UserdataUserJson;
 import guru.qa.niffler.retrofit.TestResponse;
 import guru.qa.niffler.service.UserClient;
 import guru.qa.niffler.util.RandomDataUtils;
+import io.qameta.allure.Step;
 
 import java.util.List;
 import java.util.Optional;
@@ -31,11 +32,13 @@ public class UserApiClient implements UserClient {
         private static final UserApiClient INSTANCE = new UserApiClient();
     }
 
+    @Step("Поиск пользователя по id")
     @Override
     public Optional<UserParts> findByAuthId(UUID id) {
         throw new UnsupportedOperationException("Метод не реализован");
     }
 
+    @Step("Поиск пользователя по имени")
     @Override
     public Optional<UserParts> findByUsername(String username) {
         TestResponse<List<UserdataUserJson>, Void> response = userdataClient.userAllGet(null, username);
@@ -46,6 +49,7 @@ public class UserApiClient implements UserClient {
         return users.isEmpty() ? Optional.empty() : Optional.of(users.getFirst());
     }
 
+    @Step("Создание пользователя")
     @Override
     public UserParts createUser(UserParts userPart) {
         TestResponse<Void, Void> registerGetResp = authClient.registerGet();
@@ -60,12 +64,14 @@ public class UserApiClient implements UserClient {
         return userPart.setUserdataUser(userCurrentGetResp.getBody());
     }
 
+    @Step("Обновление пользователя")
     @Override
     public UserParts updateUser(UserParts userPart) {
         TestResponse<UserdataUserJson, Void> response = userdataClient.userUpdatePost(userPart.getUserdataUserJson());
         return extractResp(response, resp -> userPart.setUserdataUser(resp.getBody()));
     }
 
+    @Step("Получение всех пользователей")
     @Override
     public List<UserParts> findAll() {
         TestResponse<List<UserdataUserJson>, Void> response = userdataClient.userAllGet(null, null);
@@ -76,11 +82,13 @@ public class UserApiClient implements UserClient {
         );
     }
 
+    @Step("Удаление пользователя")
     @Override
     public void deleteUser(UserParts userPart) {
         throw new UnsupportedOperationException("Метод не реализован");
     }
 
+    @Step("Создание входящих запросов на дружбу")
     @Override
     public void createIncomeInvitation(UserParts targetUser, int count) {
         for (int i = 0; i < count; i++) {
@@ -93,6 +101,7 @@ public class UserApiClient implements UserClient {
         }
     }
 
+    @Step("Создание исходящих запросов на дружбу")
     @Override
     public void createOutcomeInvitation(UserParts targetUser, int count) {
         for (int i = 0; i < count; i++) {
@@ -105,6 +114,7 @@ public class UserApiClient implements UserClient {
         }
     }
 
+    @Step("Создание дружеских связей для пользователя")
     @Override
     public void createFriends(UserParts targetUser, int count) {
         for (int i = 0; i < count; i++) {
@@ -120,6 +130,7 @@ public class UserApiClient implements UserClient {
         }
     }
 
+    @Step("Удаление сгенерированных пользователей")
     @Override
     public void deleteAllGenUser() {
         throw new UnsupportedOperationException("Метод не реализован");

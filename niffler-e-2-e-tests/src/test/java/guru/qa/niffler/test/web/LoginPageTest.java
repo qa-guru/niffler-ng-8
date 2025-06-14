@@ -24,5 +24,4 @@ public class LoginPageTest extends BaseWebTest {
             .doLoginError(user.getUsername(), errPassword)
             .checkBadCredentialsError();
     }
-
 }

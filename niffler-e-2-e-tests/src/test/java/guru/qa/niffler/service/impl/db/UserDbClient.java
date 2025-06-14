@@ -11,6 +11,7 @@ import guru.qa.niffler.db.repository.impl.hibernate.AuthUserRepositoryHibernate;
 import guru.qa.niffler.db.repository.impl.hibernate.UserdataUserRepositoryHibernate;
 import guru.qa.niffler.db.tpl.XaTransactionTemplate;
 import guru.qa.niffler.service.UserClient;
+import io.qameta.allure.Step;
 
 import java.util.*;
 import java.util.function.Function;
@@ -37,10 +38,12 @@ public class UserDbClient extends AbstractDbClient implements UserClient {
         this.userdataUserRepository = userdataUserRepository;
     }
 
+    @Step("Поиск пользователя по id")
     public Optional<UserParts> findByAuthId(String id) {
         return findByAuthId(UUID.fromString(id));
     }
 
+    @Step("Поиск пользователя по id")
     public Optional<UserParts> findByAuthId(UUID id) {
         Optional<AuthUserEntity> authUserOpt = authUserRepository.findById(id);
         if (authUserOpt.isPresent()) {
@@ -55,6 +58,7 @@ public class UserDbClient extends AbstractDbClient implements UserClient {
         return Optional.empty();
     }
 
+    @Step("Поиск пользователя по имени")
     public Optional<UserParts> findByUsername(String username) {
         Optional<AuthUserEntity> authUserOpt = authUserRepository.findByUsername(username);
         if (authUserOpt.isPresent()) {
@@ -69,6 +73,7 @@ public class UserDbClient extends AbstractDbClient implements UserClient {
         return Optional.empty();
     }
 
+    @Step("Создание пользователя")
     public UserParts createUser(UserParts userPart) {
         return xaTxTemplate.execute(() -> createUseWithoutTx(userPart));
     }
@@ -79,6 +84,7 @@ public class UserDbClient extends AbstractDbClient implements UserClient {
         return UserParts.of(authUser, userdataUser);
     }
 
+    @Step("Обновление пользователя")
     public UserParts updateUser(UserParts userPart) {
         return xaTxTemplate.execute(() -> {
             AuthUserEntity authUser = authUserRepository.update(userPart.getAuthUserEntity());
@@ -87,6 +93,7 @@ public class UserDbClient extends AbstractDbClient implements UserClient {
         });
     }
 
+    @Step("Получение всех пользователей")
     public List<UserParts> findAll() {
         return xaTxTemplate.execute(() -> {
             List<UserParts> result = new ArrayList<>();
@@ -100,6 +107,7 @@ public class UserDbClient extends AbstractDbClient implements UserClient {
         });
     }
 
+    @Step("Удаление пользователя")
     public void deleteUser(UserParts userPart) {
         xaTxTemplate.execute(() -> {
             deleteAuthUserAndAuthority(userPart.getAuthUserJson());
@@ -107,6 +115,7 @@ public class UserDbClient extends AbstractDbClient implements UserClient {
         });
     }
 
+    @Step("Создание входящих запросов на дружбу")
     @Override
     public void createIncomeInvitation(UserParts targetUser, int count) {
         xaTxTemplate.execute(() -> {
@@ -121,6 +130,7 @@ public class UserDbClient extends AbstractDbClient implements UserClient {
         });
     }
 
+    @Step("Создание исходящих запросов на дружбу")
     @Override
     public void createOutcomeInvitation(UserParts targetUser, int count) {
         xaTxTemplate.execute(() -> {
@@ -135,6 +145,7 @@ public class UserDbClient extends AbstractDbClient implements UserClient {
         });
     }
 
+    @Step("Создание дружеских связей для пользователя")
     @Override
     public void createFriends(UserParts targetUser, int count) {
         xaTxTemplate.execute(() -> {
@@ -149,6 +160,7 @@ public class UserDbClient extends AbstractDbClient implements UserClient {
         });
     }
 
+    @Step("Удаление сгенерированных пользователей")
     @Override
     public void deleteAllGenUser() {
         findAll().stream()

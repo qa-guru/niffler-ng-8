@@ -1,12 +1,14 @@
 package guru.qa.niffler.util;
 
 import guru.qa.niffler.jupiter.extension.ScreenShotTestExtension;
+import lombok.Data;
 import ru.yandex.qatools.ashot.comparison.ImageDiff;
 import ru.yandex.qatools.ashot.comparison.ImageDiffer;
 
 import java.awt.image.BufferedImage;
 import java.util.function.BooleanSupplier;
 
+@Data
 public class ScreeDiffResult implements BooleanSupplier {
 
     public final BufferedImage expected;
@@ -14,7 +16,7 @@ public class ScreeDiffResult implements BooleanSupplier {
     public final ImageDiff diff;
     public final boolean hasDif;
 
-    public ScreeDiffResult(BufferedImage actual, BufferedImage expected) {
+    public ScreeDiffResult(BufferedImage expected, BufferedImage actual) {
         this.actual = actual;
         this.expected = expected;
         this.diff = new ImageDiffer().makeDiff(expected, actual);
@@ -28,7 +30,7 @@ public class ScreeDiffResult implements BooleanSupplier {
             ScreenShotTestExtension.setActual(actual);
             ScreenShotTestExtension.setDiff(diff.getMarkedImage());
         }
-        return diff.hasDiff();
+        return hasDif;
     }
 
 }

@@ -19,10 +19,32 @@ import java.util.List;
 
 import static guru.qa.niffler.util.RandomDataUtils.genCategoryName;
 
-public class CategoryExtension implements ParameterResolver, AfterEachCallback {
+public class CategoryExtension implements ParameterResolver, BeforeEachCallback, AfterEachCallback {
 
     public static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(CategoryExtension.class);
     private final SpendClient spendDbClient = new SpendDbClient();
+
+    @Override
+    public void beforeEach(ExtensionContext extensionContext) {
+        UserParts user = UserExtension.createdUser();
+        List<Category> categories = getCategories(extensionContext);
+        if (!categories.isEmpty()) {
+            List<CategoryJson> createdCategories = new ArrayList<>();
+
+            for (Category category : categories) {
+                CategoryJson categoryJson = new CategoryJson(
+                    null,
+                    category.name().isEmpty() ? genCategoryName() : category.name(),
+                    user.getUsername(),
+                    category.archived()
+                );
+                CategoryJson createdCategory = spendDbClient.createCategory(categoryJson);
+                createdCategories.add(createdCategory);
+                user.getTestData().getCategories().add(createdCategory);
+            }
+            extensionContext.getStore(NAMESPACE).put(extensionContext.getUniqueId(), createdCategories);
+        }
+    }
 
     @Override
     public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
@@ -38,23 +60,7 @@ public class CategoryExtension implements ParameterResolver, AfterEachCallback {
 
     @Override
     public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
-        UserParts user = UserExtension.createdUser();
-        List<Category> categories = getCategories(extensionContext);
-        List<CategoryJson> createdCategories = new ArrayList<>();
-
-        for (Category category : categories) {
-            CategoryJson categoryJson = new CategoryJson(
-                null,
-                category.name().isEmpty() ? genCategoryName() : category.name(),
-                user.getUsername(),
-                category.archived()
-            );
-            CategoryJson createdCategory = spendDbClient.createCategory(categoryJson);
-            createdCategories.add(createdCategory);
-            user.getTestData().getCategories().add(createdCategory);
-        }
-        extensionContext.getStore(NAMESPACE).put(extensionContext.getUniqueId(), createdCategories);
-
+        List<CategoryJson> createdCategories = extensionContext.getStore(NAMESPACE).get(extensionContext.getUniqueId(), List.class);
         Class<?> paramType = parameterContext.getParameter().getType();
         if (paramType == CategoryJson.class) {
             return createdCategories.get(0);

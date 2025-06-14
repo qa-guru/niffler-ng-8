@@ -3,19 +3,20 @@ package guru.qa.niffler.jupiter.extension;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import guru.qa.niffler.allure.ScreenDiff;
 import guru.qa.niffler.jupiter.annotation.ScreenShotTest;
+import guru.qa.niffler.util.IOUtil;
 import io.qameta.allure.Allure;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.extension.*;
 import org.junit.platform.commons.support.AnnotationSupport;
-import org.springframework.core.io.ClassPathResource;
 
-import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.util.Optional;
 
 public class ScreenShotTestExtension implements ParameterResolver, TestExecutionExceptionHandler {
 
     public static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(ScreenShotTestExtension.class);
     public static final ObjectMapper objectMapper = new ObjectMapper();
+    public static final String CHECK_SCREENSHOT = "check screenshot";
 
     @Override
     public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
@@ -26,21 +27,40 @@ public class ScreenShotTestExtension implements ParameterResolver, TestExecution
     @SneakyThrows
     @Override
     public BufferedImage resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
-        return ImageIO.read(new ClassPathResource("expected-stat.png").getInputStream());
+        ScreenShotTest annotation = extensionContext.getRequiredTestMethod().getAnnotation(ScreenShotTest.class);
+        return IOUtil.getBufferedImage(annotation.value());
     }
 
     @Override
     public void handleTestExecutionException(ExtensionContext context, Throwable throwable) throws Throwable {
-        ScreenDiff screenDiff = ScreenDiff.of(
-            getExpected(),
-            getActual(),
-            getDiff()
-        );
-        Allure.addAttachment(
-            "Screenshot diff",
-            "application/vnd.allure.image.diff",
-            objectMapper.writeValueAsString(screenDiff)
-        );
+        if (throwable instanceof AssertionError err) {
+            if (err.getMessage().contains(CHECK_SCREENSHOT)) {
+                Optional<ScreenShotTest> optionalAnno = AnnotationSupport.findAnnotation(
+                    context.getRequiredTestMethod(), ScreenShotTest.class
+                );
+                if (optionalAnno.isPresent()) {
+                    ScreenShotTest annotation = optionalAnno.get();
+                    BufferedImage expected = getExpected();
+                    BufferedImage actual = getActual();
+                    if (annotation.rewriteExpected()) {
+                        IOUtil.writeBufferedImage(actual, annotation.value());
+                    } else {
+                        ScreenDiff screenDiff = ScreenDiff.of(
+                            expected,
+                            actual,
+                            getDiff()
+                        );
+                        Allure.addAttachment(
+                            "Screenshot diff",
+                            "application/vnd.allure.image.diff",
+                            objectMapper.writeValueAsString(screenDiff)
+                        );
+                    }
+                } else {
+                    throw new IllegalStateException("Не найдена аннотация ScreenShotTest");
+                }
+            }
+        }
         throw throwable;
     }
 
@@ -53,19 +73,19 @@ public class ScreenShotTestExtension implements ParameterResolver, TestExecution
     }
 
     public static void setActual(BufferedImage expected) {
-        TestMethodContextExtension.context().getStore(NAMESPACE).put("expected", expected);
+        TestMethodContextExtension.context().getStore(NAMESPACE).put("actual", expected);
     }
 
     public static BufferedImage getActual() {
-        return TestMethodContextExtension.context().getStore(NAMESPACE).get("expected", BufferedImage.class);
+        return TestMethodContextExtension.context().getStore(NAMESPACE).get("actual", BufferedImage.class);
     }
 
     public static void setDiff(BufferedImage expected) {
-        TestMethodContextExtension.context().getStore(NAMESPACE).put("expected", expected);
+        TestMethodContextExtension.context().getStore(NAMESPACE).put("diff", expected);
     }
 
     public static BufferedImage getDiff() {
-        return TestMethodContextExtension.context().getStore(NAMESPACE).get("expected", BufferedImage.class);
+        return TestMethodContextExtension.context().getStore(NAMESPACE).get("diff", BufferedImage.class);
     }
 
 }

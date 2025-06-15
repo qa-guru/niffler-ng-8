@@ -1,18 +1,16 @@
 package guru.qa.niffler.web.page;
 
-import com.codeborne.selenide.CollectionCondition;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import guru.qa.niffler.api.model.SpendJson;
+import guru.qa.niffler.condition.CategoryBubble;
 import guru.qa.niffler.condition.Color;
-import guru.qa.niffler.util.FormatUtil;
 import guru.qa.niffler.web.component.DeleteSpendingsAlert;
 import guru.qa.niffler.web.component.Header;
 import lombok.Getter;
 import org.openqa.selenium.Keys;
 
 import java.awt.image.BufferedImage;
-import java.util.Collection;
 import java.util.List;
 
 import static com.codeborne.selenide.CollectionCondition.texts;
@@ -20,7 +18,10 @@ import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
-import static guru.qa.niffler.condition.StatCondition.color;
+import static guru.qa.niffler.condition.SpendConditions.spends;
+import static guru.qa.niffler.condition.StatCondition.*;
+import static guru.qa.niffler.util.ConstructObjectUtils.expCategoryBubbles;
+import static guru.qa.niffler.util.ConstructObjectUtils.expSpendings;
 
 public class MainPage extends BasePage {
 
@@ -37,7 +38,8 @@ public class MainPage extends BasePage {
   private final SelenideElement statisticImg = $("#stat canvas");
   private final SelenideElement searchInput = $("input[placeholder='Search");
   private final SelenideElement statisticImage = $("canvas[role='img']");
-  private final ElementsCollection categoryLabels = $$("#legend-container li");
+  private final ElementsCollection categoryBubbles = $$("#legend-container li");
+  private final ElementsCollection spendTableBody = $$("tbody.MuiTableBody-root tr");
   private final SelenideElement deleteBtn = $("#delete");
 
   public MainPage findSpending(String spendingDescription) {
@@ -79,20 +81,43 @@ public class MainPage extends BasePage {
     return this;
   }
 
-  public MainPage checkCategoryBubblesContainsAll(List<SpendJson> spends, Object target, Object replacement) {
-    List<String> expCategoryLabels = expCategoryLabels(spends, target, replacement);
-    categoryLabels.shouldBe(CollectionCondition.textsInAnyOrder(expCategoryLabels));
-    return this;
-  }
-
-  public MainPage checkCategoryBubblesContainsAll(List<SpendJson> spends) {
-    List<String> expCategoryLabels = expCategoryLabels(spends, null, null);
-    categoryLabels.shouldBe(CollectionCondition.textsInAnyOrder(expCategoryLabels));
-    return this;
-  }
-
   public MainPage checkCategoryBubbles(Color... color) {
-    categoryLabels.should(color(color));
+    categoryBubbles.shouldHave(color(color));
+    return this;
+  }
+
+  public MainPage checkCategoryBubbles2(CategoryBubble... color) {
+    categoryBubbles.shouldBe(statBubbles(color));
+    return this;
+  }
+
+  public MainPage checkCategoryBubbles(List<SpendJson> spends, Object target, Object replacement) {
+    List<CategoryBubble> expCategoryBubbles = expCategoryBubbles(spends, target, replacement);
+    categoryBubbles.shouldBe(statBubbles(expCategoryBubbles));
+    return this;
+  }
+
+  public MainPage checkCategoryBubbles(List<SpendJson> spends) {
+    List<CategoryBubble> expCategoryBubbles = expCategoryBubbles(spends, null, null);
+    categoryBubbles.shouldBe(statBubbles(expCategoryBubbles));
+    return this;
+  }
+
+  public MainPage checkCategoryBubblesInAnyOrder(List<SpendJson> spends, Object target, Object replacement) {
+    List<CategoryBubble> expCategoryBubbles = expCategoryBubbles(spends, target, replacement);
+    categoryBubbles.shouldBe(statBubblesInAnyOrder(expCategoryBubbles));
+    return this;
+  }
+
+  public MainPage checkSpendings(List<SpendJson> spends, Object target, Object replacement) {
+    List<SpendJson> spendJsons = expSpendings(spends, target, replacement);
+    spendTableBody.shouldBe(spends(spendJsons));
+    return this;
+  }
+
+  public MainPage checkSpendings(List<SpendJson> spends) {
+    List<SpendJson> spendJsons = expSpendings(spends, null, null);
+    spendTableBody.shouldBe(spends(spendJsons));
     return this;
   }
 
@@ -110,33 +135,5 @@ public class MainPage extends BasePage {
     spendingSearchToolbar.shouldBe(visible);
     spendingTable.shouldBe(visible);
     return this;
-  }
-
-  private List<String> expCategoryLabels(Collection<SpendJson> spends, Object target, Object replacement) {
-    String targetStr;
-    String replacementStr;
-    boolean isNotNullTarget = target != null;
-    if (target instanceof Double dTarget && replacement instanceof Double dReplacement) {
-      targetStr = FormatUtil.format(dTarget);
-      replacementStr = FormatUtil.format(dReplacement);
-    } else {
-      targetStr = String.valueOf(target);
-      replacementStr = String.valueOf(replacement);
-    }
-    return spends.stream()
-        .map(s -> "%s %s %s".formatted(
-            s.category().name(),
-            FormatUtil.format(s.amount()),
-            s.currency().getSymbol())
-        )
-        .map(s -> {
-          if (isNotNullTarget) {
-            if (s.contains(targetStr)) {
-              return s.replace(targetStr, replacementStr);
-            }
-          }
-          return s;
-        })
-        .toList();
   }
 }

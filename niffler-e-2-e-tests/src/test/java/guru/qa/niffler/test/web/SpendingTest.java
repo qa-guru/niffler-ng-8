@@ -33,7 +33,8 @@ public class SpendingTest extends BaseWebTest {
             .editSpending(spendingDescription)
             .editDescription(newDescription)
             .checkThatTableContains(newDescription)
-            .checkCategoryBubbles(Color.YELLOW);
+            .checkCategoryBubbles(Color.YELLOW)
+            .checkSpendings(List.of(spend), spendingDescription, newDescription);
     }
 
     @User(
@@ -57,8 +58,8 @@ public class SpendingTest extends BaseWebTest {
         openLoginPage()
             .doLoginSuccess(user)
             .checkStatisticScreenshot(expImage)
-            .checkCategoryBubblesContainsAll(spends)
-            .checkCategoryBubbles(Color.YELLOW, Color.GREEN);
+            .checkCategoryBubbles(spends)
+            .checkSpendings(spends);
     }
 
     @User(
@@ -84,10 +85,11 @@ public class SpendingTest extends BaseWebTest {
 
         openLoginPage()
             .doLoginSuccess(user)
-            .checkCategoryBubblesContainsAll(spends)
+            .checkCategoryBubbles(spends)
             .deleteSpending(description)
-            .checkCategoryBubblesContainsAll(expSpends)
-            .checkStatisticScreenshot(expImage);
+            .checkCategoryBubbles(expSpends)
+            .checkStatisticScreenshot(expImage)
+            .checkSpendings(expSpends);
     }
 
     @User(
@@ -115,11 +117,12 @@ public class SpendingTest extends BaseWebTest {
 
         openLoginPage()
             .doLoginSuccess(user)
-            .checkCategoryBubblesContainsAll(spends)
+            .checkCategoryBubbles(spends)
             .editSpending(description)
             .editAmount(newAmount)
             .checkStatisticScreenshot(expImage)
-            .checkCategoryBubblesContainsAll(spends, oldAmount, newAmount);
+            .checkCategoryBubbles(spends, oldAmount, newAmount)
+            .checkSpendings(spends, oldAmount, newAmount);
     }
 
     @User(
@@ -144,6 +147,6 @@ public class SpendingTest extends BaseWebTest {
         openLoginPage()
             .doLoginSuccess(user)
             .checkStatisticScreenshot(expImage)
-            .checkCategoryBubblesContainsAll(spends, "Авто", "Archived");
+            .checkCategoryBubblesInAnyOrder(spends, "Авто", "Archived");
     }
 }

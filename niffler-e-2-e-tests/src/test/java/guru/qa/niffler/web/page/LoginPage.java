@@ -1,19 +1,27 @@
 package guru.qa.niffler.web.page;
 
+import com.codeborne.selenide.SelenideDriver;
 import com.codeborne.selenide.SelenideElement;
 import guru.qa.niffler.api.model.UserParts;
 
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Condition.visible;
-import static com.codeborne.selenide.Selenide.$;
 
 public class LoginPage extends BasePage {
 
-  private final SelenideElement usernameInput = $("input[name='username']");
-  private final SelenideElement passwordInput = $("input[name='password']");
-  private final SelenideElement logInBtn = $("button[type='submit']");
-  private final SelenideElement createNewUserBtn = $("a.form__register");
-  private final SelenideElement badCredentialsError = $(".form__error-container .form__error");
+  private final SelenideElement usernameInput;
+  private final SelenideElement passwordInput;
+  private final SelenideElement logInBtn;
+  private final SelenideElement createNewUserBtn;
+  private final SelenideElement badCredentialsError;
+
+  public LoginPage(SelenideDriver driver) {
+    usernameInput = driver.$("input[name='username']");
+    passwordInput = driver.$("input[name='password']");
+    logInBtn = driver.$("button[type='submit']");
+    createNewUserBtn = driver.$("a.form__register");
+    badCredentialsError = driver.$(".form__error-container .form__error");
+  }
 
   public MainPage doLoginSuccess(String username, String password) {
     doLogin(username, password);

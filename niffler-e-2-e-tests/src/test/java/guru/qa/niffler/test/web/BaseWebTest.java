@@ -1,6 +1,7 @@
 package guru.qa.niffler.test.web;
 
 import com.codeborne.selenide.Selenide;
+import com.codeborne.selenide.SelenideDriver;
 import guru.qa.niffler.api.model.UserParts;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.jupiter.extension.BrowserExtension;
@@ -17,6 +18,11 @@ public class BaseWebTest {
 
     protected LoginPage openLoginPage() {
         return Selenide.open(CFG.frontUrl(), LoginPage.class);
+    }
+
+    protected LoginPage openLoginPage(SelenideDriver driver) {
+        driver.open(CFG.frontUrl());
+        return new LoginPage(driver);
     }
 
     protected RegisterPage openRegisterPage() {

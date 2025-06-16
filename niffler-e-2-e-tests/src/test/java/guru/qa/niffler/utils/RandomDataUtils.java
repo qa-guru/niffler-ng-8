@@ -73,7 +73,7 @@ public class RandomDataUtils {
         );
     }
 
-    public static SpendJson generateSpend(String username,Double amount ) {
+    public static SpendJson generateSpend(String username, Double amount) {
         Faker faker = new Faker();
         return new SpendJson(
                 null,
@@ -86,7 +86,7 @@ public class RandomDataUtils {
                 ),
                 CurrencyValues.RUB,
                 100.0,
-                faker.weather().description(),
+                RandomDataUtils.getRandomShortString(),
                 username
         );
     }
@@ -98,5 +98,10 @@ public class RandomDataUtils {
             return min;
         Random r = new Random();
         return r.nextInt((max - min) + 1) + min;
+    }
+
+    public static String getRandomShortString() {
+        Faker faker = new Faker();
+        return faker.weather().description();
     }
 }

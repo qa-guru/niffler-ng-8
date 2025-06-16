@@ -1,6 +1,6 @@
 package guru.qa.niffler.data.enums;
 
-public enum MonthRu {
+public enum Month {
     JANUARY("Январь", 1),
     FEBRUARY("Февраль", 2),
     MARCH("Март", 3),
@@ -17,7 +17,7 @@ public enum MonthRu {
     private final String nameMonth;
     private final int numMonth;
 
-    MonthRu(String nameMonth, int numMonth) {
+    Month(String nameMonth, int numMonth) {
         this.nameMonth = nameMonth;
         this.numMonth = numMonth;
     }

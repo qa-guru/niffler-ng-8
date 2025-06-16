@@ -4,6 +4,7 @@ import com.github.javafaker.Faker;
 import guru.qa.niffler.data.dataClasses.UserData;
 import guru.qa.niffler.jupiter.extensions.BrowserExtension;
 import guru.qa.niffler.model.users.UserJson;
+import guru.qa.niffler.utils.RandomDataUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -55,9 +56,8 @@ public class UI71Test extends BaseUITest {
 
     @Test
     void addingNewSpending() {
-        Faker faker = new Faker();
-        int amount = faker.number().numberBetween(1,9999);
-        String description = faker.weather().description();
+        int amount = RandomDataUtils.getRandomNumberInRange(1, 9999);
+        String description = RandomDataUtils.getRandomShortString();
         loginPage().doLogin(UserData.mainUser());
         sidebarPage().header.toNewSpending();
         spendingPage().amount.clearThenFill(String.valueOf(amount));

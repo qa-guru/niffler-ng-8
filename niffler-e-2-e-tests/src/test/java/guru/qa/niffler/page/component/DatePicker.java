@@ -3,7 +3,7 @@ package guru.qa.niffler.page.component;
 import com.codeborne.selenide.CollectionCondition;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.ElementsCollection;
-import guru.qa.niffler.data.enums.MonthRu;
+import guru.qa.niffler.data.enums.Month;
 import org.openqa.selenium.By;
 
 import java.util.Calendar;
@@ -43,10 +43,10 @@ public class DatePicker {
 
     public DatePicker setMonth(String month) {
         String monthText = $(yearsBtn).getText();
-        MonthRu targetMonth = getMonthFromString(month);
+        Month targetMonth = getMonthFromString(month);
         String[] parts = monthText.split(" ");
         String displayedMonthText = parts[0];
-        MonthRu displayedMonth = getMonthFromString(displayedMonthText);
+        Month displayedMonth = getMonthFromString(displayedMonthText);
 
         if (displayedMonth == targetMonth) {
             return this;
@@ -91,7 +91,7 @@ public class DatePicker {
         return Calendar.getInstance();
     }
 
-    private MonthRu getMonthFromString(String month) {
-        return MonthRu.valueOf(month);
+    private Month getMonthFromString(String month) {
+        return Month.valueOf(month);
     }
 }

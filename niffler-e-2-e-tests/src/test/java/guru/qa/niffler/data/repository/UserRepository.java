@@ -11,6 +11,8 @@ public interface UserRepository {
 
     Optional<UserEntity> findById(UUID uuid);
 
+    Optional<UserEntity> findByUsername(String username);
+
     void addIncomeInvitation(UserEntity requester, UserEntity addressee);
 
     void addOutcomeInvitation(UserEntity requester, UserEntity addressee);

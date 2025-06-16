@@ -12,8 +12,6 @@ import guru.qa.niffler.page.LoginPage;
 import guru.qa.niffler.page.MainPage;
 import guru.qa.niffler.page.ProfilePage;
 import guru.qa.niffler.page.SidebarPage;
-import guru.qa.niffler.service.SpendDbClient;
-import guru.qa.niffler.service.UserDbClient;
 import guru.qa.niffler.steps.AssertionSteps;
 import guru.qa.niffler.utils.RandomDataUtils;
 import guru.qa.niffler.utils.ScreenDiffResult;
@@ -28,7 +26,7 @@ import java.io.IOException;
 import static com.codeborne.selenide.Selenide.$;
 
 @ExtendWith(BrowserExtension.class)
-public class ScreenTest extends BaseTest {
+public class ScreenTest extends BaseUITest {
 
     private static final Config CFG = Config.getInstance();
     String actualLogin = CFG.mainUserLogin();
@@ -82,7 +80,7 @@ public class ScreenTest extends BaseTest {
     void checkSetProfilePicture(BufferedImage expectedImage) throws IOException {
         Selenide.open(CFG.frontUrl(), LoginPage.class)
                 .doLogin(actualLogin, actualPass);
-        new SidebarPage().clickMenu().clickProfile();
+        sidebarPage().header.toProfile();
         new ProfilePage().uploadProfileImage(new File(kiwiPngPath))
                 .clickSaveChanges();
         BufferedImage actualImage = new ProfilePage().screenshotProfileIcon();
@@ -99,12 +97,12 @@ public class ScreenTest extends BaseTest {
         //Act
         Selenide.open(CFG.frontUrl(), LoginPage.class)
                 .doLogin(actualLogin, actualPass);
-        new SidebarPage().clickMenu().clickProfile();
+        sidebarPage().header.toProfile();
         //Загружаем обезьянку
         new ProfilePage().uploadProfileImage(new File(monkeyPngPath))
                 .clickSaveChanges();
-        Selenide.open(CFG.frontUrl() + "main", SidebarPage.class)
-                .clickMenu().clickProfile();
+        Selenide.open(CFG.frontUrl() + "main");
+        sidebarPage().header.toProfile();
         //Скриншотим обезбянку
         BufferedImage actualMonkey = new ProfilePage().screenshotProfileIcon();
         //Проверяем что обезбянка реалбно

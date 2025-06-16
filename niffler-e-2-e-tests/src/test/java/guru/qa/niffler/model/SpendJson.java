@@ -6,6 +6,7 @@ import guru.qa.niffler.data.entity.spend.SpendEntity;
 import guru.qa.niffler.data.enums.CurrencyValues;
 
 
+import javax.annotation.Nonnull;
 import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
@@ -27,7 +28,7 @@ public record SpendJson(
         String username) {
 
 
-    public static SpendJson fromEntity(SpendEntity entity) {
+    public static @Nonnull SpendJson fromEntity(@Nonnull SpendEntity entity) {
         final CategoryEntity category = entity.getCategory();
         final String username = entity.getUsername();
 

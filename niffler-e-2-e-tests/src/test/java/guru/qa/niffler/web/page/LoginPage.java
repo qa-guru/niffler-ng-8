@@ -1,5 +1,6 @@
 package guru.qa.niffler.web.page;
 
+import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideDriver;
 import com.codeborne.selenide.SelenideElement;
 import guru.qa.niffler.api.model.UserParts;
@@ -22,6 +23,15 @@ public class LoginPage extends BasePage {
     createNewUserBtn = driver.$("a.form__register");
     badCredentialsError = driver.$(".form__error-container .form__error");
   }
+
+  public LoginPage() {
+    usernameInput = Selenide.$("input[name='username']");
+    passwordInput = Selenide.$("input[name='password']");
+    logInBtn = Selenide.$("button[type='submit']");
+    createNewUserBtn = Selenide.$("a.form__register");
+    badCredentialsError = Selenide.$(".form__error-container .form__error");
+  }
+
 
   public MainPage doLoginSuccess(String username, String password) {
     doLogin(username, password);
@@ -67,7 +77,10 @@ public class LoginPage extends BasePage {
 
   public LoginPage checkBadCredentialsError() {
     badCredentialsError.shouldBe(visible);
-    badCredentialsError.shouldHave(text("Неверные учетные данные пользователя"));
+    badCredentialsError.shouldHave(
+        text("Неверные учетные данные пользователя")
+            .or(text("Bad credentials"))
+    );
     return this;
   }
 

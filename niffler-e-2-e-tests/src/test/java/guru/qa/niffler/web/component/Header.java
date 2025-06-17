@@ -8,8 +8,9 @@ import static com.codeborne.selenide.Selenide.$;
 
 public class Header {
 
-    private final SelenideElement profileMenuBtn = $("button[aria-label='Menu']");
-    private final SelenideElement profileMenu = $("ul[role='menu']");
+    private final SelenideElement self = $("#root header");
+    private final SelenideElement profileMenuBtn = self.$("button[aria-label='Menu']");
+    private final SelenideElement profileMenu = self.$("ul[role='menu']");
     private final SelenideElement profileMenuItem = profileMenu.$("a[href='/profile']");
     private final SelenideElement friendsMenuItem = profileMenu.$("a[href='/people/friends']");
 

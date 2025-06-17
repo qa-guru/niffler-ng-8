@@ -1,10 +1,13 @@
 package guru.qa.niffler.db.tpl;
 
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
 
+@ParametersAreNonnullByDefault
 public class JdbcTransactionTemplate {
 
     private static final int TRANSACTION_NONE_SET = -1;
@@ -21,11 +24,11 @@ public class JdbcTransactionTemplate {
         return this;
     }
 
-    public <T> T execute(Supplier<T> supplier) {
+    public @Nullable <T> T execute(Supplier<T> supplier) {
         return execute(TRANSACTION_NONE_SET, supplier);
     }
 
-    public <T> T execute(Integer transactionIsolation,
+    public @Nullable <T> T execute(Integer transactionIsolation,
                          Supplier<T> supplier) {
         Connection connection = null;
         int previousIsolation = TRANSACTION_NONE_SET;

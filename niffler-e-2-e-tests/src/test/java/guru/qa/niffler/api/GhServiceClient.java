@@ -7,6 +7,8 @@ import retrofit2.http.Header;
 import retrofit2.http.Headers;
 import retrofit2.http.Path;
 
+import javax.annotation.Nonnull;
+
 public interface GhServiceClient {
 
   @GET("repos/KonstantinKshnyakin/qa-guru-niffler-ng-8/issues/{issue_number}")
@@ -17,7 +19,7 @@ public interface GhServiceClient {
   TestResponse<JsonNode, Void> getIssue(@Header("Authorization") String bearerToken,
                                         @Path("issue_number") String issueNumber);
 
-  default String getIssueState(String issueNumber) {
+  default @Nonnull String getIssueState(@Nonnull String issueNumber) {
     String githubToken = "Bearer " + System.getenv("GITHUB_TOKEN");
     System.out.println(githubToken);
     return getIssue(githubToken, issueNumber).getBody().get("state").asText();

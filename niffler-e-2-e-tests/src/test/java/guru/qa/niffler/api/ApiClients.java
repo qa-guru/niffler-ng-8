@@ -10,6 +10,9 @@ import retrofit2.converter.jackson.JacksonConverterFactory;
 
 public class ApiClients {
 
+    private ApiClients() {
+    }
+
     private static final OkHttpClient okHttpClient = new OkHttpClient.Builder()
         .cookieJar(new SessionCookieJar())
         .addNetworkInterceptor(
@@ -20,40 +23,25 @@ public class ApiClients {
         .build();
 
     private static final Config CFG = Config.getInstance();
-
-    private ApiClients() {
-    }
+    private static final SpendServiceClient SPEND_CLIENT = buildClient(CFG.spendUrl(), SpendServiceClient.class);
+    private static final UserdataServiceClient USERDATA_CLIENT = buildClient(CFG.userdataUrl(), UserdataServiceClient.class);
+    private static final GhServiceClient GH_CLIENT = buildClient(CFG.ghUrl(), GhServiceClient.class);
+    private static final AuthServiceClient AUTH_CLIENT = buildClient(CFG.authUrl(), AuthServiceClient.class);
 
     public static SpendServiceClient spendClient() {
-        return SpendHolder.INSTANCE;
+        return SPEND_CLIENT;
     }
 
     public static UserdataServiceClient userdataClient() {
-        return UserdataHolder.INSTANCE;
+        return USERDATA_CLIENT;
     }
 
     public static GhServiceClient ghClient() {
-        return GhHolder.INSTANCE;
+        return GH_CLIENT;
     }
 
     public static AuthServiceClient authClient() {
-        return AuthHolder.INSTANCE;
-    }
-
-    private static class SpendHolder {
-        private static final SpendServiceClient INSTANCE = buildClient(CFG.spendUrl(), SpendServiceClient.class);
-    }
-
-    private static class UserdataHolder {
-        private static final UserdataServiceClient INSTANCE = buildClient(CFG.userdataUrl(), UserdataServiceClient.class);
-    }
-
-    private static class GhHolder {
-        private static final GhServiceClient INSTANCE = buildClient(CFG.ghUrl(), GhServiceClient.class);
-    }
-
-    private static class AuthHolder {
-        private static final AuthServiceClient INSTANCE = buildClient(CFG.authUrl(), AuthServiceClient.class);
+        return AUTH_CLIENT;
     }
 
     private static <T> T buildClient(String baseUrl, Class<T> apiClass) {

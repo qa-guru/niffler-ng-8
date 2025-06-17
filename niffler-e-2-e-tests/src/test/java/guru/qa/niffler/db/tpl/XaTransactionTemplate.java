@@ -5,6 +5,8 @@ import com.atomikos.icatch.jta.UserTransactionManager;
 import jakarta.transaction.SystemException;
 import jakarta.transaction.UserTransaction;
 
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -12,6 +14,7 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
 
+@ParametersAreNonnullByDefault
 public class XaTransactionTemplate {
 
     private static final int TRANSACTION_NONE_SET = -1;
@@ -38,11 +41,11 @@ public class XaTransactionTemplate {
         return this;
     }
 
-    public <T> T execute(Supplier<T> supplier, String... jdbcUrls) {
+    public @Nullable <T> T execute(Supplier<T> supplier, String... jdbcUrls) {
         return execute(TRANSACTION_NONE_SET, supplier, jdbcUrls);
     }
 
-    public <T> T execute(Integer transactionIsolation,
+    public @Nullable <T> T execute(Integer transactionIsolation,
                          Supplier<T> supplier,
                          String... jdbcUrls) {
         UserTransaction ut = new UserTransactionImp();

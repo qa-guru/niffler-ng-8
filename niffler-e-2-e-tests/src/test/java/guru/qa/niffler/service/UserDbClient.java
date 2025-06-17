@@ -26,7 +26,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 
-public class UserDbClient {
+public class UserDbClient implements UsersClient{
 
     private static final Config CFG = Config.getInstance();
 

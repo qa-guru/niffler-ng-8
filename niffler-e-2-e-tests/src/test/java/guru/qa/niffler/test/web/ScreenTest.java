@@ -12,6 +12,8 @@ import guru.qa.niffler.page.LoginPage;
 import guru.qa.niffler.page.MainPage;
 import guru.qa.niffler.page.ProfilePage;
 import guru.qa.niffler.page.SidebarPage;
+import guru.qa.niffler.service.UserDbClient;
+import guru.qa.niffler.service.UsersClient;
 import guru.qa.niffler.steps.AssertionSteps;
 import guru.qa.niffler.utils.RandomDataUtils;
 import guru.qa.niffler.utils.ScreenDiffResult;
@@ -27,6 +29,8 @@ import static com.codeborne.selenide.Selenide.$;
 
 @ExtendWith(BrowserExtension.class)
 public class ScreenTest extends BaseUITest {
+
+    UsersClient userDbClient;
 
     private static final Config CFG = Config.getInstance();
     String actualLogin = CFG.mainUserLogin();

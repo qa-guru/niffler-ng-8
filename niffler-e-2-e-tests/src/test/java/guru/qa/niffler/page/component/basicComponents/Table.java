@@ -3,13 +3,14 @@ package guru.qa.niffler.page.component.basicComponents;
 import com.codeborne.selenide.CollectionCondition;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
+import guru.qa.niffler.page.component.BaseComponent;
 import org.openqa.selenium.By;
 
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$x;
 
 
-public class Table {
+public class Table extends BaseComponent {
 
 
     protected final By table = By.xpath("table");

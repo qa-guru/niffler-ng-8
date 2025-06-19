@@ -31,6 +31,19 @@ public record UserJson(
 
         String password) {
 
+    private @Nonnull UserJson user() {
+        return new UserJson(id,
+                username,
+                firstname,
+                surname,
+                fullname,
+                currency,
+                photo,
+                photoSmall,
+                password);
+    }
+
+
     public static @Nonnull UserJson fromAuthorityEntity(@Nonnull AuthAuthorityEntity authority) {
         return new UserJson(
                 authority.getId(),

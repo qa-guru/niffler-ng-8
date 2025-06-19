@@ -56,4 +56,16 @@ public abstract class RestClient {
                 .addConverterFactory(converterFactory)
                 .build();
     }
+
+    public <T> T create(final Class<T> service) {
+        return this.retrofit.create(service);
+    }
+
+    public static final class ActionRestClient extends RestClient {
+
+        public ActionRestClient(String baseUrl) {
+            super(baseUrl);
+        }
+    }
 }
+

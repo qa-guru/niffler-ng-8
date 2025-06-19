@@ -6,7 +6,7 @@ import org.openqa.selenium.By;
 import static com.codeborne.selenide.Condition.exist;
 import static com.codeborne.selenide.Selenide.$;
 
-public class CategoryPicker {
+public class CategoryPicker extends BaseComponent{
 
     private By loc;
 

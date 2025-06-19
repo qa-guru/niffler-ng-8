@@ -4,7 +4,7 @@ import guru.qa.niffler.page.component.FriendsTable;
 import guru.qa.niffler.page.component.basicComponents.Button;
 import org.openqa.selenium.By;
 
-public class FriendsPage {
+public class FriendsPage extends BasePage{
 
     public FriendsTable table = new FriendsTable();
 

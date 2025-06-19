@@ -116,7 +116,7 @@ public class UserDbClient implements UsersClient{
         });
     }
 
-    public UserJson createUserJdbc(UserJson user) {
+    public UserJson createUser(UserJson user) {
 
         AuthUserEntity authUserEntity = new AuthUserEntity();
         authUserEntity.setUsername(user.username());

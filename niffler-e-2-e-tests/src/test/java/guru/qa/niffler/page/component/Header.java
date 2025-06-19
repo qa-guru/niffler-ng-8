@@ -7,7 +7,7 @@ import guru.qa.niffler.page.ProfilePage;
 
 import static com.codeborne.selenide.Selenide.$x;
 
-public class Header {
+public class Header extends BaseComponent{
 
 
     public Header() {

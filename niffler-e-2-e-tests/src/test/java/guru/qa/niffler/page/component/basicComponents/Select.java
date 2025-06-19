@@ -3,11 +3,12 @@ package guru.qa.niffler.page.component.basicComponents;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
+import guru.qa.niffler.page.component.BaseComponent;
 import org.openqa.selenium.By;
 
 import static com.codeborne.selenide.Selenide.$;
 
-public class Select {
+public class Select extends BaseComponent {
 
     private By btnLoc;
     private By selectorLoc;

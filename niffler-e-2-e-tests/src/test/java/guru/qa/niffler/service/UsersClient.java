@@ -9,14 +9,14 @@ import java.util.UUID;
 public interface UsersClient {
 
     static UsersClient getInstance() {
-        return new UserDbClient();
+        return new UserApiClient();
     }
 
     UserJson createUserTxJdbc(UserJson user);
 
     UserJson createUserTxChainedJdbc(UserJson user);
 
-    UserJson createUserJdbc(UserJson user);
+    UserJson createUser(UserJson user);
 
     void addIncomeInvitation(UUID requesterUUID, UUID addresseeUUID);
 

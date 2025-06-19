@@ -1,10 +1,11 @@
 package guru.qa.niffler.page.component.basicComponents;
 
+import guru.qa.niffler.page.component.BaseComponent;
 import org.openqa.selenium.By;
 
 import static com.codeborne.selenide.Selenide.$;
 
-public class LineEdit {
+public class LineEdit extends BaseComponent {
 
     public LineEdit(By locator) {
         this.locator = locator;

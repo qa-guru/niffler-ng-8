@@ -12,7 +12,7 @@ import java.util.Date;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
 
-public class DatePicker {
+public class DatePicker extends BaseComponent{
 
     private By loc;
 

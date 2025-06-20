@@ -10,7 +10,7 @@ import guru.qa.niffler.model.users.UserJson;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$x;
 
-public class LoginPage {
+public class LoginPage extends BasePage{
 
   private final SelenideElement usernameInput = $("input[name='username']");
   private final SelenideElement passwordInput = $("input[name='password']");

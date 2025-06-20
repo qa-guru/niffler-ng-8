@@ -2,12 +2,13 @@ package guru.qa.niffler.page.component.basicComponents;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.WebDriverRunner;
+import guru.qa.niffler.page.component.BaseComponent;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 
 import static com.codeborne.selenide.Selenide.$;
 
-public class Button {
+public class Button extends BaseComponent {
 
     private By locator;
 

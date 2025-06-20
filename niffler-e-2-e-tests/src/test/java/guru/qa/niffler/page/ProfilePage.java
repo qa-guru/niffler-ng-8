@@ -16,7 +16,7 @@ import java.io.IOException;
 
 import static com.codeborne.selenide.Selenide.*;
 
-public class ProfilePage {
+public class ProfilePage extends BasePage{
 
     private final SelenideElement profileIcon = $x("//*[@id='image__input']/following-sibling::div//div");
     private final SelenideElement imageInput = $x("//*[@id='image__input']");

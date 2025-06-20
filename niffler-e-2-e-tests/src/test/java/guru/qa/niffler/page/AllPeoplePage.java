@@ -8,7 +8,7 @@ import org.openqa.selenium.Keys;
 
 import static com.codeborne.selenide.Selenide.*;
 
-public class AllPeoplePage {
+public class AllPeoplePage extends BasePage{
 
     private final SelenideElement search = $("input");
     private final ElementsCollection allPeopleRows = $$x("//table//tr");

@@ -20,7 +20,7 @@ public class UI71Test extends BaseUITest {
         //Создание юзера и связей
         UserJson maiUser = UserData.mainUser();
         UserJson newUser = generateUser();
-        userDbClient.createUserJdbc(newUser);
+        userDbClient.createUser(newUser);
         UUID newId = userDbClient.getUserId(newUser);
         userDbClient.addIncomeInvitation(newId, maiUser.id());
         //Act
@@ -40,7 +40,7 @@ public class UI71Test extends BaseUITest {
         //Создание юзера и связей
         UserJson maiUser = UserData.mainUser();
         UserJson newUser = generateUser();
-        userDbClient.createUserJdbc(newUser);
+        userDbClient.createUser(newUser);
         UUID newId = userDbClient.getUserId(newUser);
         userDbClient.addIncomeInvitation(newId, maiUser.id());
         //Act
@@ -77,6 +77,6 @@ public class UI71Test extends BaseUITest {
         sidebarPage().header.toProfile();
         profilePage().nameInput.clearThenFill(faker.name().firstName());
         profilePage().saveChangesBtn.jsClick();
-        mainPage().popup.checkSuccessEditing();
+        profilePage().checkAlertMessage("Profile successfully updated");
     }
 }

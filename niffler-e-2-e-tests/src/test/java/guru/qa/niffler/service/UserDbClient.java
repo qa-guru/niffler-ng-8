@@ -26,7 +26,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 
-public class UserDbClient {
+public class UserDbClient implements UsersClient{
 
     private static final Config CFG = Config.getInstance();
 
@@ -116,7 +116,7 @@ public class UserDbClient {
         });
     }
 
-    public UserJson createUserJdbc(UserJson user) {
+    public UserJson createUser(UserJson user) {
 
         AuthUserEntity authUserEntity = new AuthUserEntity();
         authUserEntity.setUsername(user.username());

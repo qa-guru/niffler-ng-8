@@ -1,4 +1,8 @@
 package guru.qa.niffler.model.rest;
 
-public record FriendJson() {
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+public record FriendJson(
+        @JsonProperty String username
+) {
 }

@@ -10,7 +10,6 @@ import java.lang.annotation.Target;
 
 @Target({ElementType.TYPE, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
-@ExtendWith(IssueExtension.class)
 public @interface DisabledByIssue {
   String value();
 }

@@ -3,6 +3,7 @@ package guru.qa.niffler.service.api;
 import guru.qa.niffler.api.core.RestClient;
 import guru.qa.niffler.api.core.ThreadSafeCookieStore;
 import guru.qa.niffler.model.*;
+import guru.qa.niffler.model.rest.UserJson;
 import guru.qa.niffler.utils.SuccessRequestExecutor;
 import guru.qa.niffler.api.AuthApi;
 import guru.qa.niffler.api.UserdataApi;

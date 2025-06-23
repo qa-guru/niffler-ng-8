@@ -1,7 +1,8 @@
 package guru.qa.niffler.test.fake;
 
 import guru.qa.niffler.config.Config;
-import guru.qa.niffler.model.*;
+import guru.qa.niffler.model.rest.SpendJson;
+import guru.qa.niffler.model.rest.UserJson;
 import guru.qa.niffler.service.db.Realization;
 import guru.qa.niffler.service.db.SpendDbClient;
 import guru.qa.niffler.service.db.UsersDbClient;

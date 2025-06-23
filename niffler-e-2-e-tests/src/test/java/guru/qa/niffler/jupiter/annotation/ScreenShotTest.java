@@ -13,7 +13,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 @Test
-@ExtendWith(ScreenShotTestExtension.class)
 public @interface ScreenShotTest {
     String value();
     boolean rewriteExpected() default false;

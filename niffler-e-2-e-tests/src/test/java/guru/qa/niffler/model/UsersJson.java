@@ -1,6 +1,8 @@
 package guru.qa.niffler.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import guru.qa.niffler.model.pageable.Sort;
+import guru.qa.niffler.model.rest.UserJson;
 
 import java.util.List;
 

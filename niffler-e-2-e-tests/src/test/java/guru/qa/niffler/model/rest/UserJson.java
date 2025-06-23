@@ -1,9 +1,11 @@
-package guru.qa.niffler.model;
+package guru.qa.niffler.model.rest;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import guru.qa.niffler.data.entity.userdata.UserEntity;
+import guru.qa.niffler.model.FriendshipStatus;
+import guru.qa.niffler.model.TestData;
 
 import javax.annotation.Nonnull;
 import java.nio.charset.StandardCharsets;

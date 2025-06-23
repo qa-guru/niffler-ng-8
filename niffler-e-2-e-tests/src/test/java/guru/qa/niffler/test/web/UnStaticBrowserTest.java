@@ -6,7 +6,7 @@ import guru.qa.niffler.jupiter.annotation.Browsers;
 import guru.qa.niffler.jupiter.annotation.User;
 import guru.qa.niffler.jupiter.annotation.meta.NonStaticWebTest;
 import guru.qa.niffler.jupiter.extension.BrowserProvider;
-import guru.qa.niffler.model.UserJson;
+import guru.qa.niffler.model.rest.UserJson;
 import guru.qa.niffler.page.AllPeoplePage;
 import guru.qa.niffler.page.LoginPage;
 import guru.qa.niffler.utils.Browser;
@@ -14,8 +14,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.converter.ConvertWith;
 import org.junit.jupiter.params.provider.EnumSource;
-
-import java.util.Set;
 
 @NonStaticWebTest
 public class UnStaticBrowserTest {

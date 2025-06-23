@@ -1,6 +1,7 @@
 package guru.qa.niffler.model;
 
 import guru.qa.niffler.condition.Color;
+import guru.qa.niffler.model.rest.SpendJson;
 import org.openqa.selenium.WebElement;
 
 public record Bubble(

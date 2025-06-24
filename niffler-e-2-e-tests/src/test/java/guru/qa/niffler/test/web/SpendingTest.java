@@ -1,5 +1,6 @@
 package guru.qa.niffler.test.web;
 
+import guru.qa.niffler.api.model.CategoryJson;
 import guru.qa.niffler.api.model.CurrencyValues;
 import guru.qa.niffler.api.model.SpendJson;
 import guru.qa.niffler.api.model.UserParts;
@@ -8,12 +9,34 @@ import guru.qa.niffler.jupiter.annotation.Category;
 import guru.qa.niffler.jupiter.annotation.ScreenShotTest;
 import guru.qa.niffler.jupiter.annotation.Spending;
 import guru.qa.niffler.jupiter.annotation.User;
+import guru.qa.niffler.util.RandomDataUtils;
 import org.junit.jupiter.api.Test;
 
 import java.awt.image.BufferedImage;
+import java.util.Date;
 import java.util.List;
 
 public class SpendingTest extends BaseWebTest {
+
+    @Test
+    @User
+    void addNewSpending(UserParts user) {
+        SpendJson spend = new SpendJson(null,
+            new Date(),
+            CategoryJson.of(RandomDataUtils.genCategoryName()),
+            CurrencyValues.RUB,
+            7999.99,
+            "Чудо-юдо рыба-кит",
+            user.getUsername()
+        );
+        openLoginPage()
+            .doLoginSuccess(user)
+            .getHeader().addNewSpending()
+            .createSpending(spend)
+            .checkCategoryBubbles(List.of(spend))
+            .getSpendingTable()
+            .checkSpendings(List.of(spend));
+    }
 
     @Test
     @User(
@@ -29,11 +52,14 @@ public class SpendingTest extends BaseWebTest {
         String spendingDescription = spend.description();
         openLoginPage()
             .doLoginSuccess(user)
-            .findSpending(spendingDescription)
+            .getSpendingTable()
             .editSpending(spendingDescription)
             .editDescription(newDescription)
-            .checkThatTableContains(newDescription)
+            .getSpendingTable()
+            .checkTabContains(newDescription)
+            .returnToPage()
             .checkCategoryBubbles(Color.YELLOW)
+            .getSpendingTable()
             .checkSpendings(List.of(spend), spendingDescription, newDescription);
     }
 
@@ -59,6 +85,7 @@ public class SpendingTest extends BaseWebTest {
             .doLoginSuccess(user)
             .checkStatisticScreenshot(expImage)
             .checkCategoryBubbles(spends)
+            .getSpendingTable()
             .checkSpendings(spends);
     }
 
@@ -86,9 +113,12 @@ public class SpendingTest extends BaseWebTest {
         openLoginPage()
             .doLoginSuccess(user)
             .checkCategoryBubbles(spends)
+            .getSpendingTable()
             .deleteSpending(description)
+            .returnToPage()
             .checkCategoryBubbles(expSpends)
             .checkStatisticScreenshot(expImage)
+            .getSpendingTable()
             .checkSpendings(expSpends);
     }
 
@@ -118,10 +148,12 @@ public class SpendingTest extends BaseWebTest {
         openLoginPage()
             .doLoginSuccess(user)
             .checkCategoryBubbles(spends)
+            .getSpendingTable()
             .editSpending(description)
             .editAmount(newAmount)
             .checkStatisticScreenshot(expImage)
             .checkCategoryBubbles(spends, oldAmount, newAmount)
+            .getSpendingTable()
             .checkSpendings(spends, oldAmount, newAmount);
     }
 

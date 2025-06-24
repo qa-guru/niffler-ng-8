@@ -7,6 +7,9 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 import org.hibernate.proxy.HibernateProxy;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Stream;
@@ -15,6 +18,7 @@ import java.util.stream.Stream;
 @Accessors(chain = true)
 @Entity
 @Table(name = "\"user\"")
+@ParametersAreNonnullByDefault
 public class UserdataUserEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -49,12 +53,12 @@ public class UserdataUserEntity implements Serializable {
     @OneToMany(mappedBy = "addressee", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UserdataFriendshipEntity> friendshipAddressees = new ArrayList<>();
 
-    public UserdataUserEntity setId(String id) {
+    public @Nonnull UserdataUserEntity setId(String id) {
         this.id = UUID.fromString(id);
         return this;
     }
 
-    public UserdataUserEntity setId(UUID id) {
+    public @Nonnull UserdataUserEntity setId(UUID id) {
         this.id = id;
         return this;
     }
@@ -120,7 +124,7 @@ public class UserdataUserEntity implements Serializable {
     }
 
     @Override
-    public final boolean equals(Object o) {
+    public final boolean equals(@Nullable Object o) {
         if (this == o) return true;
         if (o == null) return false;
         Class<?> oEffectiveClass = o instanceof HibernateProxy ? ((HibernateProxy) o).getHibernateLazyInitializer().getPersistentClass() : o.getClass();

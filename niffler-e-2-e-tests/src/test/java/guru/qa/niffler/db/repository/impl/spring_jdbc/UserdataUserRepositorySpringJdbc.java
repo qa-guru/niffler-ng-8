@@ -13,6 +13,9 @@ import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.ResultSetExtractor;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -21,6 +24,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @SuppressWarnings("DataFlowIssue")
+@ParametersAreNonnullByDefault
 public class UserdataUserRepositorySpringJdbc implements UserdataUserRepository {
 
     protected static final String JDBC_URL = Config.getInstance().userdataJdbcUrl();
@@ -63,7 +67,7 @@ public class UserdataUserRepositorySpringJdbc implements UserdataUserRepository 
     }
 
     @Override
-    public UserdataUserEntity create(UserdataUserEntity entity) {
+    public @Nonnull UserdataUserEntity create(UserdataUserEntity entity) {
         String sql = "INSERT INTO \"user\" (username, currency, firstname, surname, full_name, photo, photo_small) " +
             "VALUES(?, ?, ?, ?, ?, ?, ?) RETURNING *";
         return jdbcTemplate.queryForObject(sql, UserdataUserEntityRowMapper.INSTANCE,
@@ -73,7 +77,7 @@ public class UserdataUserRepositorySpringJdbc implements UserdataUserRepository 
     }
 
     @Override
-    public Optional<UserdataUserEntity> findById(UUID id) {
+    public @Nonnull Optional<UserdataUserEntity> findById(UUID id) {
         String sql = SELECT_ALL + " WHERE u.id = ?";
         return jdbcTemplate.query(sql, userListResultSetExtractor, id)
             .stream()
@@ -81,7 +85,7 @@ public class UserdataUserRepositorySpringJdbc implements UserdataUserRepository 
     }
 
     @Override
-    public Optional<UserdataUserEntity> findByUsername(String username) {
+    public @Nonnull Optional<UserdataUserEntity> findByUsername(String username) {
         String sql = SELECT_ALL + " WHERE u.username = ?";
         return jdbcTemplate.query(sql, userListResultSetExtractor, username)
             .stream()
@@ -89,7 +93,7 @@ public class UserdataUserRepositorySpringJdbc implements UserdataUserRepository 
     }
 
     @Override
-    public UserdataUserEntity update(UserdataUserEntity entity) {
+    public @Nonnull UserdataUserEntity update(UserdataUserEntity entity) {
         String userSql = """
                 UPDATE "user" SET username = ?, currency = ?, firstname = ?, surname = ?, full_name = ?, photo = ?, photo_small = ?
                 WHERE id = ?
@@ -105,12 +109,11 @@ public class UserdataUserRepositorySpringJdbc implements UserdataUserRepository 
     }
 
     public void updateFriendships(List<UserdataFriendshipEntity> friendships) {
-        String friendshipSql = """
+        String sql = """
                 UPDATE friendship
                 SET status = ?, createdDate = ?
                 WHERE requester_id = ? AND addressee_id = ?
             """;
-        String sql = "UPDATE user SET name = ?, email = ? WHERE id = ?";
 
         jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
             @Override
@@ -141,12 +144,14 @@ public class UserdataUserRepositorySpringJdbc implements UserdataUserRepository 
     }
 
     @Override
-    public List<UserdataUserEntity> findAll() {
+    public @Nullable List<UserdataUserEntity> findAll() {
         return jdbcTemplate.query(SELECT_ALL, userListResultSetExtractor);
     }
 
     @Override
-    public UserdataFriendshipEntity createFriendship(UserdataUserEntity requester, UserdataUserEntity addressee, FriendshipStatus status) {
+    public @Nonnull UserdataFriendshipEntity createFriendship(UserdataUserEntity requester,
+                                                              UserdataUserEntity addressee,
+                                                              FriendshipStatus status) {
         String sql = "INSERT INTO friendship (requester_id, addressee_id, created_date, status)  VALUES (?, ?, NOW(), ?) RETURNING *";
         return jdbcTemplate.queryForObject(sql, UserdataFriendshipEntityRowMapper.INSTANCE,
             requester.getId(), addressee.getId(), status.name()

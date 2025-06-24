@@ -8,6 +8,8 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.openqa.selenium.WebElement;
 import org.springframework.util.CollectionUtils;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -15,9 +17,10 @@ import java.util.List;
 import static com.codeborne.selenide.CheckResult.accepted;
 import static com.codeborne.selenide.CheckResult.rejected;
 
+@ParametersAreNonnullByDefault
 public class StatCondition {
 
-    public static WebElementCondition color(Color expColor) {
+    public static @Nonnull WebElementCondition color(Color expColor) {
         return new WebElementCondition("color " + expColor.getRgb()) {
 
             @Override
@@ -28,7 +31,7 @@ public class StatCondition {
         };
     }
 
-    public static WebElementsCondition color(Color... expColors) {
+    public static @Nonnull WebElementsCondition color(Color... expColors) {
         String expRgba = Arrays.asList(expColors).toString();
         return new WebElementsCondition() {
 
@@ -67,7 +70,7 @@ public class StatCondition {
         };
     }
 
-    public static WebElementsCondition statBubbles(List<CategoryBubble> expBubbles) {
+    public static @Nonnull WebElementsCondition statBubbles(List<CategoryBubble> expBubbles) {
         String expBubblesStr = expBubbles.toString();
         return new WebElementsCondition() {
 
@@ -115,11 +118,11 @@ public class StatCondition {
         };
     }
 
-    public static WebElementsCondition statBubbles(CategoryBubble... expBubbles) {
+    public static @Nonnull WebElementsCondition statBubbles(CategoryBubble... expBubbles) {
         return statBubbles(Arrays.asList(expBubbles));
     }
 
-    public static WebElementsCondition statBubblesInAnyOrder(List<CategoryBubble> expBubbles) {
+    public static @Nonnull WebElementsCondition statBubblesInAnyOrder(List<CategoryBubble> expBubbles) {
         String expBubblesStr = expBubbles.toString();
         return new WebElementsCondition() {
 
@@ -167,7 +170,7 @@ public class StatCondition {
         };
     }
 
-    public static WebElementsCondition statBubblesContains(List<CategoryBubble> expBubbles) {
+    public static @Nonnull WebElementsCondition statBubblesContains(List<CategoryBubble> expBubbles) {
         String expBubblesStr = expBubbles.toString();
         return new WebElementsCondition() {
 

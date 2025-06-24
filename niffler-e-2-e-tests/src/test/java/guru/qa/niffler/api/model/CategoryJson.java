@@ -2,6 +2,7 @@ package guru.qa.niffler.api.model;
 
 import guru.qa.niffler.db.entity.spend.CategoryEntity;
 
+import javax.annotation.Nonnull;
 import java.util.UUID;
 
 public record CategoryJson(
@@ -10,7 +11,11 @@ public record CategoryJson(
     String username,
     boolean archived) {
 
-    public static CategoryJson fromEntity(CategoryEntity entity) {
+    public static CategoryJson of(String name) {
+        return new CategoryJson(null, name, null, false);
+    }
+
+    public static @Nonnull CategoryJson fromEntity(@Nonnull CategoryEntity entity) {
         return new CategoryJson(
                 entity.getId(),
                 entity.getName(),
@@ -18,14 +23,4 @@ public record CategoryJson(
                 entity.isArchived()
         );
     }
-
-    public static CategoryJson clone(CategoryJson categoryJson) {
-        return new CategoryJson(
-            categoryJson.id(),
-            categoryJson.name(),
-            categoryJson.username(),
-            categoryJson.archived()
-        );
-    }
-
 }

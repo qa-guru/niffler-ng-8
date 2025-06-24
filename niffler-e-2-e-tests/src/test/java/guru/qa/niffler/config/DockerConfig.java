@@ -1,55 +1,57 @@
 package guru.qa.niffler.config;
 
+import javax.annotation.Nonnull;
+
 enum DockerConfig implements Config {
     INSTANCE;
 
     @Override
-    public String frontUrl() {
+    public @Nonnull String frontUrl() {
         return "";
     }
 
     @Override
-    public String spendUrl() {
+    public @Nonnull String spendUrl() {
         return "";
     }
 
     @Override
-    public String spendJdbcUrl() {
+    public @Nonnull String spendJdbcUrl() {
         return "";
     }
 
     @Override
-    public String ghUrl() {
+    public @Nonnull String ghUrl() {
         return "";
     }
 
     @Override
-    public String authUrl() {
+    public @Nonnull String authUrl() {
         return "";
     }
 
     @Override
-    public String authJdbcUrl() {
+    public @Nonnull String authJdbcUrl() {
         return "";
     }
 
     @Override
-    public String gatewayUrl() {
+    public @Nonnull String gatewayUrl() {
         return "";
     }
 
     @Override
-    public String userdataUrl() {
+    public @Nonnull String userdataUrl() {
         return "";
     }
 
     @Override
-    public String userdataJdbcUrl() {
+    public @Nonnull String userdataJdbcUrl() {
         return "";
     }
 
     @Override
-    public String currencyJdbcUrl() {
+    public @Nonnull String currencyJdbcUrl() {
         return "";
     }
 

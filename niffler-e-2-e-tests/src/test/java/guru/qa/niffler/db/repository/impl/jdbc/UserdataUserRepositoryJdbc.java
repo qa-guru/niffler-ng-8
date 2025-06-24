@@ -10,11 +10,14 @@ import guru.qa.niffler.db.entity.userdata.UserdataFriendshipEntity;
 import guru.qa.niffler.db.entity.userdata.UserdataUserEntity;
 import guru.qa.niffler.db.repository.UserdataUserRepository;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+@ParametersAreNonnullByDefault
 public class UserdataUserRepositoryJdbc implements UserdataUserRepository {
 
     private static final String JDBC_URL = Config.getInstance().userdataJdbcUrl();
@@ -22,17 +25,17 @@ public class UserdataUserRepositoryJdbc implements UserdataUserRepository {
     private final UserdataFriendshipDao friendshipDao = new UserdataFriendshipDaoJdbc(JDBC_URL);
 
     @Override
-    public UserdataUserEntity create(UserdataUserEntity entity) {
+    public @Nonnull UserdataUserEntity create(UserdataUserEntity entity) {
         return userDao.create(entity);
     }
 
     @Override
-    public Optional<UserdataUserEntity> findById(UUID id) {
+    public @Nonnull Optional<UserdataUserEntity> findById(UUID id) {
         return userDao.findById(id)
             .map(this::addFriendship);
     }
 
-    private UserdataUserEntity addFriendship(UserdataUserEntity entity) {
+    private @Nonnull UserdataUserEntity addFriendship(UserdataUserEntity entity) {
         UUID userId = entity.getId();
         List<UserdataFriendshipEntity> friendships = friendshipDao.findByUserId(userId);
         for (UserdataFriendshipEntity friendship : friendships) {
@@ -46,13 +49,13 @@ public class UserdataUserRepositoryJdbc implements UserdataUserRepository {
     }
 
     @Override
-    public Optional<UserdataUserEntity> findByUsername(String username) {
+    public @Nonnull Optional<UserdataUserEntity> findByUsername(String username) {
         return userDao.findByUsername(username)
             .map(this::addFriendship);
     }
 
     @Override
-    public UserdataUserEntity update(UserdataUserEntity entity) {
+    public @Nonnull UserdataUserEntity update(UserdataUserEntity entity) {
         return userDao.update(entity);
     }
 
@@ -70,7 +73,7 @@ public class UserdataUserRepositoryJdbc implements UserdataUserRepository {
     }
 
     @Override
-    public UserdataFriendshipEntity createFriendship(UserdataUserEntity requester,
+    public @Nonnull UserdataFriendshipEntity createFriendship(UserdataUserEntity requester,
                                                      UserdataUserEntity addressee,
                                                      FriendshipStatus status) {
         UserdataFriendshipEntity friendship = new UserdataFriendshipEntity();

@@ -5,11 +5,15 @@ import guru.qa.niffler.db.entity.userdata.UserdataFriendshipEntity;
 import guru.qa.niffler.db.entity.userdata.UserdataUserEntity;
 import guru.qa.niffler.db.repository.UserdataUserRepository;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+@ParametersAreNonnullByDefault
 public class UserdataUserRepositoryHibernate extends AbstractRepositoryHibernate implements UserdataUserRepository {
 
     private static final Class<UserdataUserEntity> USER_CLASS = UserdataUserEntity.class;
@@ -19,22 +23,22 @@ public class UserdataUserRepositoryHibernate extends AbstractRepositoryHibernate
     }
 
     @Override
-    public UserdataUserEntity create(UserdataUserEntity entity) {
+    public @Nonnull UserdataUserEntity create(UserdataUserEntity entity) {
         return super.create(entity);
     }
 
     @Override
-    public Optional<UserdataUserEntity> findById(UUID id) {
+    public @Nonnull Optional<UserdataUserEntity> findById(UUID id) {
         return findByIdOpt(USER_CLASS, id);
     }
 
     @Override
-    public UserdataUserEntity update(UserdataUserEntity entity) {
+    public @Nonnull UserdataUserEntity update(UserdataUserEntity entity) {
         return super.update(entity);
     }
 
     @Override
-    public Optional<UserdataUserEntity> findByUsername(String username) {
+    public @Nonnull Optional<UserdataUserEntity> findByUsername(String username) {
         String sql = "SELECT u FROM UserdataUserEntity u WHERE u.username = ?1";
         return findSingleResultOpt(USER_CLASS, sql, username);
     }
@@ -45,13 +49,13 @@ public class UserdataUserRepositoryHibernate extends AbstractRepositoryHibernate
     }
 
     @Override
-    public List<UserdataUserEntity> findAll() {
+    public @Nullable List<UserdataUserEntity> findAll() {
         String sql = "SELECT u FROM UserdataUserEntity u";
         return findResultList(USER_CLASS, sql);
     }
 
     @Override
-    public UserdataFriendshipEntity createFriendship(UserdataUserEntity requester,
+    public @Nonnull UserdataFriendshipEntity createFriendship(UserdataUserEntity requester,
                                                      UserdataUserEntity addressee,
                                                      FriendshipStatus status) {
         UserdataFriendshipEntity friendship = new UserdataFriendshipEntity();

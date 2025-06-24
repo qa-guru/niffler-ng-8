@@ -4,8 +4,10 @@ import guru.qa.niffler.db.tpl.DataSources;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.sql.DataSource;
 
+@ParametersAreNonnullByDefault
 public class AbstractSpringDao<T> {
 
     protected final JdbcTemplate jdbcTemplate;

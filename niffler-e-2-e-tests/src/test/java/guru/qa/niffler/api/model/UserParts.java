@@ -5,9 +5,13 @@ import guru.qa.niffler.db.entity.userdata.UserdataUserEntity;
 import guru.qa.niffler.util.TestData;
 import lombok.Data;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.UUID;
 
 @Data
+@ParametersAreNonnullByDefault
 public class UserParts {
 
     private AuthUserJson authUserJson;
@@ -20,81 +24,82 @@ public class UserParts {
         this.testData = new TestData();
     }
 
-    public static UserParts of(String username, String password) {
+    public static @Nonnull UserParts of(String username, String password) {
         UserParts userParts = UserParts.of(username);
         userParts.setPassword(password);
         return userParts;
     }
 
-    public static UserParts of(String username) {
+    public static @Nonnull UserParts of(String username) {
         AuthUserJson authUserJson = new AuthUserJson().setUsername(username);
         UserdataUserJson userdataUserJson = new UserdataUserJson().setUsername(username);
         return new UserParts(authUserJson, userdataUserJson);
     }
 
-    public static UserParts of(UserdataUserJson userdataUserJson, String username, String password) {
+    public static @Nonnull UserParts of(UserdataUserJson userdataUserJson, String username, String password) {
         AuthUserJson authUserJson = new AuthUserJson()
             .setUsername(username)
             .setPassword(password);
         return new UserParts(authUserJson, userdataUserJson);
     }
 
-    public static UserParts of(UserdataUserJson userdataUserJson) {
+    public static @Nonnull UserParts of(UserdataUserJson userdataUserJson) {
         AuthUserJson authUserJson = new AuthUserJson()
             .setUsername(userdataUserJson.getUsername());
         return new UserParts(authUserJson, userdataUserJson);
     }
 
-    public static UserParts of(AuthUserEntity authUserEntity, UserdataUserEntity userdataUserEntity) {
+    public static @Nonnull UserParts of(AuthUserEntity authUserEntity,
+                                        UserdataUserEntity userdataUserEntity) {
         AuthUserJson authUserJson = AuthUserJson.fromEntity(authUserEntity);
         UserdataUserJson userdataUserJson = UserdataUserJson.fromEntity(userdataUserEntity);
         return new UserParts(authUserJson, userdataUserJson);
     }
 
-    public AuthUserEntity getAuthUserEntity() {
+    public @Nonnull AuthUserEntity getAuthUserEntity() {
         return AuthUserEntity.fromJson(authUserJson);
     }
 
-    public UserdataUserEntity getUserdataUserEntity() {
+    public @Nonnull UserdataUserEntity getUserdataUserEntity() {
         return UserdataUserEntity.fromJson(userdataUserJson);
     }
 
-    public String getUsername() {
+    public @Nullable String getUsername() {
         return authUserJson.getUsername();
     }
 
-    public String getPassword() {
+    public @Nullable String getPassword() {
         return authUserJson.getPassword();
     }
 
-    public String getUserdataId() {
+    public @Nullable String getUserdataId() {
         return userdataUserJson.getUsername();
     }
 
-    public UUID getAuthId() {
+    public @Nullable UUID getAuthId() {
         return authUserJson.getId();
     }
 
-    public AuthUserJson getAuthUserJson() {
+    public @Nonnull AuthUserJson getAuthUserJson() {
         return authUserJson;
     }
 
-    public UserdataUserJson getUserdataUserJson() {
+    public @Nonnull UserdataUserJson getUserdataUserJson() {
         return userdataUserJson;
     }
 
-    public UserParts setPassword(String password) {
+    public @Nonnull UserParts setPassword(String password) {
         authUserJson.setPassword(password);
         return this;
     }
 
-    public UserParts setUsername(String name) {
+    public @Nonnull UserParts setUsername(String name) {
         authUserJson.setUsername(name);
         userdataUserJson.setUsername(name);
         return this;
     }
 
-    public UserParts setUserdataUser(UserdataUserJson userdataUserJson) {
+    public @Nonnull UserParts setUserdataUser(UserdataUserJson userdataUserJson) {
         this.userdataUserJson = userdataUserJson;
         return this;
     }

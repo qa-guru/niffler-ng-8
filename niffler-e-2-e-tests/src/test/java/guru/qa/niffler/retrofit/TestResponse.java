@@ -5,24 +5,30 @@ import lombok.Value;
 import okhttp3.Headers;
 import retrofit2.Response;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 @Value
 public class TestResponse<SUCC_DTO, ERR_DTO> {
 
+    @Nonnull
     Response<SUCC_DTO> retrofitRawResponse;
+    @Nullable
     SUCC_DTO body;
+    @Nullable
     ERR_DTO errorBody;
 
-    private TestResponse(Response<SUCC_DTO> retrofitRawResponse, Object errorBody) {
+    private TestResponse(@Nonnull Response<SUCC_DTO> retrofitRawResponse, @Nullable Object errorBody) {
         this.retrofitRawResponse = retrofitRawResponse;
         this.body = retrofitRawResponse.body();
         this.errorBody = (ERR_DTO) errorBody;
     }
 
-    public String getMessage() {
+    public @Nonnull String getMessage() {
         return retrofitRawResponse.message();
     }
 
-    public Headers getHeaders() {
+    public @Nonnull Headers getHeaders() {
         return retrofitRawResponse.headers();
     }
 
@@ -34,7 +40,7 @@ public class TestResponse<SUCC_DTO, ERR_DTO> {
         return retrofitRawResponse.isSuccessful();
     }
 
-    public okhttp3.Response getOkhttpRawResponse() {
+    public @Nonnull okhttp3.Response getOkhttpRawResponse() {
         return retrofitRawResponse.raw();
     }
 

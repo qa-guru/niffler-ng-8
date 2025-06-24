@@ -2,6 +2,8 @@ package guru.qa.niffler.db.dao.impl.jdbc;
 
 import guru.qa.niffler.db.tpl.Connections;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -11,6 +13,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+@ParametersAreNonnullByDefault
 public abstract class AbstractDao<E> {
 
     private final String jdbcUrl;
@@ -19,7 +22,7 @@ public abstract class AbstractDao<E> {
         this.jdbcUrl = jdbcUrl;
     }
 
-    protected E executeQuery(String sql, Object... params) {
+    protected @Nonnull E executeQuery(String sql, Object... params) {
         try (PreparedStatement ps = getConnection().prepareStatement(sql)) {
             fillPrepareStatement(params, ps);
             try (ResultSet rs = ps.executeQuery()) {
@@ -43,7 +46,7 @@ public abstract class AbstractDao<E> {
         }
     }
 
-    protected Optional<E> executeQueryToOptional(String sql, Object... params) {
+    protected @Nonnull Optional<E> executeQueryToOptional(String sql, Object... params) {
         try (PreparedStatement ps = getConnection().prepareStatement(sql)) {
             fillPrepareStatement(params, ps);
             try (ResultSet rs = ps.executeQuery()) {
@@ -58,7 +61,7 @@ public abstract class AbstractDao<E> {
         }
     }
 
-    protected List<E> executeQueryToList(String sql, Object... params) {
+    protected @Nonnull List<E> executeQueryToList(String sql, Object... params) {
         try (PreparedStatement ps = getConnection().prepareStatement(sql)) {
             fillPrepareStatement(params, ps);
             try (ResultSet rs = ps.executeQuery()) {
@@ -73,7 +76,7 @@ public abstract class AbstractDao<E> {
         }
     }
 
-    protected abstract E mapResultSet(ResultSet rs) throws SQLException;
+    protected abstract @Nonnull E mapResultSet(ResultSet rs) throws SQLException;
 
     private void fillPrepareStatement(Object[] params, PreparedStatement ps) throws SQLException {
         for (int i = 0; i < params.length; i++) {
@@ -86,7 +89,7 @@ public abstract class AbstractDao<E> {
         }
     }
 
-    public Connection getConnection() {
+    public @Nonnull Connection getConnection() {
         return Connections.holder(jdbcUrl).connection();
     }
 

@@ -9,6 +9,8 @@ import lombok.SneakyThrows;
 import org.junit.jupiter.api.extension.*;
 import org.junit.platform.commons.support.AnnotationSupport;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.awt.image.BufferedImage;
 import java.util.Optional;
 
@@ -64,27 +66,27 @@ public class ScreenShotTestExtension implements ParameterResolver, TestExecution
         throw throwable;
     }
 
-    public static void setExpected(BufferedImage expected) {
+    public static void setExpected(@Nonnull BufferedImage expected) {
         TestMethodContextExtension.context().getStore(NAMESPACE).put("expected", expected);
     }
 
-    public static BufferedImage getExpected() {
+    public static @Nullable BufferedImage getExpected() {
         return TestMethodContextExtension.context().getStore(NAMESPACE).get("expected", BufferedImage.class);
     }
 
-    public static void setActual(BufferedImage expected) {
+    public static void setActual(@Nonnull BufferedImage expected) {
         TestMethodContextExtension.context().getStore(NAMESPACE).put("actual", expected);
     }
 
-    public static BufferedImage getActual() {
+    public static @Nullable BufferedImage getActual() {
         return TestMethodContextExtension.context().getStore(NAMESPACE).get("actual", BufferedImage.class);
     }
 
-    public static void setDiff(BufferedImage expected) {
+    public static void setDiff(@Nonnull BufferedImage expected) {
         TestMethodContextExtension.context().getStore(NAMESPACE).put("diff", expected);
     }
 
-    public static BufferedImage getDiff() {
+    public static @Nullable BufferedImage getDiff() {
         return TestMethodContextExtension.context().getStore(NAMESPACE).get("diff", BufferedImage.class);
     }
 

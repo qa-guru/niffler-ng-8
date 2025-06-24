@@ -4,11 +4,15 @@ import guru.qa.niffler.db.dao.CategoryDao;
 import guru.qa.niffler.db.dao.impl.spring_jdbc.mapper.CategoryEntityRowMapper;
 import guru.qa.niffler.db.entity.spend.CategoryEntity;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.sql.DataSource;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+@ParametersAreNonnullByDefault
 public class CategoryDaoSpringJdbc extends AbstractSpringDao<CategoryEntity> implements CategoryDao {
 
     public CategoryDaoSpringJdbc(String jdbcUrl) {
@@ -20,7 +24,7 @@ public class CategoryDaoSpringJdbc extends AbstractSpringDao<CategoryEntity> imp
     }
 
     @Override
-    public CategoryEntity create(CategoryEntity entity) {
+    public @Nonnull CategoryEntity create(CategoryEntity entity) {
         String sql = "INSERT INTO category (username, name, archived) VALUES(?, ?, ?) RETURNING *";
         return jdbcTemplate.queryForObject(sql, rowMapper,
                 entity.getUsername(), entity.getName(), entity.isArchived()
@@ -28,7 +32,7 @@ public class CategoryDaoSpringJdbc extends AbstractSpringDao<CategoryEntity> imp
     }
 
     @Override
-    public CategoryEntity update(CategoryEntity entity) {
+    public @Nonnull CategoryEntity update(CategoryEntity entity) {
         String sql = "UPDATE category SET username = ?, name = ?, archived = ? WHERE id = ? RETURNING *";
         return jdbcTemplate.queryForObject(sql, rowMapper,
                 entity.getUsername(), entity.getName(), entity.isArchived(), entity.getId()
@@ -36,21 +40,21 @@ public class CategoryDaoSpringJdbc extends AbstractSpringDao<CategoryEntity> imp
     }
 
     @Override
-    public Optional<CategoryEntity> findById(UUID id) {
+    public @Nonnull Optional<CategoryEntity> findById(UUID id) {
         String sql = "SELECT * FROM category WHERE id = ?";
         CategoryEntity entity = jdbcTemplate.queryForObject(sql, rowMapper, id);
         return Optional.ofNullable(entity);
     }
 
     @Override
-    public Optional<CategoryEntity> findByNameAndUsername(String name, String username) {
+    public @Nonnull Optional<CategoryEntity> findByNameAndUsername(String name, String username) {
         String sql = "SELECT * FROM category WHERE name = ? and username = ?";
         CategoryEntity entity = jdbcTemplate.queryForObject(sql, rowMapper, name, username);
         return Optional.ofNullable(entity);
     }
 
     @Override
-    public List<CategoryEntity> findAllByUsername(String username) {
+    public @Nullable List<CategoryEntity> findAllByUsername(String username) {
         String sql = "SELECT * FROM category WHERE username = ?";
         return jdbcTemplate.query(sql, rowMapper, username);
     }
@@ -63,7 +67,7 @@ public class CategoryDaoSpringJdbc extends AbstractSpringDao<CategoryEntity> imp
     }
 
     @Override
-    public List<CategoryEntity> findAll() {
+    public @Nullable List<CategoryEntity> findAll() {
         String sql = "SELECT * FROM category";
         return jdbcTemplate.query(sql, rowMapper);
     }

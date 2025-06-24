@@ -3,6 +3,8 @@ package guru.qa.niffler.condition;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.List;
 
@@ -29,7 +31,7 @@ public enum Color {
         return rgb;
     }
 
-    public static Color of(String rgba) {
+    public static @Nonnull Color of(@Nullable String rgba) {
         return colors.stream()
             .filter(c -> c.rgb.equals(rgba))
             .findFirst()

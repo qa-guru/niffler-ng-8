@@ -4,11 +4,15 @@ import guru.qa.niffler.db.dao.UserdataUserDao;
 import guru.qa.niffler.db.dao.impl.spring_jdbc.mapper.UserdataUserEntityRowMapper;
 import guru.qa.niffler.db.entity.userdata.UserdataUserEntity;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.sql.DataSource;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+@ParametersAreNonnullByDefault
 public class UserdataUserDaoSpringJdbc extends AbstractSpringDao<UserdataUserEntity> implements UserdataUserDao {
 
     public UserdataUserDaoSpringJdbc(String jdbcUrl) {
@@ -20,7 +24,7 @@ public class UserdataUserDaoSpringJdbc extends AbstractSpringDao<UserdataUserEnt
     }
 
     @Override
-    public UserdataUserEntity create(UserdataUserEntity entity) {
+    public @Nonnull UserdataUserEntity create(UserdataUserEntity entity) {
         String sql = "INSERT INTO \"user\" (username, currency, firstname, surname, full_name, photo, photo_small) " +
             "VALUES(?, ?, ?, ?, ?, ?, ?) RETURNING *";
         return jdbcTemplate.queryForObject(sql, rowMapper,
@@ -30,7 +34,7 @@ public class UserdataUserDaoSpringJdbc extends AbstractSpringDao<UserdataUserEnt
     }
 
     @Override
-    public UserdataUserEntity update(UserdataUserEntity entity) {
+    public @Nonnull UserdataUserEntity update(UserdataUserEntity entity) {
         String sql = "UPDATE \"user\" SET username = ?, currency = ?, firstname = ?, surname = ?, full_name = ?, photo = ?, photo_small = ? " +
             "WHERE id = ? RETURNING *";
         return jdbcTemplate.queryForObject(sql, rowMapper,
@@ -40,14 +44,14 @@ public class UserdataUserDaoSpringJdbc extends AbstractSpringDao<UserdataUserEnt
     }
 
     @Override
-    public Optional<UserdataUserEntity> findById(UUID id) {
+    public @Nonnull Optional<UserdataUserEntity> findById(UUID id) {
         String sql = "SELECT * FROM \"user\" WHERE id = ?";
         UserdataUserEntity entity = jdbcTemplate.queryForObject(sql, rowMapper, id);
         return Optional.ofNullable(entity);
     }
 
     @Override
-    public Optional<UserdataUserEntity> findByUsername(String username) {
+    public @Nonnull Optional<UserdataUserEntity> findByUsername(String username) {
         String sql = "SELECT * FROM \"user\" WHERE username = ?";
         UserdataUserEntity entity = jdbcTemplate.queryForObject(sql, rowMapper, username);
         return Optional.ofNullable(entity);
@@ -61,7 +65,7 @@ public class UserdataUserDaoSpringJdbc extends AbstractSpringDao<UserdataUserEnt
     }
 
     @Override
-    public List<UserdataUserEntity> findAll() {
+    public @Nullable List<UserdataUserEntity> findAll() {
         String sql = "SELECT * FROM \"user\"";
         return jdbcTemplate.query(sql, rowMapper);
     }

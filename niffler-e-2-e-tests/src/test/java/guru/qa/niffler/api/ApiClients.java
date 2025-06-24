@@ -8,6 +8,8 @@ import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
+import javax.annotation.Nonnull;
+
 public class ApiClients {
 
     private ApiClients() {
@@ -28,23 +30,23 @@ public class ApiClients {
     private static final GhServiceClient GH_CLIENT = buildClient(CFG.ghUrl(), GhServiceClient.class);
     private static final AuthServiceClient AUTH_CLIENT = buildClient(CFG.authUrl(), AuthServiceClient.class);
 
-    public static SpendServiceClient spendClient() {
+    public static @Nonnull SpendServiceClient spendClient() {
         return SPEND_CLIENT;
     }
 
-    public static UserdataServiceClient userdataClient() {
+    public static @Nonnull UserdataServiceClient userdataClient() {
         return USERDATA_CLIENT;
     }
 
-    public static GhServiceClient ghClient() {
+    public static @Nonnull GhServiceClient ghClient() {
         return GH_CLIENT;
     }
 
-    public static AuthServiceClient authClient() {
+    public static @Nonnull AuthServiceClient authClient() {
         return AUTH_CLIENT;
     }
 
-    private static <T> T buildClient(String baseUrl, Class<T> apiClass) {
+    private static <T> @Nonnull T buildClient(@Nonnull String baseUrl, @Nonnull Class<T> apiClass) {
         return new Retrofit.Builder()
             .baseUrl(baseUrl)
             .client(okHttpClient)

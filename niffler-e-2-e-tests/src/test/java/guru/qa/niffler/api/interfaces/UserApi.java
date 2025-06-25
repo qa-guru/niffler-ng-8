@@ -18,10 +18,6 @@ public interface UserApi {
     @GET("internal/users/current")
     Call<UserJson> currentUser(@Query("username") String username);
 
-
-    @GET(" /internal/users/all")
-    Call<UserJson> getAllUsers(@Query("username") String username);
-
     @GET("internal/users/all")
     Call<List<UserJson>> allUsers(@Query("username") String username,
                                   @Query("searchQuery") @Nullable String searchQuery);

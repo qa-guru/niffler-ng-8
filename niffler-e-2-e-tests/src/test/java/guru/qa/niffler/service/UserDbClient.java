@@ -22,6 +22,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -138,6 +139,11 @@ public class UserDbClient implements UsersClient{
 
         return UserJson.fromEntity(
                 userRepository.create(UserEntity.fromJson(user)));
+    }
+
+    @Override
+    public List<UserJson> allUsers(String username, String searchQuery) {
+        return List.of();
     }
 
     public void addIncomeInvitation(UUID requesterUUID, UUID addresseeUUID) {

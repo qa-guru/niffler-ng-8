@@ -3,6 +3,7 @@ package guru.qa.niffler.service;
 import guru.qa.niffler.model.users.UserJson;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.List;
 import java.util.UUID;
 
 @ParametersAreNonnullByDefault
@@ -17,6 +18,8 @@ public interface UsersClient {
     UserJson createUserTxChainedJdbc(UserJson user);
 
     UserJson createUser(UserJson user);
+
+    List<UserJson> allUsers(String username, String searchQuery);
 
     void addIncomeInvitation(UUID requesterUUID, UUID addresseeUUID);
 

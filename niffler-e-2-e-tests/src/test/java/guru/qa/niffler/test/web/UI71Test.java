@@ -20,9 +20,9 @@ public class UI71Test extends BaseUITest {
         //Создание юзера и связей
         UserJson maiUser = UserData.mainUser();
         UserJson newUser = generateUser();
-        userDbClient.createUser(newUser);
-        UUID newId = userDbClient.getUserId(newUser);
-        userDbClient.addIncomeInvitation(newId, maiUser.id());
+        userClient.createUser(newUser);
+        UUID newId = userClient.getUserId(newUser);
+        userClient.addIncomeInvitation(newId, maiUser.id());
         //Act
         loginPage().doLogin(UserData.mainUser());
         sidebarPage().header.toFriendsPage();
@@ -32,7 +32,7 @@ public class UI71Test extends BaseUITest {
         //Cleanup
         friendsPage().table.unfriend(newUser.username());
         friendsPage().delete().deleteButton.click();
-        userDbClient.deleteUser(newUser);
+        userClient.deleteUser(newUser);
     }
 
     @Test
@@ -40,9 +40,9 @@ public class UI71Test extends BaseUITest {
         //Создание юзера и связей
         UserJson maiUser = UserData.mainUser();
         UserJson newUser = generateUser();
-        userDbClient.createUser(newUser);
-        UUID newId = userDbClient.getUserId(newUser);
-        userDbClient.addIncomeInvitation(newId, maiUser.id());
+        userClient.createUser(newUser);
+        UUID newId = userClient.getUserId(newUser);
+        userClient.addIncomeInvitation(newId, maiUser.id());
         //Act
         loginPage().doLogin(UserData.mainUser());
         sidebarPage().header.toFriendsPage();
@@ -51,7 +51,7 @@ public class UI71Test extends BaseUITest {
         //Assert
         friendsPage().table.checkFriendNotExist(newUser.username());
         //Cleanup
-        userDbClient.deleteUser(newUser);
+        userClient.deleteUser(newUser);
     }
 
     @Test

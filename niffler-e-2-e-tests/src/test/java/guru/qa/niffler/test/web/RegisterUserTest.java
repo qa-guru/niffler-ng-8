@@ -17,7 +17,7 @@ public class RegisterUserTest extends BaseUITest {
     @Test
     void testRegisterUser() {
         UserJson user = RandomDataUtils.generateUser();
-        userDbClient.createUser(user);
+        userClient.createUser(user);
 
         Selenide.open(CFG.frontUrl(), LoginPage.class)
                 .doLogin(user);

@@ -3,6 +3,7 @@ package guru.qa.niffler.db.entity.userdata;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.annotation.Nullable;
 import java.io.Serializable;
 import java.util.Objects;
 import java.util.UUID;
@@ -15,7 +16,7 @@ public class FriendShipId implements Serializable {
     private UUID addressee;
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         FriendShipId friendsId = (FriendShipId) o;

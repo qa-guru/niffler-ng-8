@@ -3,6 +3,7 @@ package guru.qa.niffler.api.model;
 import guru.qa.niffler.db.entity.spend.CategoryEntity;
 import guru.qa.niffler.db.entity.spend.SpendEntity;
 
+import javax.annotation.Nonnull;
 import java.util.Date;
 import java.util.UUID;
 
@@ -15,7 +16,7 @@ public record SpendJson(
     String description,
     String username) {
 
-    public static SpendJson fromEntity(SpendEntity entity) {
+    public static @Nonnull SpendJson fromEntity(@Nonnull SpendEntity entity) {
         final CategoryEntity category = entity.getCategory();
         final String username = entity.getUsername();
 

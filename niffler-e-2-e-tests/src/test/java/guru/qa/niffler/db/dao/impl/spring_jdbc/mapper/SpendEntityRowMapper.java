@@ -5,6 +5,7 @@ import guru.qa.niffler.db.entity.spend.CategoryEntity;
 import guru.qa.niffler.db.entity.spend.SpendEntity;
 import org.springframework.jdbc.core.RowMapper;
 
+import javax.annotation.Nonnull;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.UUID;
@@ -17,7 +18,7 @@ public class SpendEntityRowMapper implements RowMapper<SpendEntity> {
     }
 
     @Override
-    public SpendEntity mapRow(ResultSet rs, int rowNum) throws SQLException {
+    public @Nonnull SpendEntity mapRow(@Nonnull ResultSet rs, int rowNum) throws SQLException {
         return new SpendEntity()
                 .setId(rs.getObject("id", UUID.class))
                 .setSpendDate(rs.getDate("spend_date"))

@@ -2,10 +2,12 @@ package guru.qa.niffler.config;
 
 import com.codeborne.selenide.SelenideConfig;
 
+import javax.annotation.Nonnull;
+
 public enum Browser {
 
     CHROME {
-        public SelenideConfig getConfig() {
+        public @Nonnull SelenideConfig getConfig() {
             return new SelenideConfig()
                 .browser("chrome")
                 .pageLoadStrategy("eager")
@@ -13,7 +15,7 @@ public enum Browser {
         }
     },
     FIREFOX {
-        public SelenideConfig getConfig() {
+        public @Nonnull SelenideConfig getConfig() {
             return new SelenideConfig()
                 .browser("firefox")
                 .pageLoadStrategy("eager")
@@ -21,5 +23,5 @@ public enum Browser {
         }
     };
 
-    public abstract SelenideConfig getConfig();
+    public abstract @Nonnull SelenideConfig getConfig();
 }

@@ -9,10 +9,14 @@ import guru.qa.niffler.db.entity.auth.AuthAuthorityEntity;
 import guru.qa.niffler.db.entity.auth.AuthUserEntity;
 import guru.qa.niffler.db.repository.AuthUserRepository;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+@ParametersAreNonnullByDefault
 public class AuthUserRepositorySpringJdbc implements AuthUserRepository {
 
     private static final String JDBC_URL = Config.getInstance().authJdbcUrl();
@@ -20,7 +24,7 @@ public class AuthUserRepositorySpringJdbc implements AuthUserRepository {
     private final AuthAuthorityDao authAuthorityDao = new AuthAuthorityDaoSpringJdbc(JDBC_URL);
 
     @Override
-    public AuthUserEntity create(AuthUserEntity entity) {
+    public @Nonnull AuthUserEntity create(AuthUserEntity entity) {
         AuthUserEntity createdUser = authUserDao.create(entity);
 
         for (AuthAuthorityEntity authority : entity.getAuthorities()) {
@@ -32,7 +36,7 @@ public class AuthUserRepositorySpringJdbc implements AuthUserRepository {
     }
 
     @Override
-    public AuthUserEntity update(AuthUserEntity entity) {
+    public @Nonnull AuthUserEntity update(AuthUserEntity entity) {
         AuthUserEntity updatedUser = authUserDao.update(entity);
 
         for (AuthAuthorityEntity authority : entity.getAuthorities()) {
@@ -43,13 +47,13 @@ public class AuthUserRepositorySpringJdbc implements AuthUserRepository {
     }
 
     @Override
-    public Optional<AuthUserEntity> findById(UUID id) {
+    public @Nonnull Optional<AuthUserEntity> findById(UUID id) {
         return authUserDao.findById(id)
             .map(this::setAuthorities);
     }
 
     @Override
-    public Optional<AuthUserEntity> findByUsername(String username) {
+    public @Nonnull Optional<AuthUserEntity> findByUsername(String username) {
         return authUserDao.findByUsername(username)
             .map(this::setAuthorities);
     }
@@ -66,7 +70,7 @@ public class AuthUserRepositorySpringJdbc implements AuthUserRepository {
     }
 
     @Override
-    public List<AuthUserEntity> findAll() {
+    public @Nullable List<AuthUserEntity> findAll() {
         List<AuthUserEntity> users = authUserDao.findAll();
         for (AuthUserEntity user : users) {
             setAuthorities(user);
@@ -74,7 +78,7 @@ public class AuthUserRepositorySpringJdbc implements AuthUserRepository {
         return users;
     }
 
-    private AuthUserEntity setAuthorities(AuthUserEntity entity) {
+    private @Nonnull AuthUserEntity setAuthorities(AuthUserEntity entity) {
         List<AuthAuthorityEntity> authorities = authAuthorityDao.findByUserId(entity.getId());
         entity.addAuthorities(authorities);
         return entity;

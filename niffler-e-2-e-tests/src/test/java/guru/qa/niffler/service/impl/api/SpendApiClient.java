@@ -8,11 +8,15 @@ import guru.qa.niffler.retrofit.TestResponse;
 import guru.qa.niffler.service.SpendClient;
 import io.qameta.allure.Step;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Function;
 
+@ParametersAreNonnullByDefault
 public class SpendApiClient implements SpendClient {
 
     public final SpendServiceClient spendClient = ApiClients.spendClient();
@@ -30,14 +34,14 @@ public class SpendApiClient implements SpendClient {
 
     @Step("Создание трат")
     @Override
-    public SpendJson createSpend(SpendJson spendJson) {
+    public @Nullable SpendJson createSpend(SpendJson spendJson) {
         TestResponse<SpendJson, Void> response = spendClient.addSpend(spendJson);
         return extractResp(response, TestResponse::getBody);
     }
 
     @Step("Поиск трат по id")
     @Override
-    public Optional<SpendJson> findSpendById(UUID id) {
+    public @Nonnull Optional<SpendJson> findSpendById(UUID id) {
         throw new UnsupportedOperationException("Метод не реализован");
     }
 
@@ -54,14 +58,14 @@ public class SpendApiClient implements SpendClient {
 
     @Step("Создание категории трат")
     @Override
-    public CategoryJson createCategory(CategoryJson categoryJson) {
+    public @Nullable CategoryJson createCategory(CategoryJson categoryJson) {
         TestResponse<CategoryJson, Void> response = spendClient.addCategory(categoryJson);
         return extractResp(response, TestResponse::getBody);
     }
 
     @Step("Обновление категории трат")
     @Override
-    public CategoryJson updateCategory(CategoryJson categoryJson) {
+    public @Nullable CategoryJson updateCategory(CategoryJson categoryJson) {
         TestResponse<CategoryJson, Void> response = spendClient.updateCategory(categoryJson);
         return extractResp(response, TestResponse::getBody);
     }

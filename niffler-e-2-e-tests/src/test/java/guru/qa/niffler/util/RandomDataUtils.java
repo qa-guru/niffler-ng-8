@@ -2,11 +2,14 @@ package guru.qa.niffler.util;
 
 import com.github.javafaker.Faker;
 import guru.qa.niffler.api.model.*;
+import lombok.NonNull;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 
 import static guru.qa.niffler.api.model.CurrencyValues.RUB;
 
+@ParametersAreNonnullByDefault
 public final class RandomDataUtils {
 
     private static final Faker FAKER = Faker.instance();
@@ -16,19 +19,19 @@ public final class RandomDataUtils {
         throw new UnsupportedOperationException();
     }
 
-    public static String genPassword() {
+    public static @NonNull String genPassword() {
         return FAKER.internet().password(3, 12);
     }
 
-    public static String genUsername() {
+    public static @NonNull String genUsername() {
         return USERNAME_PREFIX + FAKER.funnyName().name();
     }
 
-    public static String genCategoryName() {
+    public static @NonNull String genCategoryName() {
         return FAKER.app().name() + Thread.currentThread().threadId();
     }
 
-    public static UserParts genDefaultUser(String username, String password) {
+    public static @NonNull UserParts genDefaultUser(String username, String password) {
         List<AuthorityJson> defaultAuthorities = List.of(
                 new AuthorityJson().setAuthority(Authority.write),
                 new AuthorityJson().setAuthority(Authority.read)
@@ -47,11 +50,11 @@ public final class RandomDataUtils {
         return new UserParts(authUserJson, userdataUserJson);
     }
 
-    public static UserParts genDefaultUser() {
+    public static @NonNull UserParts genDefaultUser() {
         return genDefaultUser(genUsername(), genPassword());
     }
 
-    public static UserParts genDefaultUser(String password) {
+    public static @NonNull UserParts genDefaultUser(String password) {
         return genDefaultUser(genUsername(), password);
     }
 

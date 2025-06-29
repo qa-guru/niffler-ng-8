@@ -4,9 +4,12 @@ import guru.qa.niffler.db.entity.spend.CategoryEntity;
 import guru.qa.niffler.db.entity.spend.SpendEntity;
 import guru.qa.niffler.db.repository.SpendRepository;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Optional;
 import java.util.UUID;
 
+@ParametersAreNonnullByDefault
 public class SpendRepositoryHibernate extends AbstractRepositoryHibernate implements SpendRepository {
 
     private static final Class<SpendEntity> SPEND_CLASS = SpendEntity.class;
@@ -17,42 +20,42 @@ public class SpendRepositoryHibernate extends AbstractRepositoryHibernate implem
     }
 
     @Override
-    public SpendEntity create(SpendEntity entity) {
+    public @Nonnull SpendEntity create(SpendEntity entity) {
         return super.create(entity);
     }
 
     @Override
-    public SpendEntity update(SpendEntity entity) {
+    public @Nonnull SpendEntity update(SpendEntity entity) {
         return super.update(entity);
     }
 
     @Override
-    public CategoryEntity create(CategoryEntity entity) {
+    public @Nonnull CategoryEntity create(CategoryEntity entity) {
         return super.create(entity);
     }
 
     @Override
-    public CategoryEntity update(CategoryEntity entity) {
+    public @Nonnull CategoryEntity update(CategoryEntity entity) {
         return super.update(entity);
     }
 
     @Override
-    public Optional<CategoryEntity> findCategoryById(UUID id) {
+    public @Nonnull Optional<CategoryEntity> findCategoryById(UUID id) {
         return findByIdOpt(CATEGORY_CLASS, id);
     }
 
-    public Optional<CategoryEntity> findCategoryByUsernameAndName(String username, String name) {
+    public @Nonnull Optional<CategoryEntity> findCategoryByUsernameAndName(String username, String name) {
         String sql = "SELECT c FROM CategoryEntity c WHERE c.username = ?1 AND c.name = ?2";
         return findSingleResultOpt(CATEGORY_CLASS, sql, username, name);
     }
 
     @Override
-    public Optional<SpendEntity> findById(UUID id) {
+    public @Nonnull Optional<SpendEntity> findById(UUID id) {
         return findByIdOpt(SPEND_CLASS, id);
     }
 
     @Override
-    public Optional<SpendEntity> findByUsernameAndDescription(String username, String description) {
+    public @Nonnull Optional<SpendEntity> findByUsernameAndDescription(String username, String description) {
         String sql = "SELECT s FROM SpendEntity s WHERE s.username = ?1 AND s.description = ?2";
         return findSingleResultOpt(SPEND_CLASS, sql, username, description);
     }

@@ -4,6 +4,7 @@ import guru.qa.niffler.db.entity.userdata.UserdataUserEntity;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+import javax.annotation.Nonnull;
 import java.util.UUID;
 
 @Data
@@ -20,7 +21,7 @@ public class UserdataUserJson {
     private byte[] photo;
     private byte[] photoSmall;
 
-    public static UserdataUserJson fromEntity(UserdataUserEntity userdataEntity) {
+    public static @Nonnull UserdataUserJson fromEntity(@Nonnull UserdataUserEntity userdataEntity) {
         return new UserdataUserJson()
                 .setId(userdataEntity.getId())
                 .setUsername(userdataEntity.getUsername())

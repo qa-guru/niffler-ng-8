@@ -4,6 +4,8 @@ import guru.qa.niffler.db.entity.auth.AuthUserEntity;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -22,23 +24,23 @@ public class AuthUserJson {
     private Boolean credentialsNonExpired;
     private List<AuthorityJson> authorities = new ArrayList<>();
 
-    public void addAuthorities(AuthorityJson... authorities) {
+    public void addAuthorities(@Nonnull AuthorityJson... authorities) {
         List<AuthorityJson> authorityList = Arrays.stream(authorities)
                 .peek(au -> au.setUserId(this.getId()))
                 .toList();
         this.authorities.addAll(authorityList);
     }
 
-    public void addAuthorities(AuthorityJson authority) {
+    public void addAuthorities(@Nonnull AuthorityJson authority) {
         this.authorities.add(authority);
         authority.setUserId(this.getId());
     }
 
-    public void removeAuthority(AuthorityJson authority) {
+    public void removeAuthority(@Nullable AuthorityJson authority) {
         this.authorities.remove(authority);
     }
 
-    public static AuthUserJson fromEntity(AuthUserEntity authEntity) {
+    public static @Nonnull AuthUserJson fromEntity(@Nonnull AuthUserEntity authEntity) {
         return new AuthUserJson()
                 .setId(authEntity.getId())
                 .setUsername(authEntity.getUsername())
@@ -49,5 +51,4 @@ public class AuthUserJson {
                 .setCredentialsNonExpired(authEntity.getCredentialsNonExpired())
                 .setAuthorities(AuthorityJson.fromEntity(authEntity.getAuthorities()));
     }
-
 }

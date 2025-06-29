@@ -3,15 +3,17 @@ package guru.qa.niffler.db.repository;
 import guru.qa.niffler.db.tpl.Connections;
 import org.springframework.util.function.ThrowingFunction;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+@ParametersAreNonnullByDefault
 public class JdbcExecutor<E> {
 
     private final String jdbcUrl;
@@ -22,9 +24,7 @@ public class JdbcExecutor<E> {
         this.mapper = mapper;
     }
 
-    public E executeQuery(String sql, Object... params) {
-        System.out.println(sql);
-        System.out.println(Arrays.toString(params));
+    public @Nonnull E executeQuery(String sql, Object... params) {
         try (PreparedStatement ps = getConnection().prepareStatement(sql)) {
             fillPrepareStatement(params, ps);
             try (ResultSet rs = ps.executeQuery()) {
@@ -48,7 +48,7 @@ public class JdbcExecutor<E> {
         }
     }
 
-    public Optional<E> executeQueryToOptional(String sql, Object... params) {
+    public @Nonnull Optional<E> executeQueryToOptional(String sql, Object... params) {
         try (PreparedStatement ps = getConnection().prepareStatement(sql)) {
             fillPrepareStatement(params, ps);
             try (ResultSet rs = ps.executeQuery()) {
@@ -63,7 +63,7 @@ public class JdbcExecutor<E> {
         }
     }
 
-    public List<E> executeQueryToList(String sql, Object... params) {
+    public @Nonnull List<E> executeQueryToList(String sql, Object... params) {
         try (PreparedStatement ps = getConnection().prepareStatement(sql)) {
             fillPrepareStatement(params, ps);
             try (ResultSet rs = ps.executeQuery()) {
@@ -84,7 +84,7 @@ public class JdbcExecutor<E> {
         }
     }
 
-    public Connection getConnection() {
+    public @Nonnull Connection getConnection() {
         return Connections.holder(jdbcUrl).connection();
     }
 

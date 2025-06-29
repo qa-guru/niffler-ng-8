@@ -2,6 +2,7 @@ package guru.qa.niffler.web.page;
 
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
+import io.qameta.allure.Step;
 
 import java.awt.image.BufferedImage;
 
@@ -16,13 +17,15 @@ public class ProfilePage extends BasePage {
     private final SelenideElement avatarImageInput = $("input#image__input");
     private final SelenideElement avatarImage = $(".MuiBox-root > .MuiAvatar-root");
     private final SelenideElement saveChangesBtn = $("button#\\:rb\\:");
+    private final SelenideElement nameInput = $("#name");
 
-
+    @Step("Кликаем по тоглу 'Show archived'")
     public ProfilePage clickShowArchivedToggle() {
         showArchivedToggle.click();
         return this;
     }
 
+    @Step("Проверяем категорию")
     public ProfilePage checkCategoryExist(String categoryName, boolean isArchived) {
         SelenideElement categoryRow = categoryList
                 .find(text(categoryName));
@@ -37,20 +40,34 @@ public class ProfilePage extends BasePage {
         return this;
     }
 
+    @Step("Проверяем аватар")
     public ProfilePage checkAvatarScreenshot(BufferedImage expImage) {
         BufferedImage screenshot = avatarImage.screenshotAsImage();
         checkScreenshot(expImage, screenshot);
         return this;
     }
 
+    @Step("Загружаем аватар")
     public ProfilePage uploadAvatar(String classpath) {
         avatarImageInput.uploadFromClasspath(classpath);
         return this;
     }
 
+    @Step("Сохраняем изменения")
     public ProfilePage clickSaveChanges() {
         saveChangesBtn.click();
         return this;
     }
 
+    @Step("Вводим имя")
+    public ProfilePage setName(String name) {
+        nameInput.setValue(name);
+        return this;
+    }
+
+    @Step("Проверяем имя")
+    public ProfilePage checkName(String expName) {
+        nameInput.shouldHave(text(expName));
+        return this;
+    }
 }

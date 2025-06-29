@@ -1,6 +1,8 @@
 package guru.qa.niffler.web.page;
 
+import com.codeborne.selenide.Selenide;
 import guru.qa.niffler.util.ScreeDiffResult;
+import io.qameta.allure.Step;
 import org.junit.jupiter.api.Assertions;
 
 import java.awt.image.BufferedImage;
@@ -10,9 +12,15 @@ import static guru.qa.niffler.jupiter.extension.ScreenShotTestExtension.CHECK_SC
 
 public abstract class BasePage {
 
+    @Step("Проверяем скриншот")
     protected void checkScreenshot(BufferedImage expImage, BufferedImage actImage) {
         ScreeDiffResult booleanSupplier = new ScreeDiffResult(expImage, actImage);
         Assertions.assertFalse(booleanSupplier, CHECK_SCREENSHOT);
+    }
+
+    @Step("Обновляем страницу")
+    public void refresh() {
+        Selenide.refresh();
     }
 
     protected void sleepSec(int sec) {

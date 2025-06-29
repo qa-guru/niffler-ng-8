@@ -13,6 +13,8 @@ import guru.qa.niffler.db.tpl.XaTransactionTemplate;
 import guru.qa.niffler.service.UserClient;
 import io.qameta.allure.Step;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -20,6 +22,8 @@ import java.util.stream.Collectors;
 import static guru.qa.niffler.util.RandomDataUtils.USERNAME_PREFIX;
 import static guru.qa.niffler.util.RandomDataUtils.genDefaultUser;
 
+@SuppressWarnings("DataFlowIssue")
+@ParametersAreNonnullByDefault
 public class UserDbClient extends AbstractDbClient implements UserClient {
 
     private final AuthUserRepository authUserRepository;
@@ -39,12 +43,12 @@ public class UserDbClient extends AbstractDbClient implements UserClient {
     }
 
     @Step("Поиск пользователя по id")
-    public Optional<UserParts> findByAuthId(String id) {
+    public @Nonnull Optional<UserParts> findByAuthId(String id) {
         return findByAuthId(UUID.fromString(id));
     }
 
     @Step("Поиск пользователя по id")
-    public Optional<UserParts> findByAuthId(UUID id) {
+    public @Nonnull Optional<UserParts> findByAuthId(UUID id) {
         Optional<AuthUserEntity> authUserOpt = authUserRepository.findById(id);
         if (authUserOpt.isPresent()) {
             AuthUserEntity authUser = authUserOpt.get();
@@ -59,7 +63,7 @@ public class UserDbClient extends AbstractDbClient implements UserClient {
     }
 
     @Step("Поиск пользователя по имени")
-    public Optional<UserParts> findByUsername(String username) {
+    public @Nonnull Optional<UserParts> findByUsername(String username) {
         Optional<AuthUserEntity> authUserOpt = authUserRepository.findByUsername(username);
         if (authUserOpt.isPresent()) {
             AuthUserEntity authUser = authUserOpt.get();
@@ -74,18 +78,18 @@ public class UserDbClient extends AbstractDbClient implements UserClient {
     }
 
     @Step("Создание пользователя")
-    public UserParts createUser(UserParts userPart) {
+    public @Nonnull UserParts createUser(UserParts userPart) {
         return xaTxTemplate.execute(() -> createUseWithoutTx(userPart));
     }
 
-    private UserParts createUseWithoutTx(UserParts userJson) {
+    private @Nonnull UserParts createUseWithoutTx(UserParts userJson) {
         AuthUserEntity authUser = authUserRepository.create(userJson.getAuthUserEntity());
         UserdataUserEntity userdataUser = userdataUserRepository.create(userJson.getUserdataUserEntity());
         return UserParts.of(authUser, userdataUser);
     }
 
     @Step("Обновление пользователя")
-    public UserParts updateUser(UserParts userPart) {
+    public @Nonnull UserParts updateUser(UserParts userPart) {
         return xaTxTemplate.execute(() -> {
             AuthUserEntity authUser = authUserRepository.update(userPart.getAuthUserEntity());
             UserdataUserEntity userdataUser = userdataUserRepository.update(userPart.getUserdataUserEntity());
@@ -94,7 +98,7 @@ public class UserDbClient extends AbstractDbClient implements UserClient {
     }
 
     @Step("Получение всех пользователей")
-    public List<UserParts> findAll() {
+    public @Nonnull List<UserParts> findAll() {
         return xaTxTemplate.execute(() -> {
             List<UserParts> result = new ArrayList<>();
             Map<String, UserdataUserEntity> userdataUserByName = userdataUserRepository.findAll().stream()

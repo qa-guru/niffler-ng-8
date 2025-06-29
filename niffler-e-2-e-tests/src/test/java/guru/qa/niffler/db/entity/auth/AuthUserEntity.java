@@ -6,6 +6,9 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 import org.hibernate.proxy.HibernateProxy;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.io.Serializable;
 import java.util.*;
 
@@ -15,6 +18,7 @@ import static jakarta.persistence.FetchType.EAGER;
 @Accessors(chain = true)
 @Entity
 @Table(name = "\"user\"")
+@ParametersAreNonnullByDefault
 public class AuthUserEntity implements Serializable {
 
     @Id
@@ -52,7 +56,7 @@ public class AuthUserEntity implements Serializable {
         addAuthorities(Arrays.asList(authorities));
     }
 
-    public AuthUserEntity addAuthorities(List<AuthAuthorityEntity> authorities) {
+    public @Nonnull AuthUserEntity addAuthorities(List<AuthAuthorityEntity> authorities) {
         authorities.forEach(au -> au.setUser(this));
         this.authorities.addAll(authorities);
         return this;
@@ -64,7 +68,7 @@ public class AuthUserEntity implements Serializable {
     }
 
 
-    public static AuthUserEntity fromJson(AuthUserJson json) {
+    public static @Nonnull AuthUserEntity fromJson(AuthUserJson json) {
         return new AuthUserEntity()
                 .setId(json.getId())
                 .setUsername(json.getUsername())
@@ -77,7 +81,7 @@ public class AuthUserEntity implements Serializable {
     }
 
     @Override
-    public final boolean equals(Object o) {
+    public final boolean equals(@Nullable Object o) {
         if (this == o) return true;
         if (o == null) return false;
         Class<?> oEffectiveClass = o instanceof HibernateProxy ? ((HibernateProxy) o).getHibernateLazyInitializer().getPersistentClass() : o.getClass();

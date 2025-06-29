@@ -12,6 +12,8 @@ import guru.qa.niffler.util.RandomDataUtils;
 import io.qameta.allure.Step;
 import lombok.SneakyThrows;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 import java.util.Optional;
 import java.util.StringJoiner;
@@ -19,6 +21,7 @@ import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+@ParametersAreNonnullByDefault
 public class UserApiClient implements UserClient {
 
     public final AuthServiceClient authClient = ApiClients.authClient();
@@ -37,13 +40,13 @@ public class UserApiClient implements UserClient {
 
     @Step("Поиск пользователя по id")
     @Override
-    public Optional<UserParts> findByAuthId(UUID id) {
+    public @Nonnull Optional<UserParts> findByAuthId(UUID id) {
         throw new UnsupportedOperationException("Метод не реализован");
     }
 
     @Step("Поиск пользователя по имени")
     @Override
-    public Optional<UserParts> findByUsername(String username) {
+    public @Nonnull Optional<UserParts> findByUsername(String username) {
         TestResponse<List<UserdataUserJson>, ErrorJson> response = userdataClient.userAllGet("", username);
         List<UserParts> users = validateAndMapList(response);
         if (users.size() > 1) {
@@ -54,7 +57,7 @@ public class UserApiClient implements UserClient {
 
     @Step("Создание пользователя")
     @Override
-    public UserParts createUser(UserParts userPart) {
+    public @Nonnull UserParts createUser(UserParts userPart) {
         TestResponse<Void, Void> registerGetResp = authClient.registerGet();
         validate(registerGetResp);
         String token = registerGetResp.getHeaders().get("X-XSRF-TOKEN");
@@ -69,7 +72,7 @@ public class UserApiClient implements UserClient {
 
     @Step("Обновление пользователя")
     @Override
-    public UserParts updateUser(UserParts userPart) {
+    public @Nonnull UserParts updateUser(UserParts userPart) {
         TestResponse<UserdataUserJson, ErrorJson> response = userdataClient.userUpdatePost(userPart.getUserdataUserJson());
         return extractResp(response, resp -> userPart.setUserdataUser(resp.getBody()));
     }
@@ -145,7 +148,7 @@ public class UserApiClient implements UserClient {
         }
     }
 
-    private <REQ, RESP, R> R extractResp(TestResponse<REQ, RESP> response,
+    private <REQ, RESP, R> @Nonnull R extractResp(TestResponse<REQ, RESP> response,
                                          Function<TestResponse<REQ, RESP>, R> extractor) {
         if (response.isSuccessful()) {
             return extractor.apply(response);
@@ -163,7 +166,7 @@ public class UserApiClient implements UserClient {
         throw new IllegalStateException(sj.toString());
     }
 
-    private List<UserParts> validateAndMapList(TestResponse<List<UserdataUserJson>, ErrorJson> response) {
+    private @Nonnull List<UserParts> validateAndMapList(TestResponse<List<UserdataUserJson>, ErrorJson> response) {
         return extractResp(response,
             resp -> resp.getBody().stream()
                 .map(UserParts::of)

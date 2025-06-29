@@ -8,15 +8,18 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.springframework.util.CollectionUtils;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static com.codeborne.selenide.CheckResult.accepted;
 import static com.codeborne.selenide.CheckResult.rejected;
 
+@ParametersAreNonnullByDefault
 public class SpendConditions {
 
-    public static WebElementsCondition spends(List<SpendJson> expSpends) {
+    public static @Nonnull WebElementsCondition spends(List<SpendJson> expSpends) {
         String expSpendsStr = expSpends.stream().map(SpendConditions::map).toList().toString();
         return new WebElementsCondition() {
 
@@ -57,11 +60,11 @@ public class SpendConditions {
         };
     }
 
-    public static WebElementsCondition spends(SpendJson... expectedSpends) {
+    public static @Nonnull WebElementsCondition spends(SpendJson... expectedSpends) {
         return spends(Arrays.asList(expectedSpends));
     }
 
-    private static SpendPart map(List<WebElement> columns) {
+    private static @Nonnull SpendPart map(List<WebElement> columns) {
         String[] currency = columns.get(2).getText().split(" ");
         return new SpendPart(
             columns.get(1).getText(),
@@ -72,7 +75,7 @@ public class SpendConditions {
         );
     }
 
-    private static SpendPart map(SpendJson spendJson) {
+    private static @Nonnull SpendPart map(SpendJson spendJson) {
         return new SpendPart(
             spendJson.category().name(),
             spendJson.amount(),

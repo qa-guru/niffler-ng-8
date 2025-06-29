@@ -10,9 +10,13 @@ import guru.qa.niffler.db.tpl.JdbcTransactionTemplate;
 import guru.qa.niffler.service.SpendClient;
 import io.qameta.allure.Step;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Optional;
 import java.util.UUID;
 
+@SuppressWarnings("DataFlowIssue")
+@ParametersAreNonnullByDefault
 public class SpendDbClient extends AbstractDbClient implements SpendClient {
 
     private static final String SPEND_DB_URL = CFG.spendJdbcUrl();
@@ -20,7 +24,7 @@ public class SpendDbClient extends AbstractDbClient implements SpendClient {
     private final JdbcTransactionTemplate jdbcTxTemplate = new JdbcTransactionTemplate(SPEND_DB_URL);
 
     @Step("Создание трат")
-    public SpendJson createSpend(SpendJson spendJson) {
+    public @Nonnull SpendJson createSpend(SpendJson spendJson) {
         return jdbcTxTemplate.execute(() -> {
             SpendEntity spendEntity = SpendEntity.fromJson(spendJson);
             SpendEntity createdSpend = spendRepository.create(spendEntity);
@@ -29,7 +33,7 @@ public class SpendDbClient extends AbstractDbClient implements SpendClient {
     }
 
     @Step("Поиск трат по id")
-    public Optional<SpendJson> findSpendById(UUID id) {
+    public @Nonnull Optional<SpendJson> findSpendById(UUID id) {
         return spendRepository.findById(id)
             .map(SpendJson::fromEntity);
     }
@@ -43,14 +47,14 @@ public class SpendDbClient extends AbstractDbClient implements SpendClient {
     }
 
     @Step("Создание категории трат")
-    public CategoryJson createCategory(CategoryJson categoryJson) {
+    public @Nonnull CategoryJson createCategory(CategoryJson categoryJson) {
         CategoryEntity categoryEntity = CategoryEntity.fromJson(categoryJson);
         CategoryEntity createdCategory = spendRepository.create(categoryEntity);
         return CategoryJson.fromEntity(createdCategory);
     }
 
     @Step("Обновление категории трат")
-    public CategoryJson updateCategory(CategoryJson categoryJson) {
+    public @Nonnull CategoryJson updateCategory(CategoryJson categoryJson) {
         CategoryEntity categoryEntity = CategoryEntity.fromJson(categoryJson);
         CategoryEntity createdCategory = spendRepository.update(categoryEntity);
         return CategoryJson.fromEntity(createdCategory);
@@ -58,6 +62,7 @@ public class SpendDbClient extends AbstractDbClient implements SpendClient {
 
     @Step("Удаление категории трат")
     public boolean deleteCategory(CategoryJson categoryJson) {
+        spendRepository.findCategoryByUsernameAndName(categoryJson.username(), categoryJson.name());
         CategoryEntity categoryEntity = CategoryEntity.fromJson(categoryJson);
         return spendRepository.delete(categoryEntity);
     }

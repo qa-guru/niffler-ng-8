@@ -7,6 +7,8 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 import org.hibernate.proxy.HibernateProxy;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
@@ -32,13 +34,13 @@ public class AuthAuthorityEntity implements Serializable {
     @JoinColumn(name = "user_id")
     private AuthUserEntity user;
 
-    public static AuthAuthorityEntity fromJson(AuthorityJson json) {
+    public static @Nonnull AuthAuthorityEntity fromJson(@Nonnull AuthorityJson json) {
         return new AuthAuthorityEntity()
                 .setId(json.getId())
                 .setAuthority(json.getAuthority());
     }
 
-    public static List<AuthAuthorityEntity> fromJson(List<AuthorityJson> jsons) {
+    public static @Nonnull List<AuthAuthorityEntity> fromJson(@Nonnull List<AuthorityJson> jsons) {
         return jsons.stream()
                 .map(AuthAuthorityEntity::fromJson)
                 .collect(Collectors.toList());
@@ -54,7 +56,7 @@ public class AuthAuthorityEntity implements Serializable {
     }
 
     @Override
-    public final boolean equals(Object o) {
+    public final boolean equals(@Nullable Object o) {
         if (this == o) return true;
         if (o == null) return false;
         Class<?> oEffectiveClass = o instanceof HibernateProxy ? ((HibernateProxy) o).getHibernateLazyInitializer().getPersistentClass() : o.getClass();

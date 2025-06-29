@@ -1,6 +1,7 @@
 package guru.qa.niffler.web.page;
 
 import com.codeborne.selenide.SelenideElement;
+import io.qameta.allure.Step;
 
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.$;
@@ -15,6 +16,7 @@ public class SuccessfulRegistrationPage extends BasePage {
         return new LoginPage();
     }
 
+    @Step("Проверяем страницу успешной регистрации")
     public LoginPage checkSuccessfulRegistrationPage() {
         successText.shouldBe(visible);
         successText.shouldHave(text("Congratulations! You've registered!"));
@@ -23,5 +25,4 @@ public class SuccessfulRegistrationPage extends BasePage {
         singInBtn.shouldHave(text("Sign in"));
         return new LoginPage();
     }
-
 }

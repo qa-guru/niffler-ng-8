@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 import org.hibernate.proxy.HibernateProxy;
 
+import javax.annotation.Nullable;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
@@ -33,7 +34,7 @@ public class UserdataFriendshipEntity implements Serializable {
     private FriendshipStatus status;
 
     @Override
-    public final boolean equals(Object o) {
+    public final boolean equals(@Nullable Object o) {
         if (this == o) return true;
         if (o == null) return false;
         Class<?> oEffectiveClass = o instanceof HibernateProxy ? ((HibernateProxy) o).getHibernateLazyInitializer().getPersistentClass() : o.getClass();

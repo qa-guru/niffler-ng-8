@@ -5,10 +5,14 @@ import guru.qa.niffler.db.repository.AuthUserRepository;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+@ParametersAreNonnullByDefault
 public class AuthUserRepositoryHibernate extends AbstractRepositoryHibernate implements AuthUserRepository {
 
     private static final Class<AuthUserEntity> USER_CLASS = AuthUserEntity.class;
@@ -19,24 +23,24 @@ public class AuthUserRepositoryHibernate extends AbstractRepositoryHibernate imp
     }
 
     @Override
-    public AuthUserEntity create(AuthUserEntity entity) {
+    public @Nonnull AuthUserEntity create(AuthUserEntity entity) {
         String encodedPass = passwordEncoder.encode(entity.getPassword());
         entity.setPassword(encodedPass);
         return super.create(entity);
     }
 
     @Override
-    public AuthUserEntity update(AuthUserEntity entity) {
+    public @Nonnull AuthUserEntity update(AuthUserEntity entity) {
         return super.update(entity);
     }
 
     @Override
-    public Optional<AuthUserEntity> findById(UUID id) {
+    public @Nonnull Optional<AuthUserEntity> findById(UUID id) {
         return findByIdOpt(USER_CLASS, id);
     }
 
     @Override
-    public Optional<AuthUserEntity> findByUsername(String username) {
+    public @Nonnull Optional<AuthUserEntity> findByUsername(String username) {
         String sql = "SELECT u FROM AuthUserEntity u WHERE u.username = ?1";
         return findSingleResultOpt(USER_CLASS, sql, username);
     }
@@ -47,7 +51,7 @@ public class AuthUserRepositoryHibernate extends AbstractRepositoryHibernate imp
     }
 
     @Override
-    public List<AuthUserEntity> findAll() {
+    public @Nullable List<AuthUserEntity> findAll() {
         String sql = "SELECT u FROM AuthUserEntity u";
         return findResultList(USER_CLASS, sql);
     }

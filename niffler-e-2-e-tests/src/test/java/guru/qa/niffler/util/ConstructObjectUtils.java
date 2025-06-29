@@ -5,6 +5,8 @@ import guru.qa.niffler.condition.CategoryBubble;
 import guru.qa.niffler.condition.Color;
 import lombok.SneakyThrows;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Parameter;
@@ -16,7 +18,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class ConstructObjectUtils {
 
-    public static List<SpendJson> expSpendings(Collection<SpendJson> spends, Object oldValue, Object newValue) {
+    public static List<SpendJson> expSpendings(@Nonnull Collection<SpendJson> spends,
+                                               @Nullable Object oldValue,
+                                               @Nullable Object newValue) {
         return spends.stream()
             .map(spend -> {
                 if (oldValue != null) {
@@ -27,9 +31,9 @@ public class ConstructObjectUtils {
             .toList();
     }
 
-    public static List<CategoryBubble> expCategoryBubbles(Collection<SpendJson> spends,
-                                                          Object target,
-                                                          Object replacement) {
+    public static List<CategoryBubble> expCategoryBubbles(@Nonnull Collection<SpendJson> spends,
+                                                          @Nullable Object target,
+                                                          @Nullable Object replacement) {
         AtomicInteger i = new AtomicInteger();
         return expSpendings(spends, target, replacement).stream()
             .sorted(
@@ -41,7 +45,7 @@ public class ConstructObjectUtils {
             .toList();
     }
 
-    private static String formatSpend(SpendJson spend) {
+    private static @Nonnull String formatSpend(@Nonnull SpendJson spend) {
         return "%s %s %s".formatted(
             spend.category().name(),
             FormatUtil.format(spend.amount()),
@@ -50,7 +54,7 @@ public class ConstructObjectUtils {
     }
 
     @SneakyThrows
-    public static <T> T copyWithReplacement(T original, Object oldValue, Object newValue) {
+    public static <T> @Nonnull T copyWithReplacement(@Nonnull T original, @Nullable Object oldValue, @Nullable Object newValue) {
         if (original == null) return null;
 
         Class<?> clazz = original.getClass();

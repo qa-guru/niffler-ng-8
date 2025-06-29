@@ -5,12 +5,15 @@ import guru.qa.niffler.db.dao.SpendDao;
 import guru.qa.niffler.db.entity.spend.CategoryEntity;
 import guru.qa.niffler.db.entity.spend.SpendEntity;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+@ParametersAreNonnullByDefault
 public class SpendDaoJdbc extends AbstractDao<SpendEntity> implements SpendDao {
 
     public SpendDaoJdbc(String jdbcUrl) {
@@ -18,7 +21,7 @@ public class SpendDaoJdbc extends AbstractDao<SpendEntity> implements SpendDao {
     }
 
     @Override
-    public SpendEntity create(SpendEntity entity) {
+    public @Nonnull SpendEntity create(SpendEntity entity) {
         String sql = "INSERT INTO spend (username, spend_date, currency, amount, description, category_id) " +
                 "VALUES(?, ?, ?, ?, ?, ?) RETURNING *";
         return executeQuery(sql, entity.getUsername(), entity.getSpendDate(), entity.getCurrency().name(),
@@ -26,7 +29,7 @@ public class SpendDaoJdbc extends AbstractDao<SpendEntity> implements SpendDao {
     }
 
     @Override
-    public SpendEntity update(SpendEntity entity) {
+    public @Nonnull SpendEntity update(SpendEntity entity) {
         String sql = "UPDATE spend SET username = ?, spend_date = ?, currency = ?, amount = ?, description = ?, category_id = ? " +
             "WHERE id = ? RETURNING *";
         return executeQuery(sql, entity.getUsername(), entity.getSpendDate(), entity.getCurrency().name(),
@@ -34,25 +37,25 @@ public class SpendDaoJdbc extends AbstractDao<SpendEntity> implements SpendDao {
     }
 
     @Override
-    public Optional<SpendEntity> findById(UUID id) {
+    public @Nonnull Optional<SpendEntity> findById(UUID id) {
         String sql = "SELECT * FROM spend WHERE id = ?";
         return executeQueryToOptional(sql, id);
     }
 
     @Override
-    public Optional<SpendEntity> findByUsernameAndDescription(String username, String description) {
+    public @Nonnull Optional<SpendEntity> findByUsernameAndDescription(String username, String description) {
         String sql = "SELECT * FROM spend WHERE username = ? AND description = ?";
         return executeQueryToOptional(sql, username, description);
     }
 
     @Override
-    public List<SpendEntity> findAllByUsername(String username) {
+    public @Nonnull List<SpendEntity> findAllByUsername(String username) {
         String sql = "SELECT * FROM spend WHERE username = ?";
         return executeQueryToList(sql, username);
     }
 
     @Override
-    public List<SpendEntity> findAllByCategoryId(UUID categoryId) {
+    public @Nonnull List<SpendEntity> findAllByCategoryId(UUID categoryId) {
         String sql = "SELECT * FROM spend WHERE category_id = ?";
         return executeQueryToList(sql, categoryId);
     }
@@ -64,13 +67,13 @@ public class SpendDaoJdbc extends AbstractDao<SpendEntity> implements SpendDao {
     }
 
     @Override
-    public List<SpendEntity> findAll() {
+    public @Nonnull List<SpendEntity> findAll() {
         String sql = "SELECT * FROM spend";
         return executeQueryToList(sql);
     }
 
     @Override
-    protected SpendEntity mapResultSet(ResultSet rs) throws SQLException {
+    protected @Nonnull SpendEntity mapResultSet(ResultSet rs) throws SQLException {
         return new SpendEntity()
                 .setId(rs.getObject("id", UUID.class))
                 .setSpendDate(rs.getDate("spend_date"))

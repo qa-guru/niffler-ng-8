@@ -7,6 +7,8 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 import org.hibernate.proxy.HibernateProxy;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
@@ -45,7 +47,7 @@ public class SpendEntity implements Serializable {
     @JoinColumn(name = "category_id", referencedColumnName = "id")
     private CategoryEntity category;
 
-    public static SpendEntity fromJson(SpendJson json) {
+    public static @Nonnull SpendEntity fromJson(@Nonnull SpendJson json) {
         return new SpendEntity()
                 .setId(json.id())
                 .setSpendDate(new Date(json.spendDate().getTime()))
@@ -57,7 +59,7 @@ public class SpendEntity implements Serializable {
     }
 
     @Override
-    public final boolean equals(Object o) {
+    public final boolean equals(@Nullable Object o) {
         if (this == o) return true;
         if (o == null) return false;
         Class<?> oEffectiveClass = o instanceof HibernateProxy ? ((HibernateProxy) o).getHibernateLazyInitializer().getPersistentClass() : o.getClass();

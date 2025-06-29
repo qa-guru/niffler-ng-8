@@ -8,6 +8,7 @@ import guru.qa.niffler.jupiter.extension.BrowserExtension;
 import guru.qa.niffler.jupiter.extension.UsersQueueExtension.StaticUser;
 import guru.qa.niffler.web.page.FriendsPage;
 import guru.qa.niffler.web.page.LoginPage;
+import guru.qa.niffler.web.page.ProfilePage;
 import guru.qa.niffler.web.page.RegisterPage;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -18,6 +19,12 @@ public class BaseWebTest {
 
     protected LoginPage openLoginPage() {
         return Selenide.open(CFG.frontUrl(), LoginPage.class);
+    }
+
+    protected ProfilePage openProfilePage(UserParts user) {
+        return Selenide.open(CFG.frontUrl(), LoginPage.class)
+            .doLoginSuccess(user)
+            .getHeader().goToProfilePage();
     }
 
     protected LoginPage openLoginPage(SelenideDriver driver) {

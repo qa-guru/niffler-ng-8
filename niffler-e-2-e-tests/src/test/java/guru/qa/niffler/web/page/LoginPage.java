@@ -4,6 +4,7 @@ import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideDriver;
 import com.codeborne.selenide.SelenideElement;
 import guru.qa.niffler.api.model.UserParts;
+import io.qameta.allure.Step;
 
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Condition.visible;
@@ -48,6 +49,7 @@ public class LoginPage extends BasePage {
     return this;
   }
 
+  @Step("Авторизуемся")
   private LoginPage doLogin(String username, String password) {
     setUsername(username);
     setPassword(password);
@@ -55,26 +57,31 @@ public class LoginPage extends BasePage {
     return this;
   }
 
+  @Step("Вписываем имея пользователя")
   public LoginPage setUsername(String username) {
     usernameInput.setValue(username);
     return this;
   }
 
+  @Step("Вписываем пароль")
   public LoginPage setPassword(String password) {
     passwordInput.setValue(password);
     return this;
   }
 
+  @Step("Кликаем на кнопку 'LogIn'")
   public LoginPage clickLogInBtn() {
     logInBtn.click();
     return this;
   }
 
+  @Step("Кликаем на кнопку 'Create new user'")
   public RegisterPage clickCreateNewUserBtn() {
     createNewUserBtn.click();
     return new RegisterPage();
   }
 
+  @Step("Проверяем ошибку авторизации")
   public LoginPage checkBadCredentialsError() {
     badCredentialsError.shouldBe(visible);
     badCredentialsError.shouldHave(
@@ -83,5 +90,4 @@ public class LoginPage extends BasePage {
     );
     return this;
   }
-
 }

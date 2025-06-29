@@ -11,7 +11,6 @@ public class FriendsPageTest extends BaseWebTest {
     void friendShouldBePresentInFriendsTable(UserParts user) {
         String friendName = user.getTestData().getFriendsNames().getFirst();
         openFriendsPage(user)
-            .findUsername(friendName)
             .checkFriendTableContainsName(friendName);
     }
 
@@ -39,4 +38,22 @@ public class FriendsPageTest extends BaseWebTest {
             .checkAllTableContainsOutcomeInvitationWithName(friendName);
     }
 
+    @Test
+    @User(withInInvite = 1)
+    void acceptIncomeInvitation(UserParts user) {
+        String incomeUsername = user.getTestData().getInInviteNames().getFirst();
+        openFriendsPage(user)
+            .clickAcceptBtnForName(incomeUsername)
+            .checkFriendTableContainsName(incomeUsername);
+    }
+
+    @Test
+    @User(withInInvite = 1)
+    void declineIncomeInvitation(UserParts user) {
+        String incomeUsername = user.getTestData().getInInviteNames().getFirst();
+        openFriendsPage(user)
+            .clickDeclineBtnForName(incomeUsername)
+            .getAlert().clickAcceptBtn().returnToPage()
+            .checkEmptyFriends();
+    }
 }

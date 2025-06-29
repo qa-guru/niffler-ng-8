@@ -4,6 +4,7 @@ import guru.qa.niffler.db.entity.auth.AuthAuthorityEntity;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -16,14 +17,14 @@ public class AuthorityJson {
     private UUID userId;
     private Authority authority;
 
-    public static AuthorityJson fromEntity(AuthAuthorityEntity entity) {
+    public static @Nonnull AuthorityJson fromEntity(@Nonnull AuthAuthorityEntity entity) {
         return new AuthorityJson()
                 .setId(entity.getId())
                 .setAuthority(entity.getAuthority())
                 .setUserId(entity.getUser().getId());
     }
 
-    public static List<AuthorityJson> fromEntity(List<AuthAuthorityEntity> entities) {
+    public static @Nonnull List<AuthorityJson> fromEntity(@Nonnull List<AuthAuthorityEntity> entities) {
         return entities.stream()
                 .map(AuthorityJson::fromEntity)
                 .collect(Collectors.toList());

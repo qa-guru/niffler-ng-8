@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 import org.hibernate.proxy.HibernateProxy;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.Serializable;
 import java.util.Objects;
 import java.util.UUID;
@@ -30,7 +32,7 @@ public class CategoryEntity implements Serializable {
     @Column(nullable = false)
     private boolean archived;
 
-    public static CategoryEntity fromJson(CategoryJson json) {
+    public static @Nonnull CategoryEntity fromJson(@Nonnull CategoryJson json) {
         return new CategoryEntity()
                 .setId(json.id())
                 .setName(json.name())
@@ -39,7 +41,7 @@ public class CategoryEntity implements Serializable {
     }
 
     @Override
-    public final boolean equals(Object o) {
+    public final boolean equals(@Nullable Object o) {
         if (this == o) return true;
         if (o == null) return false;
         Class<?> oEffectiveClass = o instanceof HibernateProxy ? ((HibernateProxy) o).getHibernateLazyInitializer().getPersistentClass() : o.getClass();

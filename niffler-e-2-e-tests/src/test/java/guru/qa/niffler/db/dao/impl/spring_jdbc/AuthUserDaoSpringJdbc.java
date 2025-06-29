@@ -6,11 +6,15 @@ import guru.qa.niffler.db.entity.auth.AuthUserEntity;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.sql.DataSource;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+@ParametersAreNonnullByDefault
 public class AuthUserDaoSpringJdbc extends AbstractSpringDao<AuthUserEntity> implements AuthUserDao {
 
     private static final PasswordEncoder passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
@@ -24,7 +28,7 @@ public class AuthUserDaoSpringJdbc extends AbstractSpringDao<AuthUserEntity> imp
     }
 
     @Override
-    public AuthUserEntity create(AuthUserEntity entity) {
+    public @Nonnull AuthUserEntity create(AuthUserEntity entity) {
         String sql = "INSERT INTO \"user\" (username, password, enabled, account_non_expired, account_non_locked, credentials_non_expired) " +
                 "VALUES(?, ?, ?, ?, ?, ?) RETURNING *";
         String password = passwordEncoder.encode(entity.getPassword());
@@ -35,7 +39,7 @@ public class AuthUserDaoSpringJdbc extends AbstractSpringDao<AuthUserEntity> imp
     }
 
     @Override
-    public AuthUserEntity update(AuthUserEntity entity) {
+    public @Nonnull AuthUserEntity update(AuthUserEntity entity) {
         String sql = "UPDATE \"user\" SET username = ?, password = ?, enabled = ?, " +
                 "account_non_expired = ?, account_non_locked = ?, credentials_non_expired = ? WHERE id = ? RETURNING *";
         String password = passwordEncoder.encode(entity.getPassword());
@@ -46,14 +50,14 @@ public class AuthUserDaoSpringJdbc extends AbstractSpringDao<AuthUserEntity> imp
     }
 
     @Override
-    public Optional<AuthUserEntity> findById(UUID id) {
+    public @Nonnull Optional<AuthUserEntity> findById(UUID id) {
         String sql = "SELECT * FROM \"user\" WHERE id = ?";
         List<AuthUserEntity> entitys = jdbcTemplate.query(sql, rowMapper, id);
         return entitys.isEmpty() ? Optional.empty() : Optional.of(entitys.get(0));
     }
 
     @Override
-    public Optional<AuthUserEntity> findByUsername(String username) {
+    public @Nonnull Optional<AuthUserEntity> findByUsername(String username) {
         String sql = "SELECT * FROM \"user\" WHERE username = ?";
         AuthUserEntity entity = jdbcTemplate.queryForObject(sql, rowMapper, username);
         return Optional.ofNullable(entity);
@@ -67,7 +71,7 @@ public class AuthUserDaoSpringJdbc extends AbstractSpringDao<AuthUserEntity> imp
     }
 
     @Override
-    public List<AuthUserEntity> findAll() {
+    public @Nullable List<AuthUserEntity> findAll() {
         String sql = "SELECT * FROM \"user\"";
         return jdbcTemplate.query(sql, rowMapper);
     }

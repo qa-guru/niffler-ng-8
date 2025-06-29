@@ -6,7 +6,7 @@ import io.qameta.allure.Step;
 
 import static com.codeborne.selenide.Selenide.$;
 
-public class Header<P> extends BaseComponent<P> {
+public class Header<P> extends BaseComponent<P, Header<P>> {
 
     private final SelenideElement self = $("#root header");
     private final SelenideElement addSpendingBtn = self.$("a[href='/spending']");

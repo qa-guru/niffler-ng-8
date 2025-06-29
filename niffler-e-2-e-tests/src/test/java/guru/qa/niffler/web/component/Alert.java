@@ -3,26 +3,28 @@ package guru.qa.niffler.web.component;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 
+import static com.codeborne.selenide.Condition.cssClass;
+import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Selenide.$;
 
-public class Alert<P> extends BaseComponent<P> {
+public class Alert<P> extends BaseComponent<P, Alert<P>> {
 
-    private final SelenideElement cancelBtn = self.$(".MuiButton-textPrimary");
-    private final SelenideElement acceptBtn = self.$(".MuiButton-containedPrimary");
+    private final SelenideElement message = self.$(".MuiAlert-message");
 
     public Alert(P currentPage) {
-        super(currentPage, $("div.MuiDialog-paperScrollPaper"));
+        super(currentPage, $("div[role='alert']"));
     }
 
-    @Step("Кликаем на кнопку отмены действия")
-    public Alert<P> clickCancelBtn() {
-        cancelBtn.click();
+    @Step("Проверяем что алерт успешный")
+    public Alert<P> checkAllerIsSuccess(String expText) {
+        checkText(expText);
+        self.shouldHave(cssClass("MuiAlert-colorSuccess"));
         return this;
     }
 
-    @Step("Кликаем на кнопку подтверждение действия")
-    public Alert<P> clickAcceptBtn() {
-        acceptBtn.click();
+    @Step("Проверяем текст алерта")
+    public Alert<P> checkText(String expText) {
+        message.shouldHave(text(expText));
         return this;
     }
 }

@@ -33,6 +33,7 @@ public class SpendingTest extends BaseWebTest {
             .doLoginSuccess(user)
             .getHeader().addNewSpending()
             .createSpending(spend)
+            .checkAllerIsSuccess("New spending is successfully created")
             .checkCategoryBubbles(List.of(spend))
             .getSpendingTable()
             .checkSpendings(List.of(spend));

@@ -39,5 +39,4 @@ public class RegisterPageTest extends BaseWebTest {
             .registerUserError(username, password1, password2)
             .checkPasswordError("Passwords should be equal");
     }
-
 }

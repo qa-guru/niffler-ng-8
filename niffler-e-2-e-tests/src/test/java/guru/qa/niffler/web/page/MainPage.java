@@ -19,7 +19,7 @@ import static com.codeborne.selenide.Selenide.$$;
 import static guru.qa.niffler.condition.StatCondition.*;
 import static guru.qa.niffler.util.ConstructObjectUtils.expCategoryBubbles;
 
-public class MainPage extends BasePage {
+public class MainPage extends BasePage<MainPage> {
 
   @Getter
   private final Header<MainPage> header = new Header<>(this);

@@ -3,7 +3,7 @@ package guru.qa.niffler.web.component;
 import com.codeborne.selenide.SelenideElement;
 import lombok.Getter;
 
-public abstract class BaseComponent<P> {
+public abstract class BaseComponent<P, C extends BaseComponent<P, C>> {
 
     @Getter
     protected final SelenideElement self;

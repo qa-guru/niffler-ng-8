@@ -5,7 +5,7 @@ import java.util.Date;
 
 import static com.codeborne.selenide.Selenide.$;
 
-public class Calendar<P> extends BaseComponent<P> {
+public class Calendar<P> extends BaseComponent<P, Calendar<P>> {
 
     public Calendar(P currentPage) {
         super(currentPage, $("div.MuiInputBase-root input[name=\"date\"]"));

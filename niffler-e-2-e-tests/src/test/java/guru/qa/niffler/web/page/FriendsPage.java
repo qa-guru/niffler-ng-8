@@ -3,9 +3,7 @@ package guru.qa.niffler.web.page;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
-import guru.qa.niffler.web.component.Alert;
 import io.qameta.allure.Step;
-import lombok.Getter;
 import org.openqa.selenium.Keys;
 
 import static com.codeborne.selenide.CollectionCondition.size;
@@ -14,14 +12,11 @@ import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.$;
 
-public class FriendsPage extends BasePage {
+public class FriendsPage extends BasePage<FriendsPage> {
 
     private static final String ACCEPT_FRIENDSHIP_BTN = "button.MuiButton-containedPrimary";
     private static final String DECLINE_FRIENDSHIP_BTN = "button.MuiButton-containedSecondary";
     private static final String UNFRIEND_BTN = "button.MuiButton-containedSecondary";
-
-    @Getter
-    private final Alert<FriendsPage> alert = new Alert<>(this);
 
     private final SelenideElement friendsTableContainer = $("#simple-tabpanel-friends");
     private final SelenideElement friendsTable = friendsTableContainer.$("#friends");

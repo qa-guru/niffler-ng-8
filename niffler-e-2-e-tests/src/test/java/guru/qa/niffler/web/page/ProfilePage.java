@@ -10,7 +10,7 @@ import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
 
-public class ProfilePage extends BasePage {
+public class ProfilePage extends BasePage<ProfilePage> {
 
     private final SelenideElement showArchivedToggle = $(".MuiSwitch-input");
     private final ElementsCollection categoryList = $$(".MuiGrid-grid-xs-12 > .MuiBox-root");
@@ -67,7 +67,7 @@ public class ProfilePage extends BasePage {
 
     @Step("Проверяем имя")
     public ProfilePage checkName(String expName) {
-        nameInput.shouldHave(text(expName));
+        nameInput.shouldHave(value(expName));
         return this;
     }
 }

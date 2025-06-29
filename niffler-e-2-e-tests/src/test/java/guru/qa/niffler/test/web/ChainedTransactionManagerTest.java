@@ -43,7 +43,6 @@ public class ChainedTransactionManagerTest {
     private final XaTransactionTemplate xaTxTemplateWithAtomikosDs = userDbExperimentalService.getXaTxTemplateWithAtomikosDs();
     private final TransactionTemplate chainedTxTemplateWithSimpleDs = userDbExperimentalService.getChainedTxTemplateWithSimpleDs();
 
-
     @Test
     void springJdbcClientWithAtomikosDsAndTxIfUsernameInUserdataIsMissing() {
         UserParts userJson = genDefaultUser();

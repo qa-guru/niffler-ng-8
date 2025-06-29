@@ -18,9 +18,9 @@ import static com.codeborne.selenide.Selenide.$;
 import static guru.qa.niffler.condition.SpendConditions.spends;
 import static guru.qa.niffler.util.ConstructObjectUtils.expSpendings;
 
-public class SpendingTable<P> extends BaseComponent<P> {
+public class SpendingTable<P> extends BaseComponent<P, SpendingTable<P>> {
 
-    private final Alert<SpendingTable<?>> deleteSpendingsAlert = new Alert<>(this);
+    private final Modal<SpendingTable<?>> deleteSpendingsAlert = new Modal<>(this);
 
     private final SelenideElement periodDropDownValues = $("ul[role='listbox']");
     private final SelenideElement periodDropDownList = self.$("#period");

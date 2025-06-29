@@ -14,10 +14,9 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.function.Function;
 
 @ParametersAreNonnullByDefault
-public class SpendApiClient implements SpendClient {
+public class SpendApiClient extends AbstractApiClient implements SpendClient {
 
     public final SpendServiceClient spendClient = ApiClients.spendClient();
 
@@ -36,7 +35,7 @@ public class SpendApiClient implements SpendClient {
     @Override
     public @Nullable SpendJson createSpend(SpendJson spendJson) {
         TestResponse<SpendJson, Void> response = spendClient.addSpend(spendJson);
-        return extractResp(response, TestResponse::getBody);
+        return validateSuccessAndMapObj(response);
     }
 
     @Step("Поиск трат по id")
@@ -60,14 +59,14 @@ public class SpendApiClient implements SpendClient {
     @Override
     public @Nullable CategoryJson createCategory(CategoryJson categoryJson) {
         TestResponse<CategoryJson, Void> response = spendClient.addCategory(categoryJson);
-        return extractResp(response, TestResponse::getBody);
+        return validateSuccessAndMapObj(response);
     }
 
     @Step("Обновление категории трат")
     @Override
     public @Nullable CategoryJson updateCategory(CategoryJson categoryJson) {
         TestResponse<CategoryJson, Void> response = spendClient.updateCategory(categoryJson);
-        return extractResp(response, TestResponse::getBody);
+        return validateSuccessAndMapObj(response);
     }
 
     @Step("Удаление категории трат")
@@ -75,14 +74,4 @@ public class SpendApiClient implements SpendClient {
     public boolean deleteCategory(CategoryJson categoryJson) {
         throw new UnsupportedOperationException("Метод не реализован");
     }
-
-    private <REQ, RESP, R> R extractResp(TestResponse<REQ, RESP> response,
-                                         Function<TestResponse<REQ, RESP>, R> extractor) {
-        if (response.isSuccessful()) {
-            return extractor.apply(response);
-        } else {
-            throw new IllegalStateException("Запрос выполнился некорректно: \n" + response.getRetrofitRawResponse());
-        }
-    }
-
 }

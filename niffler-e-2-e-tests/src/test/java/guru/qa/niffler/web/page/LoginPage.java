@@ -9,7 +9,7 @@ import io.qameta.allure.Step;
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Condition.visible;
 
-public class LoginPage extends BasePage {
+public class LoginPage extends BasePage<LoginPage> {
 
   private final SelenideElement usernameInput;
   private final SelenideElement passwordInput;

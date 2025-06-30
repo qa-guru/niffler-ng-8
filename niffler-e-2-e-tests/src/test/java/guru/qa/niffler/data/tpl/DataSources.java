@@ -24,7 +24,7 @@ public class DataSources {
                 jdbcUrl,
                 key -> {
                     AtomikosDataSourceBean dsBean = new AtomikosDataSourceBean();
-                    final String uniqId = StringUtils.substringAfter(jdbcUrl, "5432/");
+                    final String uniqId = StringUtils.substringAfter(jdbcUrl, "5433/");
                     dsBean.setUniqueResourceName(uniqId);
                     dsBean.setXaDataSourceClassName("org.postgresql.xa.PGXADataSource");
                     Properties props = new Properties();

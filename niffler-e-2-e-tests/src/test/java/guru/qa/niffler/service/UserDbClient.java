@@ -22,11 +22,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 
-public class UserDbClient {
+public class UserDbClient implements UsersClient{
 
     private static final Config CFG = Config.getInstance();
 
@@ -57,7 +58,7 @@ public class UserDbClient {
     );
 
     public UserJson createUserTxJdbc(UserJson user) {
-        return xaTransactionTemplate.execute(TransactionIsolation.READ_UNCOMMITTED, () -> {
+        return xaTransactionTemplate.execute(() -> {
                     AuthUserEntity authUserEntity = new AuthUserEntity();
                     authUserEntity.setUsername(user.username());
                     authUserEntity.setPassword(ENCODER.encode(user.password()));
@@ -116,7 +117,7 @@ public class UserDbClient {
         });
     }
 
-    public UserJson createUserJdbc(UserJson user) {
+    public UserJson createUser(UserJson user) {
 
         AuthUserEntity authUserEntity = new AuthUserEntity();
         authUserEntity.setUsername(user.username());
@@ -140,6 +141,11 @@ public class UserDbClient {
                 userRepository.create(UserEntity.fromJson(user)));
     }
 
+    @Override
+    public List<UserJson> allUsers(String username, String searchQuery) {
+        return List.of();
+    }
+
     public void addIncomeInvitation(UUID requesterUUID, UUID addresseeUUID) {
         UserEntity requester = new UserEntity();
         requester.setId(requesterUUID);
@@ -147,6 +153,10 @@ public class UserDbClient {
         addressee.setId(addresseeUUID);
 
         userRepository.addIncomeInvitation(requester, addressee);
+    }
+
+    public void addIncomeInvitation(UserJson requester, UserJson addressee) {
+        addIncomeInvitation(requester.id(), addressee.id());
     }
 
     public void addOutcomeInvitation(UUID requesterUUID, UUID addresseeUUID) {
@@ -173,6 +183,11 @@ public class UserDbClient {
         Optional<AuthUserEntity> authUser = authUserRepository.findByName(user.username());
         authUserRepository.deleteAuthority(authUser.orElseThrow());
         authUserRepository.deleteUser(authUser.orElseThrow());
+    }
+
+    public UUID getUserId(UserJson user) {
+        Optional<UserEntity> userJson = userRepository.findByUsername(user.username());
+        return userJson.map(UserEntity::getId).orElse(null);
     }
 
     public void clearPhotoDataByUsername(String username) {

@@ -1,64 +1,64 @@
 package guru.qa.niffler.config;
 
-enum LocalConfig implements Config {
+enum DockerConfig implements Config {
     instance;
 
 
     public String mainUserLogin() {
-        return "test";
+        return "";
     }
 
     public String mainUserPass() {
-        return "12345";
+        return "";
     }
 
     @Override
     public String frontUrl() {
-        return "http://127.0.0.1:3000/";
+        return "";
     }
 
     @Override
     public String spendUrl() {
-        return "http://127.0.0.1:8093/";
+        return "";
     }
 
     @Override
     public String spendJdbcUrl() {
-        return "jdbc:postgresql://127.0.0.1:5432/niffler-spend";
+        return "";
     }
 
     @Override
     public String authUrl() {
-        return "http://127.0.0.1:9000/";
+        return "";
     }
 
     @Override
     public String authJdbcUrl() {
-        return "jdbc:postgresql://127.0.0.1:5432/niffler-auth";
+        return "";
     }
 
     @Override
     public String gatewayUrl() {
-        return "http://127.0.0.1:8090/";
+        return "";
     }
 
     @Override
     public String userdataUrl() {
-        return "http://127.0.0.1:8089/";
+        return "";
     }
 
     @Override
     public String userdataJdbcUrl() {
-        return "jdbc:postgresql://127.0.0.1:5432/niffler-userdata";
+        return "";
     }
 
     @Override
     public String currencyJdbcUrl() {
-        return "jdbc:postgresql://127.0.0.1:5432/niffler-currency";
+        return "";
     }
 
     @Override
     public String ghUrl() {
-        return "https://api.github.com/";
+        return "";
     }
 }

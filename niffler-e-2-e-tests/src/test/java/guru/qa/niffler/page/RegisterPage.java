@@ -6,7 +6,7 @@ import com.codeborne.selenide.SelenideElement;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$x;
 
-public class RegisterPage {
+public class RegisterPage extends BasePage{
 
     private final SelenideElement usernameInput = $("#username");
     private final SelenideElement passwordInput = $("#password");

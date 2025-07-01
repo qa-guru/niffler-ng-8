@@ -8,6 +8,7 @@ import guru.qa.niffler.model.users.UserJson;
 
 import java.security.SecureRandom;
 import java.util.Date;
+import java.util.Random;
 import java.util.UUID;
 
 public class RandomDataUtils {
@@ -72,7 +73,7 @@ public class RandomDataUtils {
         );
     }
 
-    public static SpendJson generateSpend(String username,Double amount ) {
+    public static SpendJson generateSpend(String username, Double amount) {
         Faker faker = new Faker();
         return new SpendJson(
                 null,
@@ -85,8 +86,22 @@ public class RandomDataUtils {
                 ),
                 CurrencyValues.RUB,
                 100.0,
-                faker.weather().description(),
+                RandomDataUtils.getRandomShortString(),
                 username
         );
+    }
+
+    public static int getRandomNumberInRange(int min, int max) {
+        if (min > max)
+            throw new IllegalArgumentException("max must be greater than min");
+        else if (max == min)
+            return min;
+        Random r = new Random();
+        return r.nextInt((max - min) + 1) + min;
+    }
+
+    public static String getRandomShortString() {
+        Faker faker = new Faker();
+        return faker.weather().description();
     }
 }

@@ -2,11 +2,14 @@ package guru.qa.niffler.data.tpl;
 
 import guru.qa.niffler.model.TransactionIsolation;
 
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
 
+@ParametersAreNonnullByDefault
 public class JdbcTransactionTemplate {
 
     private final JdbcConnectionHolder holder;
@@ -21,7 +24,7 @@ public class JdbcTransactionTemplate {
         return this;
     }
 
-    public <T> T execute(Supplier<T> action, TransactionIsolation transactionIsolation) {
+    public @Nullable <T> T execute(Supplier<T> action, TransactionIsolation transactionIsolation) {
         Connection connection = null;
         try {
             connection = holder.connection();

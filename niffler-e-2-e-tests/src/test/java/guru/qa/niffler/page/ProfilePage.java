@@ -4,7 +4,10 @@ import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import com.codeborne.selenide.WebDriverRunner;
+import guru.qa.niffler.page.component.basicComponents.Button;
+import guru.qa.niffler.page.component.basicComponents.LineEdit;
 import guru.qa.niffler.utils.CommonSteps;
+import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 
 import java.awt.image.BufferedImage;
@@ -13,7 +16,7 @@ import java.io.IOException;
 
 import static com.codeborne.selenide.Selenide.*;
 
-public class ProfilePage {
+public class ProfilePage extends BasePage{
 
     private final SelenideElement profileIcon = $x("//*[@id='image__input']/following-sibling::div//div");
     private final SelenideElement imageInput = $x("//*[@id='image__input']");
@@ -27,6 +30,9 @@ public class ProfilePage {
     private final ElementsCollection categoriesTable = $$x("//*[contains(@class, 'css-1lekzkb')]");
     private final SelenideElement edit = $x("//*[@aria-label='Edit category']");
     private final SelenideElement archive = $x("//*[@aria-label='Archive category']");
+
+    public LineEdit nameInput = new LineEdit(By.cssSelector("#name"));
+    public Button saveChangesBtn = new Button(By.xpath("//*[.='Save changes']//span"));
 
 
     public ProfilePage setUsername(String username) {

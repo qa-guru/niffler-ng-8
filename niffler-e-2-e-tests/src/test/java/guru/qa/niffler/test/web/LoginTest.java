@@ -17,7 +17,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 @ExtendWith(BrowserExtension.class)
-public class LoginTest {
+public class LoginTest extends BaseUITest{
     private static final Config CFG = Config.getInstance();
     String actualLogin = CFG.mainUserLogin();
     String actualPass = CFG.mainUserPass();
@@ -35,11 +35,10 @@ public class LoginTest {
         final String newDescription = "Обучение Niffler NG";
 
         Selenide.open(CFG.frontUrl(), LoginPage.class)
-                .doLogin("duck", "12345")
-                .editSpending(spend.description())
-                .editDescription(newDescription);
-
-        new MainPage().checkThatTableContains(newDescription);
+                .doLogin("duck", "12345");
+        mainPage().table.editSpendingByDescription(spend.description());
+        spendingPage().description.clearThenFill(newDescription);
+        mainPage().table.checkTableContainsSpendingByDescription(newDescription);
     }
 
     @Test
@@ -56,8 +55,7 @@ public class LoginTest {
         new LoginPage().doLogin(actualLogin, actualPass);
 
 
-        new SidebarPage().clickMenu()
-                .clickAllPeople();
+        sidebarPage().header.toAllPeople();
         new AllPeoplePage().findPersonByName(userName)
                 .checkTableSize(1)
                 .checkTableContainsPerson(userName);
@@ -91,7 +89,7 @@ public class LoginTest {
     void mainPageShouldBeDisplayedAfterSuccessLogin() {
         Selenide.open(CFG.frontUrl(), LoginPage.class)
                 .doLogin(actualLogin, actualPass);
-        new MainPage().checkTableVisible();
+        mainPage().table.checkTableVisible();
         Assertions.assertEquals(CFG.frontUrl() + "main", WebDriverRunner.url());
     }
 
@@ -100,7 +98,7 @@ public class LoginTest {
         String wrongPass = new Faker().number().digits(5);
         Selenide.open(CFG.frontUrl(), LoginPage.class)
                 .doLogin(actualLogin, wrongPass);
-        new MainPage().checkTableNotVisible();
+        mainPage().table.checkTableVisible();
         new LoginPage().checkError("Неверные учетные данные пользователя");
     }
 
@@ -114,7 +112,7 @@ public class LoginTest {
         Selenide.open(CFG.frontUrl(), LoginPage.class)
                 .doLogin(actualLogin, actualPass);
 
-        new SidebarPage().clickMenu().clickProfile();
+        sidebarPage().header.toProfile();
         new ProfilePage().hideArchive()
                 .checkCategoryNotExistInTable(category.name());
     }
@@ -128,7 +126,7 @@ public class LoginTest {
     void activeCategoryShouldPresentInCategoryList(CategoryJson category) {
         Selenide.open(CFG.frontUrl(), LoginPage.class)
                 .doLogin(actualLogin, actualPass);
-        new SidebarPage().clickMenu().clickProfile();
+        sidebarPage().header.toProfile();
         new ProfilePage().hideArchive()
                 .checkTableContainsCategory(category.name());
     }

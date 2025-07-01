@@ -2,16 +2,17 @@ package guru.qa.niffler.model.users;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import guru.qa.niffler.data.entity.auth.AuthAuthorityEntity;
-
 import guru.qa.niffler.data.entity.user.UserEntity;
 import guru.qa.niffler.data.enums.CurrencyValues;
+import lombok.Setter;
 
-
+import javax.annotation.Nonnull;
 import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
 public record UserJson(
         @JsonProperty("id")
+        @Setter
         UUID id,
         @JsonProperty("username")
         String username,
@@ -30,7 +31,20 @@ public record UserJson(
 
         String password) {
 
-    public static UserJson fromAuthorityEntity(AuthAuthorityEntity authority) {
+    private @Nonnull UserJson user() {
+        return new UserJson(id,
+                username,
+                firstname,
+                surname,
+                fullname,
+                currency,
+                photo,
+                photoSmall,
+                password);
+    }
+
+
+    public static @Nonnull UserJson fromAuthorityEntity(@Nonnull AuthAuthorityEntity authority) {
         return new UserJson(
                 authority.getId(),
                 null,
@@ -44,7 +58,7 @@ public record UserJson(
         );
     }
 
-    public static UserJson fromEntity(UserEntity userEntity) {
+    public static @Nonnull UserJson fromEntity(@Nonnull UserEntity userEntity) {
         return new UserJson(
                 userEntity.getId(),
                 userEntity.getUsername(),

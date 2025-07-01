@@ -48,5 +48,4 @@ public class BaseWebTest {
             .doLoginSuccess(user.getUsername(), user.getPassword())
             .getHeader().goToFriendsPage();
     }
-
 }

@@ -12,7 +12,7 @@ import static com.codeborne.selenide.Condition.appear;
 import static com.codeborne.selenide.Condition.disappear;
 import static com.codeborne.selenide.Selenide.$;
 
-public class SpendingPage extends BasePage {
+public class SpendingPage extends BasePage<SpendingPage> {
 
     private final SelenideElement descriptionInput = $("#description");
     private final SelenideElement amountInput = $("#amount");

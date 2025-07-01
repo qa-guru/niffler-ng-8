@@ -1,28 +1,26 @@
 package guru.qa.niffler.api;
 
-import guru.qa.niffler.api.util.SessionCookieJar;
+import guru.qa.niffler.api.core.TradeSafeCookieStore;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.retrofit.TestResponseAdapterFactory;
 import io.qameta.allure.okhttp3.AllureOkHttp3;
+import lombok.experimental.UtilityClass;
+import okhttp3.Interceptor;
+import okhttp3.JavaNetCookieJar;
 import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
+import org.apache.commons.lang3.ArrayUtils;
+import retrofit2.CallAdapter;
+import retrofit2.Converter;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
 import javax.annotation.Nonnull;
+import java.net.CookieManager;
+import java.net.CookiePolicy;
 
+@UtilityClass
 public class ApiClients {
-
-    private ApiClients() {
-    }
-
-    private static final OkHttpClient okHttpClient = new OkHttpClient.Builder()
-        .cookieJar(new SessionCookieJar())
-        .addNetworkInterceptor(
-            new AllureOkHttp3()
-                .setRequestTemplate("http-request-custom.ftl")
-                .setResponseTemplate("http-response-custom.ftl")
-        )
-        .build();
 
     private static final Config CFG = Config.getInstance();
     private static final SpendServiceClient SPEND_CLIENT = buildClient(CFG.spendUrl(), SpendServiceClient.class);
@@ -47,13 +45,59 @@ public class ApiClients {
     }
 
     private static <T> @Nonnull T buildClient(@Nonnull String baseUrl, @Nonnull Class<T> apiClass) {
+        return buildClient(
+            baseUrl,
+            apiClass,
+            JacksonConverterFactory.create(),
+            TestResponseAdapterFactory.create(),
+            false,
+            HttpLoggingInterceptor.Level.BODY
+        );
+    }
+
+    private static OkHttpClient buildOkHttpClient(boolean followingRedirect,
+                                                  HttpLoggingInterceptor.Level logLevel,
+                                                  Interceptor... interceptors) {
+        OkHttpClient.Builder builder = new OkHttpClient.Builder()
+            .cookieJar(new JavaNetCookieJar(
+                new CookieManager(
+                    TradeSafeCookieStore.INSTANCE,
+                    CookiePolicy.ACCEPT_ALL
+                )
+            ))
+            .followRedirects(followingRedirect)
+            .addNetworkInterceptor(
+                new AllureOkHttp3()
+                    .setRequestTemplate("http-request-custom.ftl")
+                    .setResponseTemplate("http-response-custom.ftl")
+            );
+        if (ArrayUtils.isNotEmpty(interceptors)) {
+            for (Interceptor interceptor : interceptors) {
+                builder.addNetworkInterceptor(interceptor);
+            }
+        }
+        builder.addNetworkInterceptor(
+            new HttpLoggingInterceptor().setLevel(logLevel)
+        );
+        return builder
+            .build();
+    }
+
+    private static <T> @Nonnull T buildClient(@Nonnull String baseUrl,
+                                              @Nonnull Class<T> apiClass,
+                                              @Nonnull Converter.Factory converterFactory,
+                                              @Nonnull CallAdapter.Factory adapterFactory,
+                                              boolean followingRedirect,
+                                              @Nonnull HttpLoggingInterceptor.Level logLevel,
+                                              @Nonnull Interceptor... interceptors
+    ) {
+        OkHttpClient okHttpClient = buildOkHttpClient(followingRedirect, logLevel, interceptors);
         return new Retrofit.Builder()
             .baseUrl(baseUrl)
             .client(okHttpClient)
-            .addConverterFactory(JacksonConverterFactory.create())
-            .addCallAdapterFactory(TestResponseAdapterFactory.create())
+            .addConverterFactory(converterFactory)
+            .addCallAdapterFactory(adapterFactory)
             .build()
             .create(apiClass);
     }
-
 }

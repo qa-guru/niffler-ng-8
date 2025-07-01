@@ -109,5 +109,4 @@ public class UserRepositoriesTest {
         userClient.deleteUser(userJson1);
         userClient.deleteUser(userJson2);
     }
-
 }

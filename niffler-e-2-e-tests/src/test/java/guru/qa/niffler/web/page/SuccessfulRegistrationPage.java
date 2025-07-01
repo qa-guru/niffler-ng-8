@@ -6,7 +6,7 @@ import io.qameta.allure.Step;
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.$;
 
-public class SuccessfulRegistrationPage extends BasePage {
+public class SuccessfulRegistrationPage extends BasePage<SuccessfulRegistrationPage> {
 
     private final SelenideElement successText = $(".form__paragraph_success");
     private final SelenideElement singInBtn = $("a.form_sign-in");

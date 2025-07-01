@@ -2,7 +2,7 @@ package guru.qa.niffler.web.component;
 
 import com.codeborne.selenide.SelenideElement;
 
-public class SearchField<P> extends BaseComponent<P> {
+public class SearchField<P> extends BaseComponent<P, SearchField<P>> {
 
     private final SelenideElement input = self.$("input");
     private final SelenideElement submitButton = self.$("button[type='submit']");

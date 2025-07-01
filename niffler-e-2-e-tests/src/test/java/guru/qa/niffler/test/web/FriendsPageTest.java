@@ -53,7 +53,7 @@ public class FriendsPageTest extends BaseWebTest {
         String incomeUsername = user.getTestData().getInInviteNames().getFirst();
         openFriendsPage(user)
             .clickDeclineBtnForName(incomeUsername)
-            .getAlert().clickAcceptBtn().returnToPage()
+            .getModal().clickAcceptBtn().returnToPage()
             .checkEmptyFriends();
     }
 }

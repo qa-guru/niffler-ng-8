@@ -19,8 +19,9 @@ public interface Config {
   @Nonnull
   String spendJdbcUrl();
 
-  @Nonnull
-  String ghUrl();
+  default @Nonnull String ghUrl() {
+    return "https://api.github.com/";
+  }
 
   @Nonnull
   String authUrl();

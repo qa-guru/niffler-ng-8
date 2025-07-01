@@ -1,8 +1,10 @@
 package guru.qa.niffler.service.impl.api;
 
+import com.google.common.base.Stopwatch;
 import guru.qa.niffler.api.ApiClients;
 import guru.qa.niffler.api.AuthServiceClient;
 import guru.qa.niffler.api.UserdataServiceClient;
+import guru.qa.niffler.api.core.TradeSafeCookieStore;
 import guru.qa.niffler.api.model.ErrorJson;
 import guru.qa.niffler.api.model.UserParts;
 import guru.qa.niffler.api.model.UserdataUserJson;
@@ -16,13 +18,12 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 import java.util.Optional;
-import java.util.StringJoiner;
 import java.util.UUID;
-import java.util.function.Function;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @ParametersAreNonnullByDefault
-public class UserApiClient implements UserClient {
+public class UserApiClient extends AbstractApiClient implements UserClient {
 
     public final AuthServiceClient authClient = ApiClients.authClient();
     public final UserdataServiceClient userdataClient = ApiClients.userdataClient();
@@ -48,44 +49,58 @@ public class UserApiClient implements UserClient {
     @Override
     public @Nonnull Optional<UserParts> findByUsername(String username) {
         TestResponse<List<UserdataUserJson>, ErrorJson> response = userdataClient.userAllGet("", username);
-        List<UserParts> users = validateAndMapList(response);
+        List<UserParts> users = validateSuccessAndMapList(response, UserParts::of);
         if (users.size() > 1) {
             throw new IllegalStateException("Найдено больше пользователей, чем ожидалось: \n" + users);
         }
         return users.isEmpty() ? Optional.empty() : Optional.of(users.getFirst());
     }
 
+    @SneakyThrows
     @Step("Создание пользователя")
     @Override
     public @Nonnull UserParts createUser(UserParts userPart) {
         TestResponse<Void, Void> registerGetResp = authClient.registerGet();
         validate(registerGetResp);
-        String token = registerGetResp.getHeaders().get("X-XSRF-TOKEN");
+        String token = TradeSafeCookieStore.INSTANCE.xsrfValue();
         String username = userPart.getUsername();
         String password = userPart.getPassword();
         TestResponse<Void, Void> registerPostResp = authClient.registerPost(token, username, password, password);
         validate(registerPostResp);
-        TestResponse<UserdataUserJson, ErrorJson> userCurrentGetResp = userdataClient.userCurrentGet(username);
-        validate(registerPostResp);
-        return userPart.setUserdataUser(userCurrentGetResp.getBody());
+
+        Stopwatch sw = Stopwatch.createStarted();
+        long maxWaitTime = 5000;
+
+        TestResponse<UserdataUserJson, ErrorJson> userCurrentGetResp = null;
+        while (sw.elapsed(TimeUnit.MILLISECONDS) < maxWaitTime) {
+            userCurrentGetResp = userdataClient.userCurrentGet(username);
+
+            UserdataUserJson userdataBody = userCurrentGetResp.getBody();
+            if (userCurrentGetResp.isSuccessful() && userdataBody != null && userdataBody.getId() != null) {
+                validate(registerPostResp);
+                return userPart.setUserdataUser(userdataBody);
+            } else {
+                Thread.sleep(100);
+            }
+        }
+        return throwIllegalStateException(userCurrentGetResp);
     }
 
     @Step("Обновление пользователя")
     @Override
     public @Nonnull UserParts updateUser(UserParts userPart) {
         TestResponse<UserdataUserJson, ErrorJson> response = userdataClient.userUpdatePost(userPart.getUserdataUserJson());
-        return extractResp(response, resp -> userPart.setUserdataUser(resp.getBody()));
+        UserdataUserJson userdataUserJson = validateSuccessAndMapObj(response);
+        return userPart.setUserdataUser(userdataUserJson);
     }
 
     @Step("Получение всех пользователей")
     @Override
     public List<UserParts> findAll() {
         TestResponse<List<UserdataUserJson>, ErrorJson> response = userdataClient.userAllGet("", null);
-        return extractResp(response,
-            resp -> resp.getBody().stream()
-                .map(UserParts::of)
-                .collect(Collectors.toList())
-        );
+        return validateSuccessAndMapObj(response).stream()
+            .map(UserParts::of)
+            .collect(Collectors.toList());
     }
 
     @Step("Удаление пользователя")
@@ -141,37 +156,4 @@ public class UserApiClient implements UserClient {
     public void deleteAllGenUser() {
         throw new UnsupportedOperationException("Метод не реализован");
     }
-
-    private <REQ, RESP> void validate(TestResponse<REQ, RESP> response) {
-        if (!response.isSuccessful()) {
-            throwIllegalStateException(response);
-        }
-    }
-
-    private <REQ, RESP, R> @Nonnull R extractResp(TestResponse<REQ, RESP> response,
-                                         Function<TestResponse<REQ, RESP>, R> extractor) {
-        if (response.isSuccessful()) {
-            return extractor.apply(response);
-        } else {
-            return throwIllegalStateException(response);
-        }
-    }
-
-    @SneakyThrows
-    private <REQ, RESP, R> R throwIllegalStateException(TestResponse<REQ, RESP> response) {
-        StringJoiner sj = new StringJoiner("\n");
-        sj.add("Запрос выполнился некорректно:");
-        sj.add(response.getRetrofitRawResponse().toString());
-        sj.add(response.getErrorBody().toString());
-        throw new IllegalStateException(sj.toString());
-    }
-
-    private @Nonnull List<UserParts> validateAndMapList(TestResponse<List<UserdataUserJson>, ErrorJson> response) {
-        return extractResp(response,
-            resp -> resp.getBody().stream()
-                .map(UserParts::of)
-                .collect(Collectors.toList())
-        );
-    }
-
 }

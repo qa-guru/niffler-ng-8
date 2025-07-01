@@ -38,7 +38,9 @@ public class ProfileTest extends BaseWebTest {
         openProfilePage(user)
             .setName(name)
             .clickSaveChanges()
-            .refresh();
+            .checkAllerIsSuccess("Profile successfully updated")
+            .refresh()
+            .checkName(name);
     }
 
     @User

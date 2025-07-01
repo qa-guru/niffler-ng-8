@@ -21,5 +21,4 @@ public class TestMethodContextExtension implements BeforeEachCallback, AfterEach
     public static ExtensionContext context() {
         return STORE.get();
     }
-
 }

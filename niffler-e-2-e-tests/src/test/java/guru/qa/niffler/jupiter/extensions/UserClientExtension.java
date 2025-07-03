@@ -1,6 +1,6 @@
 package guru.qa.niffler.jupiter.extensions;
 
-import guru.qa.niffler.service.UserApiClient;
+import guru.qa.niffler.api.UserApiClient;
 import guru.qa.niffler.service.UserDbClient;
 import guru.qa.niffler.service.UsersClient;
 import org.junit.jupiter.api.extension.ExtensionContext;

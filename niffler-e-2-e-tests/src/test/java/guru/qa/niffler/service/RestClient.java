@@ -2,6 +2,7 @@ package guru.qa.niffler.service;
 
 import guru.qa.niffler.api.core.ThreadSafeCookieStore;
 import guru.qa.niffler.config.Config;
+import io.qameta.allure.okhttp3.AllureOkHttp3;
 import okhttp3.Interceptor;
 import okhttp3.JavaNetCookieJar;
 import okhttp3.OkHttpClient;
@@ -18,9 +19,13 @@ public abstract class RestClient {
 
     protected static final Config CFG = Config.getInstance();
 
-    private final OkHttpClient okHttpClient;
-
     protected final Retrofit retrofit;
+
+    private final OkHttpClient client = new OkHttpClient.Builder().addNetworkInterceptor(
+            new AllureOkHttp3()
+                    .setRequestTemplate("http-request.ftl")
+                    .setResponseTemplate("http-response.ftl")
+    ).build();
 
     public RestClient(String baseUrl) {
         this(baseUrl, false, JacksonConverterFactory.create(), HttpLoggingInterceptor.Level.BODY);
@@ -49,10 +54,10 @@ public abstract class RestClient {
                         )
                 )
         );
-        this.okHttpClient = builder.build();
+
         this.retrofit = new Retrofit.Builder()
                 .baseUrl(baseUrl)
-                .client(builder.build())
+                .client(client)
                 .addConverterFactory(converterFactory)
                 .build();
     }

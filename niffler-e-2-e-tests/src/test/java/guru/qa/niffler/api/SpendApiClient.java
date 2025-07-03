@@ -4,10 +4,7 @@ package guru.qa.niffler.api;
 import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.model.SpendJson;
 import guru.qa.niffler.service.RestClient;
-import okhttp3.OkHttpClient;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.jackson.JacksonConverterFactory;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -24,7 +21,6 @@ public class SpendApiClient extends RestClient {
         super(CFG.spendUrl());
         this.spendApi = retrofit.create(SpendApi.class);
     }
-
 
     public @Nullable SpendJson addSpend(SpendJson spend) {
         final Response<SpendJson> response;

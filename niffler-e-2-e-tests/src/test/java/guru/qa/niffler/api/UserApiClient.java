@@ -1,10 +1,12 @@
-package guru.qa.niffler.service;
+package guru.qa.niffler.api;
 
 import guru.qa.niffler.api.core.ThreadSafeCookieStore;
 import guru.qa.niffler.api.interfaces.AuthApi;
 import guru.qa.niffler.api.interfaces.UserApi;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.model.users.UserJson;
+import guru.qa.niffler.service.RestClient;
+import guru.qa.niffler.service.UsersClient;
 import org.junit.jupiter.api.Assertions;
 import retrofit2.Response;
 

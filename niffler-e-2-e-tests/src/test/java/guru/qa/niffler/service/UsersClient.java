@@ -1,5 +1,6 @@
 package guru.qa.niffler.service;
 
+import guru.qa.niffler.api.UserApiClient;
 import guru.qa.niffler.model.users.UserJson;
 
 import javax.annotation.ParametersAreNonnullByDefault;

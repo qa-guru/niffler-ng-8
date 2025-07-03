@@ -1,6 +1,7 @@
 package guru.qa.niffler.test.web;
 
 import com.codeborne.selenide.Selenide;
+import guru.qa.niffler.api.SpendApiClient;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.enums.CurrencyValues;
 import guru.qa.niffler.jupiter.annotations.Spend;
@@ -8,6 +9,7 @@ import guru.qa.niffler.jupiter.annotations.User;
 import guru.qa.niffler.jupiter.extensions.BrowserExtension;
 import guru.qa.niffler.model.SpendJson;
 import guru.qa.niffler.page.LoginPage;
+import guru.qa.niffler.utils.RandomDataUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -33,5 +35,11 @@ public class SpendingTest extends BaseUITest {
         spendingPage().description.clearThenFill(newDescription);
 
         mainPage().table.checkTableContainsSpendingByDescription(newDescription);
+    }
+
+    @Test
+    void checkHtmlTest(){
+        SpendApiClient client = new SpendApiClient();
+        client.addSpend(RandomDataUtils.generateSpend("test", 100.44));
     }
 }

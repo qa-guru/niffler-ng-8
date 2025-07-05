@@ -29,7 +29,7 @@ public enum TradeSafeCookieStore implements CookieStore {
     }
 
     public String xsrfValue() {
-        return cookieValue("X-XSRF-TOKEN");
+        return cookieValue("XSRF-TOKEN");
     }
 
     @Override

@@ -25,24 +25,28 @@ public class UserExtension implements BeforeEachCallback, ParameterResolver {
                 String username = userAnno.username();
                 UserParts user = getUser(username);
                 addFriends(userAnno, user);
-                extensionContext.getStore(NAMESPACE).put(extensionContext.getUniqueId(), user);
+                setUser(user);
             });
     }
 
     @Override
     public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
-        return AnnotationSupport.isAnnotated(extensionContext.getRequiredTestMethod(), User.class)
-            && parameterContext.getParameter().getType() == UserParts.class;
+        return parameterContext.getParameter().getType() == UserParts.class;
     }
 
     @Override
     public UserParts resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
-        return createdUser();
+        return getCreatedUser();
     }
 
-    public static UserParts createdUser() {
+    public static UserParts getCreatedUser() {
         ExtensionContext context = TestMethodContextExtension.context();
         return context.getStore(NAMESPACE).get(context.getUniqueId(), UserParts.class);
+    }
+
+    public static void setUser(UserParts user) {
+        ExtensionContext context = TestMethodContextExtension.context();
+        context.getStore(NAMESPACE).put(context.getUniqueId(), user);
     }
 
     private void addFriends(User userAnno, UserParts user) {

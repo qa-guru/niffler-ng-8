@@ -42,25 +42,30 @@
     <pre><code><#if data.method??>${data.method}<#else>GET</#if> to <#if data.url??>${data.url}<#else>Unknown</#if></code></pre>
 </div>
 
-<#assign contentType = (data.headers?has_content && data.headers['Content-Type']??)?then(data.headers['Content-Type'], "")>
-<#assign lang = "plaintext">
-<#if contentType?lower_case?contains("application/json")>
-    <#assign lang = "json">
-<#elseif contentType?lower_case?contains("application/xml")>
-    <#assign lang = "xml">
-<#elseif contentType?lower_case?contains("text/html")>
-    <#assign lang = "html">
-</#if>
-
 <#if data.body??>
     <div class="code-block">
         <h4>Body</h4>
-        <#attempt>
-            <#assign pretty = data.body?eval?string("pretty")>
-            <pre><code class="${lang}">${pretty}</code></pre>
-        <#recover>
+        <#assign contentType = (data.headers?has_content && data.headers['Content-Type']??)?then(data.headers['Content-Type'], "")>
+        <#assign lang = "plaintext">
+        <#if contentType?lower_case?contains("application/json")>
+            <#assign lang = "json">
+        <#elseif contentType?lower_case?contains("application/xml")>
+            <#assign lang = "xml">
+        <#elseif contentType?lower_case?contains("text/html")>
+            <#assign lang = "html">
+        </#if>
+
+        <#if lang == "json">
+            <#attempt>
+                <#assign parsed = data.body?eval>
+                <#assign pretty = parsed?string("pretty")>
+                <pre><code class="${lang}">${pretty}</code></pre>
+            <#recover>
+                <pre><code class="${lang}">${data.body}</code></pre>
+            </#attempt>
+        <#else>
             <pre><code class="${lang}">${data.body}</code></pre>
-        </#attempt>
+        </#if>
     </div>
 </#if>
 

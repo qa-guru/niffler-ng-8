@@ -1,7 +1,7 @@
 package guru.qa.niffler.service.impl.api;
 
 import guru.qa.niffler.api.ApiClients;
-import guru.qa.niffler.api.SpendServiceClient;
+import guru.qa.niffler.api.SpendEndpointClient;
 import guru.qa.niffler.api.model.CategoryJson;
 import guru.qa.niffler.api.model.SpendJson;
 import guru.qa.niffler.retrofit.TestResponse;
@@ -18,7 +18,7 @@ import java.util.UUID;
 @ParametersAreNonnullByDefault
 public class SpendApiClient extends AbstractApiClient implements SpendClient {
 
-    public final SpendServiceClient spendClient = ApiClients.spendClient();
+    public final SpendEndpointClient spendClient = ApiClients.spendClient();
 
     private SpendApiClient() {
     }

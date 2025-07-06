@@ -1,4 +1,4 @@
-package guru.qa.niffler.test.web;
+package guru.qa.niffler.test.fake;
 
 import guru.qa.niffler.api.model.AuthUserJson;
 import guru.qa.niffler.api.model.UserParts;

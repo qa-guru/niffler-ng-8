@@ -6,10 +6,7 @@ import guru.qa.niffler.api.model.UserParts;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.jupiter.extension.BrowserExtension;
 import guru.qa.niffler.jupiter.extension.UsersQueueExtension.StaticUser;
-import guru.qa.niffler.web.page.FriendsPage;
-import guru.qa.niffler.web.page.LoginPage;
-import guru.qa.niffler.web.page.ProfilePage;
-import guru.qa.niffler.web.page.RegisterPage;
+import guru.qa.niffler.web.page.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 @ExtendWith(BrowserExtension.class)
@@ -24,6 +21,11 @@ public class BaseWebTest {
     protected ProfilePage openProfilePage(UserParts user) {
         return Selenide.open(CFG.frontUrl(), LoginPage.class)
             .doLoginSuccess(user)
+            .getHeader().goToProfilePage();
+    }
+
+    protected ProfilePage openProfilePage() {
+        return Selenide.open(CFG.frontUrl(), MainPage.class)
             .getHeader().goToProfilePage();
     }
 

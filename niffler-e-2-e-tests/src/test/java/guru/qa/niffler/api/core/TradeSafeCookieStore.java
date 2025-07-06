@@ -10,6 +10,8 @@ public enum TradeSafeCookieStore implements CookieStore {
 
     INSTANCE;
 
+    public static final String JSESSIONID = "JSESSIONID";
+
     private final ThreadLocal<CookieStore> tradeSafeCookieStore = ThreadLocal.withInitial(this::inMemoryCookieStore);
 
     private CookieStore inMemoryCookieStore() {
@@ -30,6 +32,10 @@ public enum TradeSafeCookieStore implements CookieStore {
 
     public String xsrfValue() {
         return cookieValue("XSRF-TOKEN");
+    }
+
+    public String jSessionIdValue() {
+        return cookieValue(JSESSIONID);
     }
 
     @Override

@@ -12,7 +12,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 
 @ParametersAreNonnullByDefault
-public interface SpendServiceClient {
+public interface SpendEndpointClient {
 
     @GET("internal/spends/{id}")
     @Nonnull

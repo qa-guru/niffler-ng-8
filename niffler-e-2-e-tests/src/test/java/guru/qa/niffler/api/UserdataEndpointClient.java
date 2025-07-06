@@ -7,7 +7,7 @@ import retrofit2.http.*;
 
 import java.util.List;
 
-public interface UserdataServiceClient {
+public interface UserdataEndpointClient {
 
     @GET("internal/users/current")
     TestResponse<UserdataUserJson, ErrorJson> userCurrentGet(@Query("username") String username);

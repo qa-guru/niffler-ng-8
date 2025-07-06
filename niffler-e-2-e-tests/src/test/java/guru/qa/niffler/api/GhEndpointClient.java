@@ -9,7 +9,7 @@ import retrofit2.http.Path;
 
 import javax.annotation.Nonnull;
 
-public interface GhServiceClient {
+public interface GhEndpointClient {
 
   @GET("repos/KonstantinKshnyakin/qa-guru-niffler-ng-8/issues/{issue_number}")
   @Headers({

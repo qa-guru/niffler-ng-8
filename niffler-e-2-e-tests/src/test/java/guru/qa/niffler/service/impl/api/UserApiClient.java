@@ -2,8 +2,8 @@ package guru.qa.niffler.service.impl.api;
 
 import com.google.common.base.Stopwatch;
 import guru.qa.niffler.api.ApiClients;
-import guru.qa.niffler.api.AuthServiceClient;
-import guru.qa.niffler.api.UserdataServiceClient;
+import guru.qa.niffler.api.AuthEndpointClient;
+import guru.qa.niffler.api.UserdataEndpointClient;
 import guru.qa.niffler.api.core.TradeSafeCookieStore;
 import guru.qa.niffler.api.model.ErrorJson;
 import guru.qa.niffler.api.model.UserParts;
@@ -25,8 +25,8 @@ import java.util.stream.Collectors;
 @ParametersAreNonnullByDefault
 public class UserApiClient extends AbstractApiClient implements UserClient {
 
-    public final AuthServiceClient authClient = ApiClients.authClient();
-    public final UserdataServiceClient userdataClient = ApiClients.userdataClient();
+    public final AuthEndpointClient authClient = ApiClients.authClient();
+    public final UserdataEndpointClient userdataClient = ApiClients.userdataClient();
 
     private UserApiClient() {
     }

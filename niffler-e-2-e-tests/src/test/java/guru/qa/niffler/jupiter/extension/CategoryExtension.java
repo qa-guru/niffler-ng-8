@@ -26,7 +26,7 @@ public class CategoryExtension implements ParameterResolver, BeforeEachCallback,
 
     @Override
     public void beforeEach(ExtensionContext extensionContext) {
-        UserParts user = UserExtension.createdUser();
+        UserParts user = UserExtension.getCreatedUser();
         List<Category> categories = getCategories(extensionContext);
         if (!categories.isEmpty()) {
             List<CategoryJson> createdCategories = new ArrayList<>();

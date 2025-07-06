@@ -2,6 +2,7 @@ package guru.qa.niffler.test.web;
 
 import guru.qa.niffler.api.model.CategoryJson;
 import guru.qa.niffler.api.model.UserParts;
+import guru.qa.niffler.jupiter.annotation.ApiLogin;
 import guru.qa.niffler.jupiter.annotation.Category;
 import guru.qa.niffler.jupiter.annotation.ScreenShotTest;
 import guru.qa.niffler.jupiter.annotation.User;
@@ -26,16 +27,18 @@ public class ProfileTest extends BaseWebTest {
     @User(
         categories = @Category(archived = false)
     )
-    void activeCategoryShouldPresentInCategoriesList(UserParts user, CategoryJson category) {
-        openProfilePage(user)
+    @ApiLogin
+    void activeCategoryShouldPresentInCategoriesList(CategoryJson category) {
+        openProfilePage()
             .checkCategoryExist(category.name(), false);
     }
 
     @Test
     @User
+    @ApiLogin
     void editProfile(UserParts user) {
         String name = RandomDataUtils.genUsername();
-        openProfilePage(user)
+        openProfilePage()
             .setName(name)
             .clickSaveChanges()
             .checkAllerIsSuccess("Profile successfully updated")

@@ -1,5 +1,6 @@
 package guru.qa.niffler.api;
 
+import guru.qa.niffler.api.core.CodeInterceptor;
 import guru.qa.niffler.api.core.TradeSafeCookieStore;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.retrofit.TestResponseAdapterFactory;
@@ -23,49 +24,45 @@ import java.net.CookiePolicy;
 public class ApiClients {
 
     private static final Config CFG = Config.getInstance();
-    private static final SpendServiceClient SPEND_CLIENT = buildClient(CFG.spendUrl(), SpendServiceClient.class);
-    private static final UserdataServiceClient USERDATA_CLIENT = buildClient(CFG.userdataUrl(), UserdataServiceClient.class);
-    private static final GhServiceClient GH_CLIENT = buildClient(CFG.ghUrl(), GhServiceClient.class);
-    private static final AuthServiceClient AUTH_CLIENT = buildClient(CFG.authUrl(), true, AuthServiceClient.class);
+    private static final SpendEndpointClient SPEND_CLIENT = buildClient(CFG.spendUrl(), SpendEndpointClient.class);
+    private static final UserdataEndpointClient USERDATA_CLIENT = buildClient(CFG.userdataUrl(), UserdataEndpointClient.class);
+    private static final GhEndpointClient GH_CLIENT = buildClient(CFG.ghUrl(), GhEndpointClient.class);
+    private static final AuthEndpointClient AUTH_CLIENT = buildClient(
+        CFG.authUrl(), true, AuthEndpointClient.class, new CodeInterceptor()
+    );
 
-    public static @Nonnull SpendServiceClient spendClient() {
+    public static @Nonnull SpendEndpointClient spendClient() {
         return SPEND_CLIENT;
     }
 
-    public static @Nonnull UserdataServiceClient userdataClient() {
+    public static @Nonnull UserdataEndpointClient userdataClient() {
         return USERDATA_CLIENT;
     }
 
-    public static @Nonnull GhServiceClient ghClient() {
+    public static @Nonnull GhEndpointClient ghClient() {
         return GH_CLIENT;
     }
 
-    public static @Nonnull AuthServiceClient authClient() {
+    public static @Nonnull AuthEndpointClient authClient() {
         return AUTH_CLIENT;
     }
 
     private static <T> @Nonnull T buildClient(@Nonnull String baseUrl, @Nonnull Class<T> apiClass) {
-        return buildClient(
-            baseUrl,
-            apiClass,
-            JacksonConverterFactory.create(),
-            TestResponseAdapterFactory.create(),
-            false,
-            HttpLoggingInterceptor.Level.BODY
-        );
+        return buildClient(baseUrl, false, apiClass);
     }
-
 
     private static <T> @Nonnull T buildClient(@Nonnull String baseUrl,
                                               boolean followingRedirect,
-                                              @Nonnull Class<T> apiClass) {
+                                              @Nonnull Class<T> apiClass,
+                                              @Nonnull Interceptor... interceptors) {
         return buildClient(
             baseUrl,
             apiClass,
             JacksonConverterFactory.create(),
             TestResponseAdapterFactory.create(),
             followingRedirect,
-            HttpLoggingInterceptor.Level.BODY
+            HttpLoggingInterceptor.Level.BODY,
+            interceptors
         );
     }
 

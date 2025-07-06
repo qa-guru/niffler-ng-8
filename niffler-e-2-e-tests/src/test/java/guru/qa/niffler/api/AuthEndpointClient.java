@@ -1,12 +1,10 @@
 package guru.qa.niffler.api;
 
-import guru.qa.niffler.api.core.TradeSafeCookieStore;
 import guru.qa.niffler.api.model.OAuthTokenResponse;
-import guru.qa.niffler.config.Config;
 import guru.qa.niffler.retrofit.TestResponse;
 import retrofit2.http.*;
 
-public interface AuthServiceClient {
+public interface AuthEndpointClient {
 
 
     @GET("login")
@@ -17,11 +15,6 @@ public interface AuthServiceClient {
     TestResponse<Void, Void> loginPost(@Field("_csrf") String csrf,
                                        @Field("username") String username,
                                        @Field("password") String password);
-
-    default TestResponse<Void, Void> loginPost(String username,
-                                               String password) {
-        return loginPost(TradeSafeCookieStore.INSTANCE.xsrfValue(), username, password);
-    }
 
     @GET("register")
     TestResponse<Void, Void> registerGet();
@@ -42,18 +35,6 @@ public interface AuthServiceClient {
                                           @Query("code_challenge_method") String codeChallengeMethod
     );
 
-    default TestResponse<Void, Void> authorizeGet(String codeChallenge) {
-        String redirectUri = Config.getInstance().frontUrl() + "authorized";
-        return authorizeGet(
-            "code",
-            "client",
-            "openid",
-            redirectUri,
-            codeChallenge,
-            "S256"
-        );
-    }
-
     @FormUrlEncoded
     @POST("oauth2/token")
     TestResponse<OAuthTokenResponse, Void> tokenPost(@Field("code") String code,
@@ -61,15 +42,4 @@ public interface AuthServiceClient {
                                                      @Field("code_verifier") String codeVerifier,
                                                      @Field("grant_type") String grantType,
                                                      @Field(value = "client_id") String client);
-
-    default TestResponse<OAuthTokenResponse, Void> tokenPost(String code, String codeVerifier) {
-        String redirectUri = Config.getInstance().frontUrl() + "authorized";
-        return tokenPost(
-            code,
-            redirectUri,
-            codeVerifier,
-            "authorization_code",
-            "client"
-        );
-    }
 }

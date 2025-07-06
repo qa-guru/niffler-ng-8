@@ -21,7 +21,7 @@ public class SpendingExtension implements BeforeEachCallback, AfterEachCallback,
 
     @Override
     public void beforeEach(ExtensionContext extensionContext) {
-        UserParts user = UserExtension.createdUser();
+        UserParts user = UserExtension.getCreatedUser();
         List<Spending> spendings = getSpendings(extensionContext);
         if (!spendings.isEmpty()) {
             List<SpendJson> createdSpendings = new ArrayList<>();

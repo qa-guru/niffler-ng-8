@@ -26,7 +26,7 @@ public class ApiClients {
     private static final SpendServiceClient SPEND_CLIENT = buildClient(CFG.spendUrl(), SpendServiceClient.class);
     private static final UserdataServiceClient USERDATA_CLIENT = buildClient(CFG.userdataUrl(), UserdataServiceClient.class);
     private static final GhServiceClient GH_CLIENT = buildClient(CFG.ghUrl(), GhServiceClient.class);
-    private static final AuthServiceClient AUTH_CLIENT = buildClient(CFG.authUrl(), AuthServiceClient.class);
+    private static final AuthServiceClient AUTH_CLIENT = buildClient(CFG.authUrl(), true, AuthServiceClient.class);
 
     public static @Nonnull SpendServiceClient spendClient() {
         return SPEND_CLIENT;
@@ -51,6 +51,20 @@ public class ApiClients {
             JacksonConverterFactory.create(),
             TestResponseAdapterFactory.create(),
             false,
+            HttpLoggingInterceptor.Level.BODY
+        );
+    }
+
+
+    private static <T> @Nonnull T buildClient(@Nonnull String baseUrl,
+                                              boolean followingRedirect,
+                                              @Nonnull Class<T> apiClass) {
+        return buildClient(
+            baseUrl,
+            apiClass,
+            JacksonConverterFactory.create(),
+            TestResponseAdapterFactory.create(),
+            followingRedirect,
             HttpLoggingInterceptor.Level.BODY
         );
     }

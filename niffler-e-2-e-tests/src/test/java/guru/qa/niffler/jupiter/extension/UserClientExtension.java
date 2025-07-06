@@ -17,8 +17,7 @@ public class UserClientExtension implements TestInstancePostProcessor {
             if (field.getType().isAssignableFrom(UserClient.class)) {
                 field.setAccessible(true);
                 field.set(testInstance, new UserDbClient());
-            }
-            if (field.getType().isAssignableFrom(SpendClient.class)) {
+            } else if (field.getType().isAssignableFrom(SpendClient.class)) {
                 field.setAccessible(true);
                 field.set(testInstance, new SpendDbClient());
             }

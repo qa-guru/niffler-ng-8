@@ -4,6 +4,7 @@ import guru.qa.niffler.retrofit.TestResponse;
 import lombok.SneakyThrows;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.List;
 import java.util.StringJoiner;
@@ -18,7 +19,7 @@ public abstract class AbstractApiClient {
         }
     }
 
-    protected <SUCC_DTO, ERR_DTO> @Nonnull SUCC_DTO validateSuccessAndMapObj(TestResponse<SUCC_DTO, ERR_DTO> response) {
+    protected <SUCC_DTO, ERR_DTO> @Nullable SUCC_DTO validateSuccessAndGetBody(TestResponse<SUCC_DTO, ERR_DTO> response) {
         SUCC_DTO body = response.getBody();
         if (response.isSuccessful() && body != null) {
             return body;

@@ -9,7 +9,10 @@ import guru.qa.niffler.api.util.OAuthUtils;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.jupiter.extension.ApiLoginExtension;
 import guru.qa.niffler.retrofit.TestResponse;
+import io.qameta.allure.Step;
 import org.junit.jupiter.api.Assertions;
+
+import javax.annotation.Nonnull;
 
 public class AuthApiClient extends AbstractApiClient {
 
@@ -26,12 +29,13 @@ public class AuthApiClient extends AbstractApiClient {
         private static final AuthApiClient INSTANCE = new AuthApiClient();
     }
 
-    public TestResponse<Void, Void> loginPost(String username,
+
+    private TestResponse<Void, Void> loginPost(String username,
                                               String password) {
         return authEndpointClient.loginPost(TradeSafeCookieStore.INSTANCE.xsrfValue(), username, password);
     }
 
-    public TestResponse<Void, Void> authorizeGet(String codeChallenge) {
+    private TestResponse<Void, Void> authorizeGet(String codeChallenge) {
         String redirectUri = Config.getInstance().frontUrl() + "authorized";
         return authEndpointClient.authorizeGet(
             "code",
@@ -43,7 +47,7 @@ public class AuthApiClient extends AbstractApiClient {
         );
     }
 
-    public TestResponse<OAuthTokenResponse, Void> tokenPost(String code, String codeVerifier) {
+    private TestResponse<OAuthTokenResponse, Void> tokenPost(String code, String codeVerifier) {
         String redirectUri = Config.getInstance().frontUrl() + "authorized";
         return authEndpointClient.tokenPost(
             code,
@@ -54,7 +58,8 @@ public class AuthApiClient extends AbstractApiClient {
         );
     }
 
-    public OAuthTokenResponse successLogin(UserParts user) {
+    @Step("Логин пользователя через OAuth2 и получение токенов")
+    public @Nonnull OAuthTokenResponse successLogin(@Nonnull UserParts user) {
         String codeVerifier = OAuthUtils.generateCodeVerifier();
         String codeChallenge = OAuthUtils.generateCodeChallenge(codeVerifier);
         TestResponse<Void, Void> authResponse = authorizeGet(codeChallenge);

@@ -18,7 +18,7 @@ import java.util.UUID;
 @ParametersAreNonnullByDefault
 public class SpendApiClient extends AbstractApiClient implements SpendClient {
 
-    public final SpendEndpointClient spendClient = ApiClients.spendClient();
+    private final SpendEndpointClient spendClient = ApiClients.spendClient();
 
     private SpendApiClient() {
     }
@@ -35,13 +35,19 @@ public class SpendApiClient extends AbstractApiClient implements SpendClient {
     @Override
     public @Nullable SpendJson createSpend(SpendJson spendJson) {
         TestResponse<SpendJson, Void> response = spendClient.addSpend(spendJson);
-        return validateSuccessAndMapObj(response);
+        return validateSuccessAndGetBody(response);
     }
 
     @Step("Поиск трат по id")
     @Override
     public @Nonnull Optional<SpendJson> findSpendById(UUID id) {
         throw new UnsupportedOperationException("Метод не реализован");
+    }
+
+    @Step("Получение всех трат пользователя")
+    public @Nullable List<SpendJson> getAllSpends(String username) {
+        TestResponse<List<SpendJson>, Void> response = spendClient.getAllSpends(username, null, null, null);
+        return validateSuccessAndGetBody(response);
     }
 
     @Step("Удаление трат")
@@ -59,14 +65,20 @@ public class SpendApiClient extends AbstractApiClient implements SpendClient {
     @Override
     public @Nullable CategoryJson createCategory(CategoryJson categoryJson) {
         TestResponse<CategoryJson, Void> response = spendClient.addCategory(categoryJson);
-        return validateSuccessAndMapObj(response);
+        return validateSuccessAndGetBody(response);
     }
 
     @Step("Обновление категории трат")
     @Override
     public @Nullable CategoryJson updateCategory(CategoryJson categoryJson) {
         TestResponse<CategoryJson, Void> response = spendClient.updateCategory(categoryJson);
-        return validateSuccessAndMapObj(response);
+        return validateSuccessAndGetBody(response);
+    }
+
+    @Step("Получение всех категорий пользователя")
+    public @Nullable List<CategoryJson> getAllCategories(String username) {
+        TestResponse<List<CategoryJson>, Void> response = spendClient.getAllCategories(username, null);
+        return validateSuccessAndGetBody(response);
     }
 
     @Step("Удаление категории трат")

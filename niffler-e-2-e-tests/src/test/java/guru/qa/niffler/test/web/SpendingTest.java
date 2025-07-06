@@ -5,10 +5,7 @@ import guru.qa.niffler.api.model.CurrencyValues;
 import guru.qa.niffler.api.model.SpendJson;
 import guru.qa.niffler.api.model.UserParts;
 import guru.qa.niffler.condition.Color;
-import guru.qa.niffler.jupiter.annotation.Category;
-import guru.qa.niffler.jupiter.annotation.ScreenShotTest;
-import guru.qa.niffler.jupiter.annotation.Spending;
-import guru.qa.niffler.jupiter.annotation.User;
+import guru.qa.niffler.jupiter.annotation.*;
 import guru.qa.niffler.util.RandomDataUtils;
 import org.junit.jupiter.api.Test;
 
@@ -20,6 +17,7 @@ public class SpendingTest extends BaseWebTest {
 
     @Test
     @User
+    @ApiLogin
     void addNewSpending(UserParts user) {
         SpendJson spend = new SpendJson(null,
             new Date(),
@@ -29,8 +27,7 @@ public class SpendingTest extends BaseWebTest {
             "Чудо-юдо рыба-кит",
             user.getUsername()
         );
-        openLoginPage()
-            .doLoginSuccess(user)
+        openMainPage()
             .getHeader().addNewSpending()
             .createSpending(spend)
             .checkAllerIsSuccess("New spending is successfully created")
@@ -48,11 +45,11 @@ public class SpendingTest extends BaseWebTest {
             currency = CurrencyValues.RUB
         )
     )
-    void spendingDescriptionShouldBeUpdatedByTableAction(UserParts user, SpendJson spend) {
+    @ApiLogin
+    void spendingDescriptionShouldBeUpdatedByTableAction(SpendJson spend) {
         final String newDescription = "Обучение Niffler NG";
         String spendingDescription = spend.description();
-        openLoginPage()
-            .doLoginSuccess(user)
+        openMainPage()
             .getSpendingTable()
             .editSpending(spendingDescription)
             .editDescription(newDescription)
@@ -80,10 +77,10 @@ public class SpendingTest extends BaseWebTest {
             )
         }
     )
+    @ApiLogin
     @ScreenShotTest(value = "img/exp/spend/check-stat.png")
-    void checkStatComponentTest(UserParts user, List<SpendJson> spends, BufferedImage expImage) {
-        openLoginPage()
-            .doLoginSuccess(user)
+    void checkStatComponentTest(List<SpendJson> spends, BufferedImage expImage) {
+        openMainPage()
             .checkStatisticScreenshot(expImage)
             .checkCategoryBubbles(spends)
             .getSpendingTable()
@@ -106,13 +103,13 @@ public class SpendingTest extends BaseWebTest {
             )
         }
     )
+    @ApiLogin
     @ScreenShotTest(value = "img/exp/spend/remove-element.png")
-    void checkStatComponentRemoveElement(UserParts user, List<SpendJson> spends, BufferedImage expImage) {
+    void checkStatComponentRemoveElement(List<SpendJson> spends, BufferedImage expImage) {
         String description = spends.getFirst().description();
         List<SpendJson> expSpends = spends.stream().filter(s -> !description.equals(s.description())).toList();
 
-        openLoginPage()
-            .doLoginSuccess(user)
+        openMainPage()
             .checkCategoryBubbles(spends)
             .getSpendingTable()
             .deleteSpending(description)
@@ -139,15 +136,15 @@ public class SpendingTest extends BaseWebTest {
             )
         }
     )
+    @ApiLogin
     @ScreenShotTest(value = "img/exp/spend/update-element.png")
-    void checkStatComponentUpdateElement(UserParts user, List<SpendJson> spends, BufferedImage expImage) {
+    void checkStatComponentUpdateElement(List<SpendJson> spends, BufferedImage expImage) {
         SpendJson spend = spends.getFirst();
         String description = spend.description();
         double newAmount = 1450.57;
         double oldAmount = spend.amount();
 
-        openLoginPage()
-            .doLoginSuccess(user)
+        openMainPage()
             .checkCategoryBubbles(spends)
             .getSpendingTable()
             .editSpending(description)
@@ -175,10 +172,10 @@ public class SpendingTest extends BaseWebTest {
             )
         }
     )
+    @ApiLogin
     @ScreenShotTest(value = "img/exp/spend/archived-element.png")
-    void checkStatComponentArchivedElement(UserParts user, List<SpendJson> spends, BufferedImage expImage) {
-        openLoginPage()
-            .doLoginSuccess(user)
+    void checkStatComponentArchivedElement(List<SpendJson> spends, BufferedImage expImage) {
+        openMainPage()
             .checkStatisticScreenshot(expImage)
             .checkCategoryBubblesInAnyOrder(spends, "Авто", "Archived");
     }

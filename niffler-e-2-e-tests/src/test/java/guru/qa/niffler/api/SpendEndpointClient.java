@@ -50,6 +50,6 @@ public interface SpendEndpointClient {
     @GET("internal/categories/all")
     @Nonnull
     TestResponse<List<CategoryJson>, Void> getAllCategories(@Query("username") String username,
-                                                            @Query("excludeArchived") Boolean excludeArchived);
+                                                            @Nullable @Query("excludeArchived") Boolean excludeArchived);
 
 }

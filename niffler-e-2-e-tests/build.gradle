@@ -159,6 +159,8 @@ dependencies {
     xjc "org.glassfish.jaxb:jaxb-xjc:${project.ext.jakartaJaxbVersion}"
     // Kafka
     testImplementation "org.apache.kafka:kafka-clients:${kafkaClientsVersion}"
+    //AssertJ
+    testImplementation "org.assertj:assertj-core:3.24.2"
     // Wiremock
     testImplementation "com.github.tomakehurst:wiremock-jre8:${wiremockVersion}"
     testImplementation "com.github.tomakehurst:wiremock-standalone:${wiremockVersion}"

@@ -22,6 +22,7 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Controller;
 
 import java.util.List;
+import java.util.Objects;
 
 @Controller
 @PreAuthorize("isAuthenticated()")
@@ -90,6 +91,15 @@ public class UserQueryController {
       List<SelectedField> selectors = env.getSelectionSet().getFieldsGroupedByResultKey().get(queryKey);
       if (selectors != null && selectors.size() > depth) {
         throw new TooManySubQueriesException("Can`t fetch over 2 " + queryKey + " sub-queries");
+      }
+      if ("friends".equals(queryKey)) {
+        Objects.requireNonNull(selectors).forEach(field -> {
+          if (field.getSelectionSet().getFieldsGroupedByResultKey().containsKey("friends")) {
+            throw new IllegalGqlFieldAccessException(
+                    "Nested friends queries are forbidden"
+            );
+          }
+        });
       }
     }
   }

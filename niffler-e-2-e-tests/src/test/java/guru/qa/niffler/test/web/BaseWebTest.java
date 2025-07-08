@@ -3,11 +3,10 @@ package guru.qa.niffler.test.web;
 import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideDriver;
 import guru.qa.niffler.config.Config;
-import guru.qa.niffler.jupiter.extension.BrowserExtension;
+import guru.qa.niffler.jupiter.annotation.WebTest;
 import guru.qa.niffler.web.page.*;
-import org.junit.jupiter.api.extension.ExtendWith;
 
-@ExtendWith(BrowserExtension.class)
+@WebTest
 public class BaseWebTest {
 
     protected static final Config CFG = Config.getInstance();

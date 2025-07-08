@@ -27,6 +27,7 @@ public class ApiClients {
     private static final SpendEndpointClient SPEND_CLIENT = buildClient(CFG.spendUrl(), SpendEndpointClient.class);
     private static final UserdataEndpointClient USERDATA_CLIENT = buildClient(CFG.userdataUrl(), UserdataEndpointClient.class);
     private static final GhEndpointClient GH_CLIENT = buildClient(CFG.ghUrl(), GhEndpointClient.class);
+    private static final GatewayEndpointClient GATEWAY_CLIENT = buildClient(CFG.gatewayUrl(), GatewayEndpointClient.class);
     private static final AuthEndpointClient AUTH_CLIENT = buildClient(
         CFG.authUrl(), true, AuthEndpointClient.class, new CodeInterceptor()
     );
@@ -45,6 +46,10 @@ public class ApiClients {
 
     public static @Nonnull AuthEndpointClient authClient() {
         return AUTH_CLIENT;
+    }
+
+    public static @Nonnull GatewayEndpointClient gatewayClient() {
+        return GATEWAY_CLIENT;
     }
 
     private static <T> @Nonnull T buildClient(@Nonnull String baseUrl, @Nonnull Class<T> apiClass) {

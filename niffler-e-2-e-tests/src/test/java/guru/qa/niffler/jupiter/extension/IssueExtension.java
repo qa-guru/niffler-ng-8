@@ -18,8 +18,9 @@ public class IssueExtension implements ExecutionCondition {
   @SneakyThrows
   @Override
   public ConditionEvaluationResult evaluateExecutionCondition(ExtensionContext context) {
+
     return AnnotationSupport.findAnnotation(
-        context.getRequiredTestMethod(),
+        context.getTestMethod(),
         DisabledByIssue.class
     ).or(
         () -> AnnotationSupport.findAnnotation(

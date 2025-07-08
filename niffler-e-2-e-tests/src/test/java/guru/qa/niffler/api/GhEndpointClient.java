@@ -8,7 +8,9 @@ import retrofit2.http.Headers;
 import retrofit2.http.Path;
 
 import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 
+@ParametersAreNonnullByDefault
 public interface GhEndpointClient {
 
   @GET("repos/KonstantinKshnyakin/qa-guru-niffler-ng-8/issues/{issue_number}")

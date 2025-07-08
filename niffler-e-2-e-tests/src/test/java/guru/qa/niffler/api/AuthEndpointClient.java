@@ -4,6 +4,9 @@ import guru.qa.niffler.api.model.OAuthTokenResponse;
 import guru.qa.niffler.retrofit.TestResponse;
 import retrofit2.http.*;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
+@ParametersAreNonnullByDefault
 public interface AuthEndpointClient {
 
 

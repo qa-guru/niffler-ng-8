@@ -7,6 +7,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.StringJoiner;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -47,7 +48,10 @@ public abstract class AbstractApiClient {
         StringJoiner sj = new StringJoiner("\n");
         sj.add("Запрос выполнился некорректно:");
         sj.add(response.getRetrofitRawResponse().toString());
-        sj.add(response.getErrorBody().toString());
+        ERR_DTO errorBody = response.getErrorBody();
+        if (Objects.nonNull(errorBody)) {
+            sj.add(errorBody.toString());
+        }
         throw new IllegalStateException(sj.toString());
     }
 }

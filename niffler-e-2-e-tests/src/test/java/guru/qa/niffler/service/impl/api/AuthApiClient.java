@@ -16,7 +16,7 @@ import javax.annotation.Nonnull;
 
 public class AuthApiClient extends AbstractApiClient {
 
-    public final AuthEndpointClient authEndpointClient = ApiClients.authClient();
+    private final AuthEndpointClient authEndpointClient = ApiClients.authClient();
 
     private AuthApiClient() {
     }
@@ -79,6 +79,6 @@ public class AuthApiClient extends AbstractApiClient {
     }
 
     public String successLoginAdnGetToken(UserParts user) {
-        return successLogin(user).accessToken();
+        return successLogin(user).idToken();
     }
 }

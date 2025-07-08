@@ -12,6 +12,7 @@ import org.junit.platform.commons.support.AnnotationSupport;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.awt.image.BufferedImage;
+import java.lang.reflect.Method;
 import java.util.Optional;
 
 public class ScreenShotTestExtension implements ParameterResolver, TestExecutionExceptionHandler {
@@ -37,29 +38,32 @@ public class ScreenShotTestExtension implements ParameterResolver, TestExecution
     public void handleTestExecutionException(ExtensionContext context, Throwable throwable) throws Throwable {
         if (throwable instanceof AssertionError err) {
             if (err.getMessage().contains(CHECK_SCREENSHOT)) {
-                Optional<ScreenShotTest> optionalAnno = AnnotationSupport.findAnnotation(
-                    context.getRequiredTestMethod(), ScreenShotTest.class
-                );
-                if (optionalAnno.isPresent()) {
-                    ScreenShotTest annotation = optionalAnno.get();
-                    BufferedImage expected = getExpected();
-                    BufferedImage actual = getActual();
-                    if (annotation.rewriteExpected()) {
-                        IOUtil.writeBufferedImage(actual, annotation.value());
+                Optional<Method> optMethod = context.getTestMethod();
+                if (optMethod.isPresent()) {
+                    Optional<ScreenShotTest> optionalAnno = AnnotationSupport.findAnnotation(
+                        optMethod.get(), ScreenShotTest.class
+                    );
+                    if (optionalAnno.isPresent()) {
+                        ScreenShotTest annotation = optionalAnno.get();
+                        BufferedImage expected = getExpected();
+                        BufferedImage actual = getActual();
+                        if (annotation.rewriteExpected()) {
+                            IOUtil.writeBufferedImage(actual, annotation.value());
+                        } else {
+                            ScreenDiff screenDiff = ScreenDiff.of(
+                                expected,
+                                actual,
+                                getDiff()
+                            );
+                            Allure.addAttachment(
+                                "Screenshot diff",
+                                "application/vnd.allure.image.diff",
+                                objectMapper.writeValueAsString(screenDiff)
+                            );
+                        }
                     } else {
-                        ScreenDiff screenDiff = ScreenDiff.of(
-                            expected,
-                            actual,
-                            getDiff()
-                        );
-                        Allure.addAttachment(
-                            "Screenshot diff",
-                            "application/vnd.allure.image.diff",
-                            objectMapper.writeValueAsString(screenDiff)
-                        );
+                        throw new IllegalStateException("Не найдена аннотация ScreenShotTest");
                     }
-                } else {
-                    throw new IllegalStateException("Не найдена аннотация ScreenShotTest");
                 }
             }
         }

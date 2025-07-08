@@ -1,4 +1,4 @@
-package guru.qa.niffler.test.api;
+package guru.qa.niffler.test.rest;
 
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.*;

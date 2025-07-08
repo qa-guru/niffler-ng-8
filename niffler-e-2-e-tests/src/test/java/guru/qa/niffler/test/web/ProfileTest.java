@@ -17,8 +17,9 @@ public class ProfileTest extends BaseWebTest {
     @User(
         categories = @Category(archived = true)
     )
-    void archivedCategoryShouldPresentInCategoriesList(UserParts user, CategoryJson category) {
-        openProfilePage(user)
+    @ApiLogin
+    void archivedCategoryShouldPresentInCategoriesList(CategoryJson category) {
+        openProfilePage()
             .clickShowArchivedToggle()
             .checkCategoryExist(category.name(), true);
     }
@@ -47,16 +48,18 @@ public class ProfileTest extends BaseWebTest {
     }
 
     @User
+    @ApiLogin
     @ScreenShotTest(value = "img/exp/profile/empty-avatar.png")
-    void checkAvatarIsEmpty(UserParts user, BufferedImage expImage) {
-        openProfilePage(user)
+    void checkAvatarIsEmpty(BufferedImage expImage) {
+        openProfilePage()
             .checkAvatarScreenshot(expImage);
     }
 
     @User
+    @ApiLogin
     @ScreenShotTest(value = "img/exp/profile/save-avatar.png")
-    void checkAvatarIsSave(UserParts user, BufferedImage expImage) {
-        openProfilePage(user)
+    void checkAvatarIsSave(BufferedImage expImage) {
+        openProfilePage()
             .uploadAvatar("img/upload-avatar.jpeg")
             .clickSaveChanges()
             .checkAvatarScreenshot(expImage);

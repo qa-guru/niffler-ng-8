@@ -20,13 +20,12 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 @ParametersAreNonnullByDefault
 public class UserApiClient extends AbstractApiClient implements UserClient {
 
-    public final AuthEndpointClient authClient = ApiClients.authClient();
-    public final UserdataEndpointClient userdataClient = ApiClients.userdataClient();
+    private final AuthEndpointClient authClient = ApiClients.authClient();
+    private final UserdataEndpointClient userdataClient = ApiClients.userdataClient();
 
     private UserApiClient() {
     }
@@ -90,7 +89,7 @@ public class UserApiClient extends AbstractApiClient implements UserClient {
     @Override
     public @Nonnull UserParts updateUser(UserParts userPart) {
         TestResponse<UserdataUserJson, ErrorJson> response = userdataClient.userUpdatePost(userPart.getUserdataUserJson());
-        UserdataUserJson userdataUserJson = validateSuccessAndMapObj(response);
+        UserdataUserJson userdataUserJson = validateSuccessAndGetBody(response);
         return userPart.setUserdataUser(userdataUserJson);
     }
 
@@ -98,9 +97,7 @@ public class UserApiClient extends AbstractApiClient implements UserClient {
     @Override
     public List<UserParts> findAll() {
         TestResponse<List<UserdataUserJson>, ErrorJson> response = userdataClient.userAllGet("", null);
-        return validateSuccessAndMapObj(response).stream()
-            .map(UserParts::of)
-            .collect(Collectors.toList());
+        return validateSuccessAndMapList(response, UserParts::of);
     }
 
     @Step("Удаление пользователя")
@@ -149,6 +146,12 @@ public class UserApiClient extends AbstractApiClient implements UserClient {
             validate(acceptResponse);
             targetUser.getTestData().getFriendsNames().add(user.getUsername());
         }
+    }
+
+    @Step("Получение дружеских связей для пользователя")
+    public List<UserdataUserJson> getAllFriends(String username) {
+        TestResponse<List<UserdataUserJson>, ErrorJson> response = userdataClient.friendAllGet(username, null);
+        return validateSuccessAndGetBody(response);
     }
 
     @Step("Удаление сгенерированных пользователей")

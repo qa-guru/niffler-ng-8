@@ -72,8 +72,8 @@ public class UserParts {
         return authUserJson.getPassword();
     }
 
-    public @Nullable String getUserdataId() {
-        return userdataUserJson.getUsername();
+    public @Nullable UUID getUserdataId() {
+        return userdataUserJson.getId();
     }
 
     public @Nullable UUID getAuthId() {

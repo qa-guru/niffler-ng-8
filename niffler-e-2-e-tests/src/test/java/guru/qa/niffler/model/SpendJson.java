@@ -5,10 +5,8 @@ import guru.qa.niffler.data.entity.category.CategoryEntity;
 import guru.qa.niffler.data.entity.spend.SpendEntity;
 import guru.qa.niffler.data.enums.CurrencyValues;
 
-
 import javax.annotation.Nonnull;
 import java.util.Date;
-import java.util.Optional;
 import java.util.UUID;
 
 public record SpendJson(

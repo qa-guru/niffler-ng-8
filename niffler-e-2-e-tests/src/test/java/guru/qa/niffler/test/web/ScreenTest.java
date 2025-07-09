@@ -2,19 +2,18 @@ package guru.qa.niffler.test.web;
 
 import com.codeborne.selenide.Selenide;
 import guru.qa.niffler.config.Config;
+import guru.qa.niffler.data.condition.Bubble;
+import guru.qa.niffler.data.condition.Color;
 import guru.qa.niffler.data.enums.CurrencyValues;
 import guru.qa.niffler.jupiter.annotations.ScreenShootTest;
-import guru.qa.niffler.jupiter.extensions.BrowserExtension;
 import guru.qa.niffler.jupiter.annotations.Spend;
 import guru.qa.niffler.jupiter.annotations.User;
+import guru.qa.niffler.jupiter.extensions.BrowserExtension;
 import guru.qa.niffler.model.SpendJson;
 import guru.qa.niffler.page.LoginPage;
-import guru.qa.niffler.page.MainPage;
 import guru.qa.niffler.page.ProfilePage;
-import guru.qa.niffler.page.SidebarPage;
-import guru.qa.niffler.service.UserDbClient;
-import guru.qa.niffler.service.UsersClient;
 import guru.qa.niffler.steps.AssertionSteps;
+import guru.qa.niffler.utils.InputGenerator;
 import guru.qa.niffler.utils.RandomDataUtils;
 import guru.qa.niffler.utils.ScreenDiffResult;
 import org.junit.jupiter.api.Assertions;
@@ -25,17 +24,13 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-import static com.codeborne.selenide.Selenide.$;
-
 @ExtendWith(BrowserExtension.class)
 public class ScreenTest extends BaseUITest {
 
-    UsersClient userDbClient;
 
     private static final Config CFG = Config.getInstance();
     String actualLogin = CFG.mainUserLogin();
     String actualPass = CFG.mainUserPass();
-
 
 
     @User(
@@ -46,37 +41,42 @@ public class ScreenTest extends BaseUITest {
                     amount = 89000.00,
                     currency = CurrencyValues.RUB))
     @ScreenShootTest(value = "img/stats/stat_one_spend_main.png")
-        void screenOneSpendTest(BufferedImage expectedImage) throws IOException {
+    void screenOneSpendTest(BufferedImage expectedImage) throws IOException {
         Selenide.open(CFG.frontUrl(), LoginPage.class)
                 .doLogin(actualLogin, actualPass);
-        BufferedImage actualImage = new MainPage().screenshotStats();
-        Assertions.assertFalse(new ScreenDiffResult(expectedImage, actualImage));
+        BufferedImage actualImage = mainPage().stat.screenshotStats();
+        Assertions.assertFalse(new ScreenDiffResult(expectedImage, actualImage), "Screen comparison failure");
+        mainPage().bubbles.checkBubbles(Color.yellow);
     }
 
     @User(
             username = "test",
             spendings = @Spend(username = "test",
-                    category = "Обучение",
+                    category = "Обучение1",
                     description = "Обучение Niffler 2.0",
                     amount = 200,
                     currency = CurrencyValues.RUB))
     @ScreenShootTest(value = "img/stats/stat_two_spends_main.png")
-        void screenTwoSpendTest(BufferedImage expectedImage) throws IOException {
-        SpendJson secondSpend = RandomDataUtils.generateSpend(actualLogin, 150.0);
+    void screenTwoSpendTest(BufferedImage expectedImage) throws IOException {
+
+        SpendJson secondSpend = RandomDataUtils.generateSpend(actualLogin, 100.0);
+        Bubble bubble1 = new Bubble(Color.yellow, InputGenerator.getExpectedBubbleText("Обучение1", 200.0));
+        Bubble bubble2 = new Bubble(Color.green, InputGenerator.getExpectedBubbleText(secondSpend));
         spendDbClient.createSpend(secondSpend);
         Selenide.open(CFG.frontUrl(), LoginPage.class)
                 .doLogin(actualLogin, actualPass);
-        BufferedImage actualImage = new MainPage().screenshotStats();
+        BufferedImage actualImage = mainPage().stat.screenshotStats();
         spendDbClient.deleteTxSpend(secondSpend);
         spendDbClient.deleteTxCategory(secondSpend.category());
         AssertionSteps.assertScreenshotsEquals(expectedImage, actualImage);
+        mainPage().bubbles.checkBubbles(bubble1, bubble2);
     }
 
     @ScreenShootTest(value = "img/stats/stat_without_spends.png")
-        void screenWithoutOneSpendsTest(BufferedImage expectedImage) throws IOException {
+    void screenWithoutOneSpendsTest(BufferedImage expectedImage) throws IOException {
         Selenide.open(CFG.frontUrl(), LoginPage.class)
                 .doLogin(actualLogin, actualPass);
-        BufferedImage actualImage = new MainPage().screenshotStats();
+        BufferedImage actualImage = mainPage().stat.screenshotStats();
         Assertions.assertFalse(new ScreenDiffResult(expectedImage, actualImage));
     }
 
@@ -87,17 +87,23 @@ public class ScreenTest extends BaseUITest {
         sidebarPage().header.toProfile();
         new ProfilePage().uploadProfileImage(new File(kiwiPngPath))
                 .clickSaveChanges();
-        BufferedImage actualImage = new ProfilePage().screenshotProfileIcon();
+        BufferedImage actualImage = profilePage().profileIcon.screenshotStats();
 
         Assertions.assertFalse(new ScreenDiffResult(expectedImage, actualImage));
 
-        userDbClient.clearPhotoDataByUsername(actualLogin);
+        userClient.clearPhotoDataByUsername(actualLogin);
     }
 
     @ScreenShootTest(value = "img/expected/expected_Kiwi.png")
     void checkResetProfilePicture(BufferedImage expectedImage) throws IOException {
-        //Safety check
-        userDbClient.clearPhotoDataByUsername(actualLogin);
+
+//    @Test
+//    void checkResetProfilePicture() throws IOException {
+//        //Safety check
+//        BufferedImage expectedImage = ImageIO.read(
+//                new File("C:\\niffler-ng-81\\niffler-e-2-e-tests\\src\\test\\resources" +
+//                        "\\img\\expected\\expected_Kiwi.png"));
+        userClient.clearPhotoDataByUsername(actualLogin);
         //Act
         Selenide.open(CFG.frontUrl(), LoginPage.class)
                 .doLogin(actualLogin, actualPass);
@@ -108,7 +114,7 @@ public class ScreenTest extends BaseUITest {
         Selenide.open(CFG.frontUrl() + "main");
         sidebarPage().header.toProfile();
         //Скриншотим обезбянку
-        BufferedImage actualMonkey = new ProfilePage().screenshotProfileIcon();
+        BufferedImage actualMonkey = profilePage().profileIcon.screenshotStats();
         //Проверяем что обезбянка реалбно
         Assertions.assertFalse(new ScreenDiffResult(ImageIO.read(
                 new File("C:\\niffler-ng-81\\niffler-e-2-e-tests\\src\\test\\resources" +
@@ -117,11 +123,11 @@ public class ScreenTest extends BaseUITest {
         new ProfilePage().uploadProfileImage(new File(kiwiPngPath))
                 .clickSaveChanges();
         //Скриншотим Киви
-        BufferedImage actualKiwi = new ProfilePage().screenshotProfileIcon();
+        BufferedImage actualKiwi = profilePage().profileIcon.screenshotStats();
         //Проверяем что Киви реально
         Assertions.assertFalse(new ScreenDiffResult(expectedImage, actualKiwi));
         //Cleanup
-        userDbClient.clearPhotoDataByUsername(actualLogin);
+        userClient.clearPhotoDataByUsername(actualLogin);
     }
 
 }

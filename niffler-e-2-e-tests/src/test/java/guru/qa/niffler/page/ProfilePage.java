@@ -4,6 +4,7 @@ import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import com.codeborne.selenide.WebDriverRunner;
+import guru.qa.niffler.page.component.StatComponent;
 import guru.qa.niffler.page.component.basicComponents.Button;
 import guru.qa.niffler.page.component.basicComponents.LineEdit;
 import guru.qa.niffler.utils.CommonSteps;
@@ -16,9 +17,9 @@ import java.io.IOException;
 
 import static com.codeborne.selenide.Selenide.*;
 
-public class ProfilePage extends BasePage{
+public class ProfilePage extends BasePage {
 
-    private final SelenideElement profileIcon = $x("//*[@id='image__input']/following-sibling::div//div");
+    public final StatComponent profileIcon = new StatComponent(By.xpath("//*[@id='image__input']/following-sibling::div//div"));
     private final SelenideElement imageInput = $x("//*[@id='image__input']");
     private final SelenideElement userName = $("#username");
     private final SelenideElement name = $("#name");
@@ -99,9 +100,5 @@ public class ProfilePage extends BasePage{
         saveChanges.shouldBe(Condition.visible);
         js.executeScript("arguments[0].click();", saveChanges);
         return this;
-    }
-
-    public BufferedImage screenshotProfileIcon() throws IOException {
-        return CommonSteps.screenshot(profileIcon);
     }
 }

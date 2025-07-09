@@ -1,27 +1,15 @@
 package guru.qa.niffler.page;
 
-import com.codeborne.selenide.SelenideElement;
 import guru.qa.niffler.page.component.SpendingTable;
+import guru.qa.niffler.page.component.StatComponent;
 import guru.qa.niffler.page.component.basicComponents.LineEdit;
-import guru.qa.niffler.utils.CommonSteps;
 import org.openqa.selenium.By;
-
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-
-import static com.codeborne.selenide.Selenide.$;
-import static com.codeborne.selenide.Selenide.sleep;
 
 public class MainPage extends BasePage {
 
-    private final SelenideElement stat = $("canvas[role='img']");
-
-
+    public StatComponent stat = new StatComponent(By.xpath("//canvas[@role='img']"));
     public SpendingTable table = new SpendingTable();
     public LineEdit search = new LineEdit(By.xpath("//input"));
+    public final StatComponent bubbles = new StatComponent(By.cssSelector("#legend-container"));
 
-    public BufferedImage screenshotStats() throws IOException {
-        sleep(5000);
-        return CommonSteps.screenshot(stat);
-    }
 }

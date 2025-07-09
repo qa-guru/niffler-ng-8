@@ -33,7 +33,7 @@ public class SpendingExtension implements BeforeEachCallback, AfterEachCallback,
                             new Date(),
                             new CategoryJson(
                                     null,
-                                    categoryName,
+                                    anno.spendings()[0].category(),
                                     anno.username(),
                                     false
                             ),

@@ -11,7 +11,7 @@ import java.util.UUID;
 public interface UsersClient {
 
     static UsersClient getInstance() {
-        return new UserApiClient();
+        return new UserDbClient();
     }
 
     UserJson createUserTxJdbc(UserJson user);

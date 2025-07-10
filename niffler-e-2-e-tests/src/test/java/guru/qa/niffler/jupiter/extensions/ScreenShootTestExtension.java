@@ -36,23 +36,25 @@ public class ScreenShootTestExtension implements ParameterResolver, TestExecutio
 
     @Override
     public void handleTestExecutionException(ExtensionContext context, Throwable throwable) throws Throwable {
-        ScreenShootTest screenShotTest = context.getRequiredTestMethod().getAnnotation(ScreenShootTest.class);
-        if (screenShotTest.rewriteExpected()) {
-            BufferedImage actual = getActual();
-            if (actual != null) {
-                ImageIO.write(actual, "png", new File("src/test/resources/" + screenShotTest.value()));
+        if (throwable.getMessage().contains("Screen comparison failure")) {
+            ScreenShootTest screenShotTest = context.getRequiredTestMethod().getAnnotation(ScreenShootTest.class);
+            if (screenShotTest.rewriteExpected()) {
+                BufferedImage actual = getActual();
+                if (actual != null) {
+                    ImageIO.write(actual, "png", new File("src/test/resources/" + screenShotTest.value()));
+                }
             }
+            ScreenDif screenDif = new ScreenDif(
+                    "data:image/png;base64," + Base64.getEncoder().encodeToString(imageToBytes(getExpected())),
+                    "data:image/png;base64," + Base64.getEncoder().encodeToString(imageToBytes(getActual())),
+                    "data:image/png;base64," + Base64.getEncoder().encodeToString(imageToBytes(getActual())));
+
+
+            Allure.addAttachment("ScreenDif"
+                    , "application/vnd.allure.image.diff",
+                    objectMapper.writeValueAsString(screenDif));
+
         }
-        ScreenDif screenDif = new ScreenDif(
-                "data:image/png;base64," + Base64.getEncoder().encodeToString(imageToBytes(getExpected())),
-                "data:image/png;base64," + Base64.getEncoder().encodeToString(imageToBytes(getActual())),
-                "data:image/png;base64," + Base64.getEncoder().encodeToString(imageToBytes(getActual())));
-
-
-        Allure.addAttachment("ScreenDif"
-                , "application/vnd.allure.image.diff",
-                objectMapper.writeValueAsString(screenDif));
-
         throw throwable;
     }
 

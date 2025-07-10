@@ -85,7 +85,7 @@ public class RandomDataUtils {
                         false
                 ),
                 CurrencyValues.RUB,
-                100.0,
+                amount,
                 RandomDataUtils.getRandomShortString(),
                 username
         );

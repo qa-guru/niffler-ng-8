@@ -17,6 +17,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 public class SpendingTest extends BaseUITest {
 
     private static final Config CFG = Config.getInstance();
+    String actualLogin = CFG.mainUserLogin();
+    String actualPass = CFG.mainUserPass();
 
     @User(
             username = "test",
@@ -26,7 +28,7 @@ public class SpendingTest extends BaseUITest {
                     amount = 89000.00,
                     currency = CurrencyValues.RUB))
     @Test
-    void spendingDescriptionShouldBeUpdatedByTableAction(SpendJson spend) {
+    void spendingDescriptionShouldBeUpdatedByTableActionTest(SpendJson spend) {
         final String newDescription = "Обучение Niffler NG";
 
         Selenide.open(CFG.frontUrl(), LoginPage.class)
@@ -38,8 +40,24 @@ public class SpendingTest extends BaseUITest {
     }
 
     @Test
-    void checkHtmlTest(){
+    void checkHtmlTest() {
         SpendApiClient client = new SpendApiClient();
         client.addSpend(RandomDataUtils.generateSpend("test", 100.44));
+    }
+
+    @Test
+    void checkSpendingTableRowTest() throws InterruptedException {
+        SpendJson spend = RandomDataUtils.generateSpend(actualLogin, 500.0);
+
+        spendDbClient.createSpend(spend);
+        Selenide.open(CFG.frontUrl(), LoginPage.class)
+                .doLogin(actualLogin, actualPass);
+
+        Thread.sleep(3000);
+
+        mainPage().table.checkRowExist(spend);
+
+        spendDbClient.deleteTxSpend(spend);
+        spendDbClient.deleteTxCategory(spend.category());
     }
 }

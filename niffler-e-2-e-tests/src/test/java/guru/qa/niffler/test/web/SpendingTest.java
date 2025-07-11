@@ -4,7 +4,7 @@ import guru.qa.niffler.condition.Color;
 import guru.qa.niffler.jupiter.annotation.*;
 import guru.qa.niffler.jupiter.annotation.meta.WebTest;
 import guru.qa.niffler.model.Bubble;
-import guru.qa.niffler.model.rest.CurrencyValues;
+import guru.qa.niffler.data.entity.currency.CurrencyValues;
 import guru.qa.niffler.model.rest.SpendJson;
 import guru.qa.niffler.model.rest.UserJson;
 import guru.qa.niffler.page.EditSpendingPage;

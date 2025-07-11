@@ -1,6 +1,6 @@
 package guru.qa.niffler.data.entity.spend;
 
-import guru.qa.niffler.model.rest.CurrencyValues;
+import guru.qa.niffler.data.entity.currency.CurrencyValues;
 import guru.qa.niffler.model.rest.SpendJson;
 import jakarta.persistence.*;
 import lombok.Getter;

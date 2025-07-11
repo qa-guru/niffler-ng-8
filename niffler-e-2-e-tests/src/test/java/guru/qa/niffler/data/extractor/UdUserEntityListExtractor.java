@@ -3,7 +3,7 @@ package guru.qa.niffler.data.extractor;
 import guru.qa.niffler.data.entity.userdata.FriendshipEntity;
 import guru.qa.niffler.data.entity.userdata.FriendshipStatus;
 import guru.qa.niffler.data.entity.userdata.UserEntity;
-import guru.qa.niffler.model.rest.CurrencyValues;
+import guru.qa.niffler.data.entity.currency.CurrencyValues;
 import org.springframework.jdbc.core.ResultSetExtractor;
 
 import java.sql.ResultSet;

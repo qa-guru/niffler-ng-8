@@ -5,7 +5,7 @@ import com.apollographql.java.rx2.Rx2Apollo;
 import guru.qa.StatQuery;
 import guru.qa.UpdateCategoryMutation;
 import guru.qa.niffler.model.rest.CategoryJson;
-import guru.qa.niffler.model.rest.CurrencyValues;
+import guru.qa.niffler.data.entity.currency.CurrencyValues;
 import guru.qa.niffler.model.rest.SpendJson;
 import guru.qa.niffler.model.rest.UserJson;
 import guru.qa.type.CategoryInput;

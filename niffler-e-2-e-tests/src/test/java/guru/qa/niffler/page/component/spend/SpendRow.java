@@ -6,7 +6,7 @@ import com.codeborne.selenide.SelenideDriver;
 import com.codeborne.selenide.SelenideElement;
 import guru.qa.niffler.jupiter.extension.NonStaticBrowserExtension;
 import guru.qa.niffler.model.rest.CategoryJson;
-import guru.qa.niffler.model.rest.CurrencyValues;
+import guru.qa.niffler.data.entity.currency.CurrencyValues;
 import guru.qa.niffler.model.rest.SpendJson;
 import guru.qa.niffler.page.EditSpendingPage;
 import guru.qa.niffler.page.MainPage;

@@ -2,7 +2,7 @@ package guru.qa.niffler.data.mapper;
 
 import guru.qa.niffler.data.dao.impl.spring.CategoryDaoSpringJdbc;
 import guru.qa.niffler.data.entity.spend.SpendEntity;
-import guru.qa.niffler.model.rest.CurrencyValues;
+import guru.qa.niffler.data.entity.currency.CurrencyValues;
 import org.springframework.jdbc.core.RowMapper;
 
 import javax.annotation.ParametersAreNonnullByDefault;

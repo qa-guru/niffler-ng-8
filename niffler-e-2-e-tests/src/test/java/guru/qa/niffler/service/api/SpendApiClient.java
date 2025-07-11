@@ -1,11 +1,12 @@
 package guru.qa.niffler.service.api;
 
 import guru.qa.niffler.api.core.RestClient;
+import guru.qa.niffler.grpc.Currency;
 import guru.qa.niffler.utils.SuccessRequestExecutor;
 import guru.qa.niffler.api.SpendApi;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.model.rest.CategoryJson;
-import guru.qa.niffler.model.rest.CurrencyValues;
+import guru.qa.niffler.data.entity.currency.CurrencyValues;
 import guru.qa.niffler.model.rest.SpendJson;
 import guru.qa.niffler.service.SpendClient;
 import io.qameta.allure.Step;
@@ -90,5 +91,17 @@ public class SpendApiClient extends RestClient implements SpendClient {
   @Step("Find spend by id {spendId}")
   public Optional<SpendJson> findById(UUID spendId) {
     throw new UnsupportedOperationException("Method 'findCategoryById' is not implemented");
+  }
+
+  @Override
+  @Step("Get all currencies")
+  public List<Currency> getAllCurrencies(){
+    throw new UnsupportedOperationException("Method 'getAllCurrencies' is not implemented");
+  }
+
+  @Override
+  @Step("Exchange {spend} {spendCurrency} to {desiredCurrency}")
+  public double exchange(double spend, guru.qa.niffler.grpc.CurrencyValues spendCurrency, guru.qa.niffler.grpc.CurrencyValues desiredCurrency){
+    throw new UnsupportedOperationException("Method 'exchange' is not implemented");
   }
 }

@@ -38,4 +38,10 @@ public interface Config {
   default String defaultPassword(){
     return "12345";
   }
+
+  String currencyGrpcAddress();
+
+  default int currencyGrpcPort() {
+    return 8092;
+  };
 }

@@ -38,6 +38,8 @@ enum DockerConfig implements Config {
     return "http://auth.niffler.dc:8091/";
   }
 
+
+
   @Override
   public String spendUrl() {
     return "http://127.0.0.1:8093/";
@@ -51,5 +53,10 @@ enum DockerConfig implements Config {
   @Override
   public String currencyJdbcUrl() {
     return "jdbc:postgresql://127.0.0.1:5433/niffler-currency";
+  }
+
+  @Override
+  public String currencyGrpcAddress() {
+    return "auth.niffler.dc";
   }
 }

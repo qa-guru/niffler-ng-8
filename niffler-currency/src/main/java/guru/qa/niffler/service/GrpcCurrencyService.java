@@ -10,6 +10,7 @@ import guru.qa.niffler.grpc.Currency;
 import guru.qa.niffler.grpc.CurrencyResponse;
 import guru.qa.niffler.grpc.CurrencyValues;
 import guru.qa.niffler.grpc.NifflerCurrencyServiceGrpc;
+import io.grpc.Status;
 import io.grpc.stub.StreamObserver;
 import jakarta.annotation.Nonnull;
 import net.devh.boot.grpc.server.service.GrpcService;
@@ -53,6 +54,12 @@ public class GrpcCurrencyService extends NifflerCurrencyServiceGrpc.NifflerCurre
   @Transactional(readOnly = true)
   @Override
   public void calculateRate(CalculateRequest request, StreamObserver<CalculateResponse> responseObserver) {
+    if (request.getAmount() < 0) {
+      throw Status.INVALID_ARGUMENT
+          .withDescription("Amount cannot be negative")
+          .asRuntimeException();
+    }
+
     BigDecimal result = convertSpendTo(
         request.getAmount(),
         request.getSpendCurrency(),

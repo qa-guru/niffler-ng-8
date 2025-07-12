@@ -29,7 +29,7 @@ public interface GatewayEndpointClient {
 
     @DELETE("api/friends/remove")
     TestResponse<Void, Void> removeFriend(@Header("Authorization") String bearerToken,
-                                          @Nullable @Query("username") String targetUsername);
+                                          @Nonnull @Query("username") String targetUsername);
 
     @POST("api/invitations/send")
     TestResponse<UserdataUserJson, Void> sendInvitation(@Header("Authorization") String bearerToken,

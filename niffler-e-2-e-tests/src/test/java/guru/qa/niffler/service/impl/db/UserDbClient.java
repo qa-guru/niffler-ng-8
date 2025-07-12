@@ -4,16 +4,19 @@ import guru.qa.niffler.api.model.AuthUserJson;
 import guru.qa.niffler.api.model.UserParts;
 import guru.qa.niffler.api.model.UserdataUserJson;
 import guru.qa.niffler.db.entity.auth.AuthUserEntity;
+import guru.qa.niffler.db.entity.userdata.FriendshipStatus;
+import guru.qa.niffler.db.entity.userdata.UserdataFriendshipEntity;
 import guru.qa.niffler.db.entity.userdata.UserdataUserEntity;
 import guru.qa.niffler.db.repository.AuthUserRepository;
 import guru.qa.niffler.db.repository.UserdataUserRepository;
-import guru.qa.niffler.db.repository.impl.hibernate.AuthUserRepositoryHibernate;
-import guru.qa.niffler.db.repository.impl.hibernate.UserdataUserRepositoryHibernate;
+import guru.qa.niffler.db.repository.impl.spring_jdbc.AuthUserRepositorySpringJdbc;
+import guru.qa.niffler.db.repository.impl.spring_jdbc.UserdataUserRepositorySpringJdbc;
 import guru.qa.niffler.db.tpl.XaTransactionTemplate;
 import guru.qa.niffler.service.UserClient;
 import io.qameta.allure.Step;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.*;
 import java.util.function.Function;
@@ -33,8 +36,8 @@ public class UserDbClient extends AbstractDbClient implements UserClient {
 
 
     public UserDbClient() {
-        this.authUserRepository = new AuthUserRepositoryHibernate();
-        this.userdataUserRepository = new UserdataUserRepositoryHibernate();
+        this.authUserRepository = new AuthUserRepositorySpringJdbc();
+        this.userdataUserRepository = new UserdataUserRepositorySpringJdbc();
     }
 
     public UserDbClient(AuthUserRepository authUserRepository, UserdataUserRepository userdataUserRepository) {
@@ -102,7 +105,7 @@ public class UserDbClient extends AbstractDbClient implements UserClient {
         return xaTxTemplate.execute(() -> {
             List<UserParts> result = new ArrayList<>();
             Map<String, UserdataUserEntity> userdataUserByName = userdataUserRepository.findAll().stream()
-                    .collect(Collectors.toMap(UserdataUserEntity::getUsername, Function.identity()));
+                .collect(Collectors.toMap(UserdataUserEntity::getUsername, Function.identity()));
             for (AuthUserEntity authUser : authUserRepository.findAll()) {
                 UserdataUserEntity userdataUser = userdataUserByName.get(authUser.getUsername());
                 result.add(UserParts.of(authUser, userdataUser));
@@ -117,6 +120,21 @@ public class UserDbClient extends AbstractDbClient implements UserClient {
             deleteAuthUserAndAuthority(userPart.getAuthUserJson());
             deleteUserdataUser(userPart.getUserdataUserJson());
         });
+    }
+
+    public List<UserdataFriendshipEntity> selectFriendshipsByRequesterId(@Nullable UUID requesterId) {
+        return selectFriendships(requesterId, null, null);
+    }
+
+    public List<UserdataFriendshipEntity> selectFriendshipsByAddresseeId(@Nullable UUID addresseeId) {
+        return selectFriendships(null, addresseeId, null);
+    }
+
+    @Step("Получение дружеских отношений пользователя")
+    public List<UserdataFriendshipEntity> selectFriendships(@Nullable UUID requesterId,
+                                                            @Nullable UUID addresseeId,
+                                                            @Nullable FriendshipStatus status) {
+        return userdataUserRepository.selectFriendships(requesterId, addresseeId, status);
     }
 
     @Step("Создание входящих запросов на дружбу")
@@ -179,10 +197,10 @@ public class UserDbClient extends AbstractDbClient implements UserClient {
         } else if (userJson.getUsername() != null) {
             String username = userJson.getUsername();
             userdataUser = userdataUserRepository.findByUsername(username)
-                    .orElseThrow(() -> new IllegalArgumentException(
-                            "У пользователя невозможно удалить, т.к. отсутствует id и не получается найти по username: " +
-                                    username
-                    ));
+                .orElseThrow(() -> new IllegalArgumentException(
+                    "У пользователя невозможно удалить, т.к. отсутствует id и не получается найти по username: " +
+                        username
+                ));
         } else {
             throw new IllegalArgumentException("id и username == null");
         }
@@ -196,10 +214,10 @@ public class UserDbClient extends AbstractDbClient implements UserClient {
         } else if (userJson.getUsername() != null) {
             String username = userJson.getUsername();
             authUser = authUserRepository.findByUsername(username)
-                    .orElseThrow(() -> new IllegalArgumentException(
-                            "У пользователя невозможно удалить, т.к. отсутствует id и не получается найти по username: " +
-                                    username
-                    ));
+                .orElseThrow(() -> new IllegalArgumentException(
+                    "У пользователя невозможно удалить, т.к. отсутствует id и не получается найти по username: " +
+                        username
+                ));
         } else {
             throw new IllegalArgumentException("id и username == null");
         }

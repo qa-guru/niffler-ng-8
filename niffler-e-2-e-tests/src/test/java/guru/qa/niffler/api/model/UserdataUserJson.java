@@ -17,7 +17,7 @@ public class UserdataUserJson {
     private String firstname;
     private String surname;
     private String fullname;
-    private String friendshipStatus;
+    private FriendshipStatus friendshipStatus;
     private byte[] photo;
     private byte[] photoSmall;
 
@@ -33,4 +33,10 @@ public class UserdataUserJson {
                 .setPhotoSmall(userdataEntity.getPhotoSmall());
     }
 
+    public enum FriendshipStatus {
+        INVITE_SENT,
+        INVITE_RECEIVED,
+        FRIEND,
+        VOID;
+    }
 }

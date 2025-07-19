@@ -1,0 +1,54 @@
+query CategoriesAnotherUser($page: Int!, $size: Int!) {
+    user {
+        id
+        username
+        categories {
+            id
+            name
+            archived
+        }
+        friends(page: $page, size: $size) {
+            edges {
+                node {
+                    categories {
+                        id
+                        name
+                        archived
+                    }
+                }
+            }
+        }
+    }
+}
+
+query SubQueriesFriendsOver2($page: Int!, $size: Int!) {
+    user {
+        id
+        username
+        friends(page: $page, size: $size) {
+            edges {
+                node {
+                    id
+                    username
+                    friends(page: $page, size: $page) {
+                        edges {
+                            node {
+                                id
+                                username
+                                friends(page: $page, size: $page) {
+                                    edges {
+                                        node {
+                                            id
+                                            username
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+

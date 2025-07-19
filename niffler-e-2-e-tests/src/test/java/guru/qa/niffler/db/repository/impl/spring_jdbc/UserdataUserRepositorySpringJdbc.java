@@ -19,9 +19,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @SuppressWarnings("DataFlowIssue")
 @ParametersAreNonnullByDefault
@@ -130,6 +128,28 @@ public class UserdataUserRepositorySpringJdbc implements UserdataUserRepository 
                 return friendships.size();
             }
         });
+    }
+
+    public List<UserdataFriendshipEntity> selectFriendships(@Nullable UUID requesterId,
+                                                            @Nullable UUID addresseeId,
+                                                            @Nullable FriendshipStatus status) {
+        String sql = "SELECT * FROM friendship";
+        StringJoiner sj = new StringJoiner(" AND ", " WHERE ", "");
+        ArrayList<Object> params = new ArrayList<>();
+        if (requesterId != null) {
+            sj.add("requester_id = ?");
+            params.add(requesterId);
+        }
+        if (addresseeId != null) {
+            sj.add("addressee_id = ?");
+            params.add(addresseeId);
+        }
+        if (status != null) {
+            sj.add("status = ?");
+            params.add(status);
+        }
+        sql = sql + sj;
+        return jdbcTemplate.query(sql, UserdataFriendshipEntityRowMapper.INSTANCE, params.toArray());
     }
 
     @Override

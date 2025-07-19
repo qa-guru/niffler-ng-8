@@ -60,12 +60,12 @@ public class UserApiClient extends AbstractApiClient implements UserClient {
     @Override
     public @Nonnull UserParts createUser(UserParts userPart) {
         TestResponse<Void, Void> registerGetResp = authClient.registerGet();
-        validate(registerGetResp);
+        validateSuccess(registerGetResp);
         String token = TradeSafeCookieStore.INSTANCE.xsrfValue();
         String username = userPart.getUsername();
         String password = userPart.getPassword();
         TestResponse<Void, Void> registerPostResp = authClient.registerPost(token, username, password, password);
-        validate(registerPostResp);
+        validateSuccess(registerPostResp);
 
         Stopwatch sw = Stopwatch.createStarted();
         long maxWaitTime = 5000;
@@ -76,7 +76,7 @@ public class UserApiClient extends AbstractApiClient implements UserClient {
 
             UserdataUserJson userdataBody = userCurrentGetResp.getBody();
             if (userCurrentGetResp.isSuccessful() && userdataBody != null && userdataBody.getId() != null) {
-                validate(registerPostResp);
+                validateSuccess(registerPostResp);
                 return userPart.setUserdataUser(userdataBody);
             } else {
                 Thread.sleep(100);
@@ -114,7 +114,7 @@ public class UserApiClient extends AbstractApiClient implements UserClient {
             user = createUser(user);
             TestResponse<UserdataUserJson, ErrorJson> response =
                 userdataClient.invitationSendPost(user.getUsername(), targetUser.getUsername());
-            validate(response);
+            validateSuccess(response);
             targetUser.getTestData().getInInviteNames().add(user.getUsername());
         }
     }
@@ -127,7 +127,7 @@ public class UserApiClient extends AbstractApiClient implements UserClient {
             user = createUser(user);
             TestResponse<UserdataUserJson, ErrorJson> response =
                 userdataClient.invitationSendPost(targetUser.getUsername(), user.getUsername());
-            validate(response);
+            validateSuccess(response);
             targetUser.getTestData().getOutInviteNames().add(user.getUsername());
         }
     }
@@ -140,10 +140,10 @@ public class UserApiClient extends AbstractApiClient implements UserClient {
             user = createUser(user);
             TestResponse<UserdataUserJson, ErrorJson> sendResponse =
                 userdataClient.invitationSendPost(targetUser.getUsername(), user.getUsername());
-            validate(sendResponse);
+            validateSuccess(sendResponse);
             TestResponse<UserdataUserJson, ErrorJson> acceptResponse =
                 userdataClient.invitationAcceptPost(user.getUsername(), targetUser.getUsername());
-            validate(acceptResponse);
+            validateSuccess(acceptResponse);
             targetUser.getTestData().getFriendsNames().add(user.getUsername());
         }
     }

@@ -25,9 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
@@ -158,6 +156,21 @@ class UserServiceTest {
 
     assertEquals(secondTestUserName, invitation.username());
     assertEquals(thirdTestUserName, friend.username());
+  }
+
+  @Test
+  void inviteRequestMustBeSend(@Mock UserRepository userRepository) {
+    when(userRepository.findByUsername(eq(mainTestUserName)))
+        .thenReturn(Optional.of(mainTestUser));
+    when(userRepository.findByUsername(eq(secondTestUserName)))
+        .thenReturn(Optional.of(secondTestUser));
+
+    userService = new UserService(userRepository);
+
+    final UserJson user = userService.createFriendshipRequest(mainTestUserName, secondTestUserName);
+
+    assertEquals(secondTestUserName, user.username());
+    assertEquals(INVITE_SENT, user.friendshipStatus());
   }
 
   private List<UserWithStatus> getMockUsersMappingFromDb() {

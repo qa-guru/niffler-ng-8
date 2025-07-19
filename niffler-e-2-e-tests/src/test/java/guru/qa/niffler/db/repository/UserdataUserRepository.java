@@ -4,6 +4,7 @@ import guru.qa.niffler.db.entity.userdata.FriendshipStatus;
 import guru.qa.niffler.db.entity.userdata.UserdataFriendshipEntity;
 import guru.qa.niffler.db.entity.userdata.UserdataUserEntity;
 
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -47,4 +48,9 @@ public interface UserdataUserRepository {
 
     UserdataFriendshipEntity createFriendship(UserdataUserEntity requester, UserdataUserEntity addressee, FriendshipStatus status);
 
+    default List<UserdataFriendshipEntity> selectFriendships(@Nullable UUID requesterId,
+                                                             @Nullable UUID addresseeId,
+                                                             @Nullable FriendshipStatus status) {
+        throw new UnsupportedOperationException("Метод не реализован");
+    }
 }

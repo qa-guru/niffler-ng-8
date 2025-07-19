@@ -96,9 +96,9 @@ public class ApiLoginExtension implements BeforeEachCallback, ParameterResolver 
         List<UserdataUserJson> friends = userClient.getAllFriends(user.getUsername());
         for (UserdataUserJson friend : friends) {
             switch (friend.getFriendshipStatus()) {
-                case "FRIEND" -> testData.getFriendsNames().add(friend.getUsername());
-                case "INVITE_SENT" -> testData.getOutInviteNames().add(friend.getUsername());
-                case "INVITE_RECEIVED" -> testData.getInInviteNames().add(friend.getUsername());
+                case FRIEND -> testData.getFriendsNames().add(friend.getUsername());
+                case INVITE_SENT -> testData.getOutInviteNames().add(friend.getUsername());
+                case INVITE_RECEIVED -> testData.getInInviteNames().add(friend.getUsername());
             }
         }
     }

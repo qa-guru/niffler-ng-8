@@ -1,18 +1,18 @@
 package guru.qa.niffler.test.soap;
 
 
-import jaxb.userdata.CurrentUserRequest;
-import jaxb.userdata.UserResponse;
+import guru.qa.jaxb.userdata.CurrentUserRequest;
+import guru.qa.jaxb.userdata.UserResponse;
 import guru.qa.niffler.jupiter.annotation.User;
 import guru.qa.niffler.jupiter.annotation.meta.SoapTest;
 import guru.qa.niffler.model.rest.UserJson;
 import guru.qa.niffler.service.soap.UserdataSoapClient;
-import jaxb.userdata.UsersResponse;
+import guru.qa.jaxb.userdata.UsersResponse;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
-import static jaxb.userdata.FriendshipStatus.INVITE_SENT;
+import static guru.qa.jaxb.userdata.FriendshipStatus.INVITE_SENT;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 

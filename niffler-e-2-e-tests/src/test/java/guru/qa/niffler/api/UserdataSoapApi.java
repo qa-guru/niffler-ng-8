@@ -1,6 +1,6 @@
 package guru.qa.niffler.api;
 
-import jaxb.userdata.*;
+import guru.qa.jaxb.userdata.*;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.Headers;

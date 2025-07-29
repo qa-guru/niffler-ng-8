@@ -2,7 +2,7 @@ package guru.qa.niffler.service.soap;
 
 
 import guru.qa.niffler.model.rest.UserJson;
-import jaxb.userdata.*;
+import guru.qa.jaxb.userdata.*;
 import guru.qa.niffler.api.UserdataSoapApi;
 import guru.qa.niffler.api.core.RestClient;
 import guru.qa.niffler.api.core.converter.SoapConverterFactory;

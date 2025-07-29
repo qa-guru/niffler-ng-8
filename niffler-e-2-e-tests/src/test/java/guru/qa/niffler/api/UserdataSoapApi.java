@@ -1,9 +1,6 @@
 package guru.qa.niffler.api;
 
-import jaxb.userdata.AllUsersRequest;
-import jaxb.userdata.CurrentUserRequest;
-import jaxb.userdata.UserResponse;
-import jaxb.userdata.UsersResponse;
+import jaxb.userdata.*;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.Headers;
@@ -25,5 +22,47 @@ public interface UserdataSoapApi {
     @POST("ws")
     Call<UsersResponse> allUsers(@Body AllUsersRequest allUsersRequest);
 
+    @Headers(value = {
+            "Content-type: text/xml",
+            "Accept-Charset: utf-8"
+    })
+
+    @POST("/ws")
+    Call<UsersResponse> friendsPage(@Body FriendsPageRequest friendsPageRequest);
+
+    @Headers(value = {
+            "Content-type: text/xml",
+            "Accept-Charset: utf-8"
+    })
+    @POST("/ws")
+    Call<UsersResponse> friends(@Body FriendsRequest friendsRequest);
+
+    @Headers(value = {
+            "Content-type: text/xml",
+            "Accept-Charset: utf-8"
+    })
+    @POST("/ws")
+    Call<Void> removeFriend(@Body RemoveFriendRequest removeFriendRequest);
+
+    @Headers(value = {
+            "Content-type: text/xml",
+            "Accept-Charset: utf-8"
+    })
+    @POST("/ws")
+    Call<UserResponse> acceptInvitation(@Body AcceptInvitationRequest acceptInvitationRequest);
+
+    @Headers(value = {
+            "Content-type: text/xml",
+            "Accept-Charset: utf-8"
+    })
+    @POST("/ws")
+    Call<UserResponse> declineInvitation(@Body DeclineInvitationRequest declineInvitationRequest);
+
+    @Headers(value = {
+            "Content-type: text/xml",
+            "Accept-Charset: utf-8"
+    })
+    @POST("/ws")
+    Call<UserResponse> sendInvitation(@Body SendInvitationRequest sendInvitationRequest);
 
 }

@@ -19,14 +19,12 @@ public interface AuthApi {
 
 
     @GET("oauth2/authorize")
-    Call<Void> authorize(
-            @Query("response_type") String responseType,
-            @Query("client_id") String clientId,
-            @Query("scope") String scope,
-            @Query(value = "redirect_uri", encoded = true) String redirectUri,
-            @Query("code_challenge") String codeChallenge,
-            @Query("code_challenge_method") String codeChallengeMethod
-    );
+    Call<Void> authorize(@Query("response_type") String responseType,
+                         @Query("client_id") String clientId,
+                         @Query("scope") String scope,
+                         @Query(value = "redirect_uri", encoded = true) String redirectUri,
+                         @Query("code_challenge") String codeChallenge,
+                         @Query("code_challenge_method") String codeChallengeMethod);
 
     @FormUrlEncoded
     @POST("login")

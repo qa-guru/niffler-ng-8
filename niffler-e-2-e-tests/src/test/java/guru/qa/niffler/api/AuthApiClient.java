@@ -27,8 +27,8 @@ public class AuthApiClient extends RestClient {
     private final AuthApi authApi;
 
     public AuthApiClient() {
-        super(CFG.authUrl(), true);
-        authApi = retrofit.create(AuthApi.class);
+        super(CFG.authUrl(), false);
+        authApi = create(AuthApi.class);
     }
 
     public String loginAs(String userName, String password) {
@@ -42,20 +42,14 @@ public class AuthApiClient extends RestClient {
     }
 
     private void preRequest(String codeChallenge) {
-        Response<Void> response;
-        try {
-            response = authApi.authorize(
-                            CODE,
-                            CLIENT_ID,
-                            OPEN_ID,
-                            REDIRECT_URI,
-                            codeChallenge,
-                            CODE_CHALLENGE_METHOD
-                    ).execute();
-        } catch (IOException e) {
-            throw new AssertionError(e);
-        }
-        assertEquals(HttpStatus.SC_OK, response.code());
+        execute(authApi.authorize(
+                CODE,
+                CLIENT_ID,
+                OPEN_ID,
+                REDIRECT_URI,
+                codeChallenge,
+                CODE_CHALLENGE_METHOD
+        ), 302);
     }
 
     private String login(String userName, String password) {

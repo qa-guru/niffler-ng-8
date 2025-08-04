@@ -27,7 +27,7 @@ public class AuthApiClient extends RestClient {
     private final AuthApi authApi;
 
     public AuthApiClient() {
-        super(CFG.authUrl(), false);
+        super(CFG.authUrl(), true);
         authApi = create(AuthApi.class);
     }
 
@@ -49,7 +49,7 @@ public class AuthApiClient extends RestClient {
                 REDIRECT_URI,
                 codeChallenge,
                 CODE_CHALLENGE_METHOD
-        ), 302);
+        ), HttpStatus.SC_OK);
     }
 
     private String login(String userName, String password) {
@@ -65,7 +65,7 @@ public class AuthApiClient extends RestClient {
             throw new RuntimeException(e);
         }
 
-        assertEquals(HttpStatus.SC_MOVED_TEMPORARILY, response.code());
+        assertEquals(HttpStatus.SC_OK, response.code());
         return StringUtils.substringAfter(String.valueOf(response.raw().request().url()), "code=");
     }
 

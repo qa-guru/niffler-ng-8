@@ -18,7 +18,7 @@ public class SpendApiClient extends RestClient {
     private final SpendApi spendApi;
 
     public SpendApiClient() {
-        super(CFG.spendUrl());
+        super(CFG.spendUrl(), true);
         this.spendApi = retrofit.create(SpendApi.class);
     }
 

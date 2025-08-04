@@ -26,11 +26,13 @@ public abstract class RestClient {
 
     protected final Retrofit retrofit;
 
-    private final OkHttpClient client = new OkHttpClient.Builder().addNetworkInterceptor(
-            new AllureOkHttp3()
-                    .setRequestTemplate("http-request.ftl")
-                    .setResponseTemplate("http-response.ftl")
-    ).build();
+    private final OkHttpClient client;
+
+//    private final OkHttpClient client = new OkHttpClient.Builder().addNetworkInterceptor(
+//            new AllureOkHttp3()
+//                    .setRequestTemplate("http-request.ftl")
+//                    .setResponseTemplate("http-response.ftl")
+//    ).build();
 
     public RestClient(String baseUrl) {
         this(baseUrl, false, JacksonConverterFactory.create(), HttpLoggingInterceptor.Level.BODY);
@@ -60,6 +62,7 @@ public abstract class RestClient {
                 )
         );
 
+        this.client = builder.build();
         this.retrofit = new Retrofit.Builder()
                 .baseUrl(baseUrl)
                 .client(client)

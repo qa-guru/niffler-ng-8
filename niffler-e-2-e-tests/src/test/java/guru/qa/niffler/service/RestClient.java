@@ -8,12 +8,17 @@ import okhttp3.JavaNetCookieJar;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import org.apache.commons.lang3.ArrayUtils;
+import retrofit2.Call;
 import retrofit2.Converter;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
+import java.io.IOException;
 import java.net.CookieManager;
 import java.net.CookiePolicy;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public abstract class RestClient {
 
@@ -21,11 +26,13 @@ public abstract class RestClient {
 
     protected final Retrofit retrofit;
 
-    private final OkHttpClient client = new OkHttpClient.Builder().addNetworkInterceptor(
-            new AllureOkHttp3()
-                    .setRequestTemplate("http-request.ftl")
-                    .setResponseTemplate("http-response.ftl")
-    ).build();
+    private final OkHttpClient client;
+
+//    private final OkHttpClient client = new OkHttpClient.Builder().addNetworkInterceptor(
+//            new AllureOkHttp3()
+//                    .setRequestTemplate("http-request.ftl")
+//                    .setResponseTemplate("http-response.ftl")
+//    ).build();
 
     public RestClient(String baseUrl) {
         this(baseUrl, false, JacksonConverterFactory.create(), HttpLoggingInterceptor.Level.BODY);
@@ -55,6 +62,7 @@ public abstract class RestClient {
                 )
         );
 
+        this.client = builder.build();
         this.retrofit = new Retrofit.Builder()
                 .baseUrl(baseUrl)
                 .client(client)
@@ -71,6 +79,18 @@ public abstract class RestClient {
         public ActionRestClient(String baseUrl) {
             super(baseUrl);
         }
+    }
+
+    public <T> T execute(Call<T> executeMethod, int expectedCode) {
+        final Response<T> response;
+        try {
+            response = executeMethod.execute();
+        } catch (IOException e) {
+            throw new AssertionError(e);
+        }
+
+        assertEquals(expectedCode, response.code());
+        return response.body();
     }
 }
 

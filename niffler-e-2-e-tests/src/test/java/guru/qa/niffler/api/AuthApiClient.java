@@ -1,11 +1,12 @@
 package guru.qa.niffler.api;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.github.jknack.handlebars.internal.lang3.StringUtils;
+import guru.qa.niffler.api.core.CodeInterceptor;
 import guru.qa.niffler.api.core.ThreadSafeCookieStore;
 import guru.qa.niffler.api.interfaces.AuthApi;
 import guru.qa.niffler.service.RestClient;
 import guru.qa.niffler.utils.OauthUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.hc.core5.http.HttpStatus;
 import retrofit2.Response;
 
@@ -27,7 +28,7 @@ public class AuthApiClient extends RestClient {
     private final AuthApi authApi;
 
     public AuthApiClient() {
-        super(CFG.authUrl(), true);
+        super(CFG.authUrl(), true, new CodeInterceptor());
         authApi = create(AuthApi.class);
     }
 

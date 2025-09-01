@@ -1,7 +1,18 @@
 package guru.qa.niffler.config;
 
+import org.jetbrains.annotations.NotNull;
+
+import java.util.Objects;
+
 enum DockerConfig implements Config {
   INSTANCE;
+
+  @NotNull
+  @Override
+  public String allureDockerServiceUrl() {
+    String allureDockerApiUrl = System.getenv("ALLURE_DOCKER_API");
+    return Objects.requireNonNullElse(allureDockerApiUrl, "http://allure:5050/");
+  }
 
   @Override
   public String frontUrl() {

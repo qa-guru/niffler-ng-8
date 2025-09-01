@@ -10,4 +10,5 @@ COPY ./build.gradle ./
 COPY ./settings.gradle ./
 COPY ./gradle.properties ./
 
-CMD ./gradlew test -Dtest.env=docker -Drepository=jpa -Duser.timezone=Europe/Moscow
+RUN chmod +x ./gradlew
+CMD ./gradlew test -Dtest.env=docker -Dclient.impl=api -Dbrowser=${BROWSER} -Duser.timezone=Europe/Moscow

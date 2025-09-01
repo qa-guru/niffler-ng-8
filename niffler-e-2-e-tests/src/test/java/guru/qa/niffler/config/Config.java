@@ -10,6 +10,9 @@ public interface Config {
       : LocalConfig.INSTANCE;
   }
 
+  @Nonnull
+  String allureDockerServiceUrl();
+
   String frontUrl();
 
   String authUrl();

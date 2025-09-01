@@ -1,5 +1,7 @@
 package guru.qa.niffler.config;
 
+import org.jetbrains.annotations.NotNull;
+
 enum LocalConfig implements Config {
   INSTANCE;
 
@@ -56,5 +58,11 @@ enum LocalConfig implements Config {
   @Override
   public String currencyGrpcAddress() {
     return "127.0.0.1";
+  }
+
+  @NotNull
+  @Override
+  public String allureDockerServiceUrl() {
+    return "http://127.0.0.1:5050/";
   }
 }

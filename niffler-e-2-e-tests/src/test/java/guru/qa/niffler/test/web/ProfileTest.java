@@ -20,11 +20,11 @@ import static guru.qa.niffler.utils.RandomDataUtils.randomName;
 public class ProfileTest {
 
     @User
-    @ScreenShotTest("img/expected-avatar.png")
+    @ScreenShotTest("expected-avatar.png")
     @ApiLogin
     void checkProfileImageTest(BufferedImage expectedProfileImage)  {
         open(ProfilePage.class)
-                .uploadAvatar("img/avatar.png")
+                .uploadAvatar("avatar.png")
                 .checkAvatar(expectedProfileImage);
     }
 

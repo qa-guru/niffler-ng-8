@@ -65,4 +65,10 @@ enum LocalConfig implements Config {
   public String allureDockerServiceUrl() {
     return "http://127.0.0.1:5050/";
   }
+
+  @NotNull
+  @Override
+  public String screenshotBaseDir() {
+    return "screenshots/local/";
+  }
 }

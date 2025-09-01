@@ -15,6 +15,7 @@ import static com.codeborne.selenide.WebDriverConditions.url;
 @ParametersAreNonnullByDefault
 public abstract class BasePage<T extends BasePage<?>> extends SelenideProviderService {
 
+    protected static final Config CFG = Config.getInstance();
     @Getter
     private final Header header = new Header(driver);
     private final SelenideElement alert = $(".MuiSnackbar-root");

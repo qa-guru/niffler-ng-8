@@ -46,5 +46,8 @@ public interface Config {
 
   default int currencyGrpcPort() {
     return 8092;
-  };
+  }
+
+  @Nonnull
+  String screenshotBaseDir();
 }

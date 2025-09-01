@@ -194,7 +194,9 @@ public class ProfilePage extends BasePage<ProfilePage> {
     @SneakyThrows
     @Step("Upload avatar")
     public ProfilePage uploadAvatar(String path) {
-        pictureInput.uploadFromClasspath(path);
+        pictureInput.uploadFromClasspath(
+            CFG.screenshotBaseDir()+path
+        );
         return this;
     }
     @Step("Check userName: '{0}'")

@@ -70,4 +70,10 @@ enum DockerConfig implements Config {
   public String currencyGrpcAddress() {
     return "auth.niffler.dc";
   }
+
+  @NotNull
+  @Override
+  public String screenshotBaseDir() {
+    return "screenshots/selenoid/";
+  }
 }

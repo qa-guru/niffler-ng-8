@@ -50,7 +50,7 @@ public class SpendingTest {
                   amount = 89000.00
           )
   )
-  @ScreenShotTest(value = "img/expected-stat.png")
+  @ScreenShotTest(value = "expected-stat.png")
   @ApiLogin
   void checkStatComponentTest(UserJson userJson, BufferedImage expected) throws IOException {
       open(MainPage.class)
@@ -76,7 +76,7 @@ public class SpendingTest {
                           amount = 45391.0
                   )
           })
-  @ScreenShotTest(value = "img/expected-stat-edit.png")
+  @ScreenShotTest(value = "expected-stat-edit.png")
   @ApiLogin
   void checkStatComponentAfterEditingTest(UserJson user, BufferedImage expected) throws IOException {
     SpendJson spend = user.testData().spendings().getFirst();
@@ -105,7 +105,7 @@ public class SpendingTest {
 
   @User(
           spendings = @Spending())
-  @ScreenShotTest(value = "img/expected-stat-delete.png")
+  @ScreenShotTest(value = "expected-stat-delete.png")
   @ApiLogin
   void checkStatComponentAfterDeletingSpendTest(UserJson user, BufferedImage expected) throws IOException {
       open(MainPage.class)
@@ -135,7 +135,7 @@ public class SpendingTest {
                           amount = 55000
                   )
           })
-  @ScreenShotTest(value = "img/expected-stat-archived.png")
+  @ScreenShotTest(value = "expected-stat-archived.png")
   @ApiLogin
   void checkStatComponentWithArchiveSpendTest(UserJson user, BufferedImage expected) throws IOException {
       open(MainPage.class)

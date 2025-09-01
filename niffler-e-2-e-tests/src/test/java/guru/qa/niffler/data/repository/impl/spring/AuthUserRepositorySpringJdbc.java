@@ -9,7 +9,7 @@ import guru.qa.niffler.data.entity.auth.AuthUserEntity;
 import guru.qa.niffler.data.entity.auth.AuthorityEntity;
 import guru.qa.niffler.data.extractor.AuthUserEntityExtractor;
 import guru.qa.niffler.data.repository.AuthUserRepository;
-import guru.qa.niffler.data.tpl.DataSources;
+import guru.qa.niffler.data.jdbc.DataSources;
 import guru.qa.niffler.data.tpl.JdbcTransactionTemplate;
 import org.springframework.jdbc.core.JdbcTemplate;
 

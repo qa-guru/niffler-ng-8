@@ -1,5 +1,8 @@
 package guru.qa.niffler.data.tpl;
 
+import guru.qa.niffler.data.jdbc.Connections;
+import guru.qa.niffler.data.jdbc.JdbcConnectionHolder;
+
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.sql.Connection;

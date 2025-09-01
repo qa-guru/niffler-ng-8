@@ -144,10 +144,10 @@ public class UsersDbClient implements UsersClient {
     @Step("Create {count} income invitations for user {targetUser}")
     public void createIncomeInvitations(UserJson targetUser, int count) {
         if (count > 0) {
-            UserEntity targetEntity = userdataUserRepository.findById(
-                    targetUser.id()
-            ).orElseThrow();
             xaTransactionTemplate.execute(() -> {
+                UserEntity targetEntity = userdataUserRepository.findById(
+                    targetUser.id()
+                ).orElseThrow();
                 for (int i = 0; i < count; i++) {
                     String username = randomUsername();
                     AuthUserEntity authUser = authUserEntity(username, CFG.defaultPassword());

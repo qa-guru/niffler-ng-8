@@ -1,6 +1,5 @@
 package guru.qa.niffler.service;
 
-
 import com.google.protobuf.Empty;
 import guru.qa.niffler.data.CurrencyEntity;
 import guru.qa.niffler.data.repository.CurrencyRepository;

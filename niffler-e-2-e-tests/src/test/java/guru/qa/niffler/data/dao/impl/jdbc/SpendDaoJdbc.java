@@ -12,7 +12,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.*;
 
-import static guru.qa.niffler.data.tpl.Connections.holder;
+import static guru.qa.niffler.data.jdbc.Connections.holder;
 
 @ParametersAreNonnullByDefault
 public class SpendDaoJdbc implements SpendDao {

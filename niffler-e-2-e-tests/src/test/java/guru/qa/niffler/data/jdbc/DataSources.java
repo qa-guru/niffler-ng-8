@@ -1,4 +1,4 @@
-package guru.qa.niffler.data.tpl;
+package guru.qa.niffler.data.jdbc;
 
 import com.atomikos.jdbc.AtomikosDataSourceBean;
 import com.p6spy.engine.spy.P6DataSource;

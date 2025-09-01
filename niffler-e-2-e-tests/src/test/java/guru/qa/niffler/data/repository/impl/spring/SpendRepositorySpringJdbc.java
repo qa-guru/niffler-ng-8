@@ -10,7 +10,7 @@ import guru.qa.niffler.data.entity.spend.SpendEntity;
 import guru.qa.niffler.data.extractor.CategoryEntityExtractor;
 import guru.qa.niffler.data.extractor.SpendEntityExtractor;
 import guru.qa.niffler.data.repository.SpendRepository;
-import guru.qa.niffler.data.tpl.DataSources;
+import guru.qa.niffler.data.jdbc.DataSources;
 import guru.qa.niffler.data.tpl.JdbcTransactionTemplate;
 import org.springframework.jdbc.core.JdbcTemplate;
 

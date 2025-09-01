@@ -1,9 +1,9 @@
 buildscript {
     ext {
-        junitVersion = '5.11.4'
+        junitVersion = '5.13.0'
         allureVersion = '2.29.0'
-        selenideVersion = '7.7.1'
-        okhttp3Version = '3.14.9'
+        selenideVersion = '7.9.3'
+        okhttp3Version = '4.12.0'
         retrofitVersion = '2.11.0'
         apollographqlVersion = '0.0.2'
         logbackVersion = '1.4.11'
@@ -20,9 +20,13 @@ buildscript {
         fakerVersion = '1.0.2'
         atomicosVersion = '6.0.0'
         ashotVersion = '1.5.4'
+        apolloVersion = '0.0.2'
         userdataWsdlUrl = System.getProperty("test.env") == "docker"
                 ? "http://userdata.niffler.dc:8089/ws/userdata.wsdl"
                 : "http://127.0.0.1:8089/ws/userdata.wsdl"
+        gatewayIterospectionUrl = System.getProperty("test.env") == "docker"
+                ? "http://gateway.niffler.dc:8090/graphql"
+                : "http://127.0.0.1:8090/graphql"
     }
 }
 
@@ -30,6 +34,7 @@ plugins {
     id 'io.qameta.allure' version '2.12.0'
     id 'io.qameta.allure-adapter' version '2.12.0'
     id 'com.github.edeandrea.xjc-generation' version '1.6'
+    id 'com.apollographql.apollo' version "4.3.3"
 }
 
 group = 'guru.qa'
@@ -54,11 +59,28 @@ xjcGeneration {
     }
 }
 
+apollo {
+    service("niffler"){
+        generateKotlinModels.set(false)
+        packageName.set("guru.qa")
+        srcDir("src/test/graphql")
+        mapScalar("Date", "java.util.Date")
+        introspection {
+            endpointUrl.set("$gatewayIterospectionUrl")
+            schemaFile.set(file("src/test/graphql/schema.graphqls"))
+        }
+        outputDirConnection {
+            connectToJavaSourceSet("test")
+        }
+    }
+}
+
 sourceSets {
     test {
         java {
             srcDir('src/test/java')
             srcDir("$buildDir/generated-sources/test/xjc")
+            srcDir("$buildDir/generated/source/apollo/niffler")
         }
     }
 }
@@ -129,6 +151,11 @@ dependencies {
     // Lombok
     testAnnotationProcessor "org.projectlombok:lombok:${project.ext.lombokVersion}"
     testCompileOnly "org.projectlombok:lombok:${project.ext.lombokVersion}"
+    //Graphql
+    testImplementation "com.apollographql.java:client:${apolloVersion}"
+    testImplementation "com.apollographql.java:rx2:${apolloVersion}"
+    testImplementation "com.apollographql.adapters:apollo-adapters-core:0.0.4"
+
 }
 
 tasks.withType(JavaCompile).configureEach {
@@ -139,6 +166,10 @@ tasks.register('printVersion') {
     doLast {
         println project.version
     }
+}
+
+tasks.named{it =="generateNifflerApolloSources"}.configureEach {
+    dependsOn("downloadNifflerApolloSchemaFromIntrospection")
 }
 
 test {

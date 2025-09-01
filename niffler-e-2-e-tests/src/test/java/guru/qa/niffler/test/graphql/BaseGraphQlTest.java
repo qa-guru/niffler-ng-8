@@ -12,7 +12,7 @@ public class BaseGraphQlTest {
 
     protected static final Config CFG = Config.getInstance();
 
-    protected static ApolloClient apolloClient = new ApolloClient.Builder()
+    protected static final ApolloClient apolloClient = new ApolloClient.Builder()
             .serverUrl(CFG.gatewayUrl() + "/graphql")
             .addCustomScalarAdapter(Date.type, DateAdapter.INSTANCE)
             .okHttpClient(new OkHttpClient.Builder()

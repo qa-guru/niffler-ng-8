@@ -1,6 +1,9 @@
 package guru.qa.niffler.test.web;
 
+import com.codeborne.selenide.Selenide;
 import guru.qa.niffler.api.AuthApiClient;
+import guru.qa.niffler.jupiter.annotations.ApiLogin;
+import guru.qa.niffler.jupiter.annotations.Token;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -11,10 +14,8 @@ public class OAuthTest extends BaseUITest {
 
 
     @Test
+    @ApiLogin(username = "test",password = "12345")
     void oauthTest() {
-        AuthApiClient authApiClient = new AuthApiClient();
-        String token = authApiClient.loginAs(actualLogin, actualPass);
-
-        Assertions.assertNotNull(token);
+        Selenide.open(CFG.frontUrl());
     }
 }

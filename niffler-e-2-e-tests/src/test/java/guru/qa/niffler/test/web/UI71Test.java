@@ -1,7 +1,9 @@
 package guru.qa.niffler.test.web;
 
+import com.codeborne.selenide.Selenide;
 import com.github.javafaker.Faker;
 import guru.qa.niffler.data.dataClasses.UserData;
+import guru.qa.niffler.jupiter.annotations.ApiLogin;
 import guru.qa.niffler.jupiter.extensions.BrowserExtension;
 import guru.qa.niffler.model.users.UserJson;
 import guru.qa.niffler.utils.RandomDataUtils;
@@ -55,10 +57,11 @@ public class UI71Test extends BaseUITest {
     }
 
     @Test
+    @ApiLogin(username = "test",password = "12345")
     void addingNewSpending() {
         int amount = RandomDataUtils.getRandomNumberInRange(1, 9999);
         String description = RandomDataUtils.getRandomShortString();
-        loginPage().doLogin(UserData.mainUser());
+        Selenide.open(CFG.frontUrl());
         sidebarPage().header.toNewSpending();
         spendingPage().amount.clearThenFill(String.valueOf(amount));
         spendingPage().category.pickRandomCategory();

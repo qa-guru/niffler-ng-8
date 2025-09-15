@@ -12,10 +12,12 @@ import guru.qa.niffler.data.tpl.XaTransactionTemplate;
 import guru.qa.niffler.data.entity.currency.CurrencyValues;
 import guru.qa.niffler.model.rest.UserJson;
 import guru.qa.niffler.service.UsersClient;
+import guru.qa.niffler.utils.waiter.Waiter;
 import io.qameta.allure.Step;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Arrays;
 import java.util.List;
@@ -161,6 +163,14 @@ public class UsersDbClient implements UsersClient {
                 return null;
             });
         }
+    }
+
+    @Override
+    public @Nullable UserJson getUser(String username) {
+        return Waiter.getNonOptional(() -> xaTransactionTemplate.execute(
+            () -> userdataUserRepository.findByUsername(username)
+                .map(UserJson::fromEntity))
+        );
     }
 
 }

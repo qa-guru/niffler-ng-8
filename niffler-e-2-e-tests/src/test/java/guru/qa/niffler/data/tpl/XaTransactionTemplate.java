@@ -25,8 +25,10 @@ public class XaTransactionTemplate {
         this.closeAfterAction.set(false);
         return this;
     }
-    
-    public @Nullable <T> T execute(Supplier<T>... actions) {
+
+
+    @SafeVarargs
+    public final @Nullable <T> T execute(Supplier<T>... actions) {
         UserTransaction ut = new UserTransactionImp();
         try {
             ut.begin();

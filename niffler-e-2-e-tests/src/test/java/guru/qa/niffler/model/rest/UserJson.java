@@ -9,6 +9,7 @@ import guru.qa.niffler.model.FriendshipStatus;
 import guru.qa.niffler.model.TestData;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -56,8 +57,9 @@ public record UserJson(
     );
   }
 
-    public @Nonnull static UserJson fromEntity(@Nonnull UserEntity entity) {
-        return new UserJson(
+    public @Nullable static UserJson fromEntity(@Nullable UserEntity entity) {
+    if (entity == null) return null;
+    return new UserJson(
                 entity.getId(),
                 entity.getUsername(),
                 entity.getFirstname(),

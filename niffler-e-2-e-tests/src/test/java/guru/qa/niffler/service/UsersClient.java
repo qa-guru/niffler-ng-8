@@ -5,6 +5,8 @@ import guru.qa.niffler.model.rest.UserJson;
 import java.util.List;
 
 public interface UsersClient {
+    UserJson getUser(String username);
+
     UserJson createUser(String username, String password);
 
     void createIncomeInvitations(UserJson targetUser, int count);

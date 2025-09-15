@@ -157,8 +157,9 @@ public class UsersApiClient implements UsersClient {
                 .toList();
     }
 
-    @Step("Get current user's profile data")
-    public UserJson currentUser(String username){
+    @Step("Get {username} user's profile data")
+    @Override
+    public UserJson getUser(String username){
         return sre.executeRequest(userdataApi.currentUser(username));
     }
 }
